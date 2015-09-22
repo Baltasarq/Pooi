@@ -16,9 +16,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.HashSet;
@@ -339,7 +337,7 @@ public class Gui extends JFrame {
         this.tpMain = new JTabbedPane();
         this.tpMain.setTabPlacement( JTabbedPane.BOTTOM );
         this.tpMain.addTab( "Console", this.spPanel );
-        this.tpMain.addTab( "Diagram", this.pnlCanvas );
+     //   this.tpMain.addTab( "Diagram", this.pnlCanvas );
     }
 
     private void buildCanvas()
@@ -365,15 +363,24 @@ public class Gui extends JFrame {
 
     private void buildToolbar()
     {
+        JButton btReset = new JButton( "Reset" );
+        JButton btNewObject = new JButton( "New object" );
+
         this.tbIconBar = new JToolBar();
         this.tbIconBar.setFloatable( false );
 
-        this.tbIconBar.add( new JButton( "Reset" ) );
+        this.tbIconBar.add( btReset );
         this.tbIconBar.addSeparator();
-        this.tbIconBar.add( new JButton( "New object" ) );
+        this.tbIconBar.add( btNewObject );
 
         this.getContentPane().add( this.tbIconBar, BorderLayout.NORTH );
 
+        // Events
+        btReset.addActionListener( e -> Gui.this.onReset() );
+
+        btNewObject.addActionListener( e -> {
+            Gui.this.simulate( "(anObject copy)" );
+        });
     }
     
     /**
