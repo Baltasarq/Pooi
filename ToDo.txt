@@ -1,0 +1,5 @@
+- The parser has problems interpreting parameters which are complex. For example, Complex add c2
+      TraitsComplex.add = { c: self.real = (self.real + c.real); self.imgr = (self.imgr + c.imgr) }
+- Needs Math object with sqr, sqrt, PI
+- Needs libraries, such as Complex. This could used with import, and loaded as any transcription.
+- Store the last directory

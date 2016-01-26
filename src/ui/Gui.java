@@ -502,13 +502,11 @@ public class Gui extends JFrame {
                     this.close();
                 }
 
-                // If it was not an error, set it to the order history
-                if ( !( this.interpreter.getError() ) ) {
-                    this.input.addItem( msg );
+                // Set it to the order history
+                this.input.insertItemAt( msg, 0  );
 
-                    if ( this.input.getItemCount() > 10 ) {
-                        this.input.removeItemAt( 0 );
-                    }
+                if ( this.input.getItemCount() >= 10 ) {
+                    this.input.removeItemAt( 9 );
                 }
             }
         } catch(StackOverflowError exc)
