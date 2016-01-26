@@ -1,0 +1,13 @@
+> (anObject copy) rename "TraitsPoint"
+> (TraitsPoint createChild) rename "Point"
+> Point.x = 0
+> Point.y = 0
+> TraitsPoint.shift = { delta: self.x = ( self.x + delta ); self.y = ( self.y + delta ) }
+> TraitsPoint.move = { x y: self.x = x; self.y = y }
+> TraitsPoint.str = {: ( ( self.x str ) + ", " ) + ( self.y str ) }
+> (Point copy) rename "p1"
+> p1 str
+> p1 move 5 6
+> p1 str
+> p1 shift 7
+> p1 str
