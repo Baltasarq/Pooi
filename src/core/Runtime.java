@@ -9,10 +9,13 @@ import core.evaluables.literals.BoolLiteral;
 import core.evaluables.literals.IntLiteral;
 import core.evaluables.literals.RealLiteral;
 import core.evaluables.literals.StrLiteral;
+import core.evaluables.method.InterpretedMethod;
 import core.evaluables.method.nativemethods.*;
 import core.exceps.AttributeNotFound;
 import core.exceps.InterpretError;
 import core.objs.*;
+
+import java.util.Calendar;
 
 /**
  * The runtime, i.e. preexisting objects, root, etc.
@@ -27,16 +30,19 @@ public final class Runtime {
     public static final String EtqNameBool = Reserved.BoolObject;
     public static final String EtqNameReal = Reserved.RealObject;
     public static final String EtqNameStr = Reserved.StrObject;
+    public static final String EtqNameDateTime = "DateTime";
     public static final String EtqNameAnObject = "anObject";
     public static final String EtqNameLiterals = "bin";
     public static final String EtqLit = "lit";
 
     private Runtime() throws InterpretError
     {
+        // The inheritance root and the main container
         this.absParent = new ObjectParent( EtqTopParentObject );
         this.root = new ObjectRoot( EtqNameRoot, absParent );
         this.root.set( EtqTopParentObject, this.absParent );
 
+        // Main "type" objects
         this.str = new SysObject( EtqNameStr, absParent, root );
         this.root.set( EtqNameStr, this.str );
 
@@ -49,11 +55,20 @@ public final class Runtime {
         this.bool = new SysObject( EtqNameBool, absParent, root );
         this.root.set( EtqNameBool, this.bool );
 
+        this.dateTime = new SysObject( EtqNameDateTime, absParent, root );
+        this.root.set( EtqNameDateTime, this.dateTime );
+
+        // The first prototype
         this.anObject = new ObjectBag( EtqNameAnObject, absParent, root );
         this.root.set( EtqNameAnObject, this.anObject );
 
+        // An object to hold literals
         this.literals = new SysObject( EtqNameLiterals, absParent, root );
         this.root.set( EtqNameLiterals, this.literals );
+
+        // The operating system rep
+        this.os = new ObjectOs( absParent, root );
+        this.root.set( ObjectOs.Name, this.os );
 
         this.addMethodsToRuntimeObjects();
         this.getLiteralsContainer().clear( false );
@@ -131,6 +146,28 @@ public final class Runtime {
 
         this.getLiteralsContainer().set( toret.getName(), toret );
         toret.assign( value );
+        return toret;
+    }
+
+    public ObjectDateTime createDateTime(long year, long month, long day, long hour, long minute, long second)
+            throws InterpretError
+    {
+        final ObjectDateTime toret = new ObjectDateTime(
+                this.createNewLiteralName(),
+                this.dateTime,
+                this.getLiteralsContainer() );
+
+        // Date
+        toret.set( ObjectDateTime.EtqDay, rt.createInt( day ) );
+        toret.set( ObjectDateTime.EtqMonth, rt.createInt( month ) );
+        toret.set( ObjectDateTime.EtqYear, rt.createInt( year ) );
+
+        // Time
+        toret.set( ObjectDateTime.EtqSecond, rt.createInt( second ) );
+        toret.set( ObjectDateTime.EtqMinute, rt.createInt( minute ) );
+        toret.set( ObjectDateTime.EtqHour, rt.createInt( hour ) );
+
+        this.getLiteralsContainer().set( toret.getName(), toret );
         return toret;
     }
 
@@ -338,8 +375,10 @@ public final class Runtime {
     private final ObjectBag integer;
     private final ObjectBag real;
     private final ObjectBag bool;
+    private final ObjectBag dateTime;
     private final ObjectBag anObject;
     private final ObjectBag literals;
+    private final ObjectOs os;
 
     private static Runtime rt;
     private static int numLiterals = 0;

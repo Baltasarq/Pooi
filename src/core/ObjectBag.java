@@ -406,7 +406,7 @@ public class ObjectBag {
             toret.append( "\n" );
         }
 
-        return toret.append( "\n}" ).toString();
+        return toret.append( '}' ).toString();
     }
 
     /**

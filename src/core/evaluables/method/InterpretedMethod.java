@@ -89,7 +89,13 @@ public class InterpretedMethod extends Method {
             && !lex.isEOL() )
         {
             formalParamsList.add( lex.getToken() );
+
+            // Skip spaces or commas
             lex.skipSpaces();
+            if ( lex.getCurrentChar() == ',' ) {
+                lex.advance();
+                lex.skipSpaces();
+            }
         }
 
         // Check ':' and remove it
@@ -153,7 +159,8 @@ public class InterpretedMethod extends Method {
 
         // Add params
         for(String param: this.getFormalParams()) {
-            toret.append( param  );
+            toret.append( param );
+            toret.append( ' ' );
         }
 
         toret.append( ": " );

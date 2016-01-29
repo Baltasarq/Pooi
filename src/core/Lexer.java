@@ -30,7 +30,7 @@ public class Lexer {
 
     public boolean isWhiteSpace()
     {
-        return Character.isWhitespace( this.getCurrentChar() );
+        return ( Character.isWhitespace( this.getCurrentChar() ) );
     }
 
     public void skipSpaces()
