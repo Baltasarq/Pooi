@@ -111,7 +111,6 @@ public class Interpreter {
         ObjectBag toret = null;
         error = false;
         final Runtime rt = this.getRuntime();
-        final ObjectRoot root = rt.getRoot();
         ExecutionStack stack = new ExecutionStack();
 
         try {

@@ -32,36 +32,15 @@ import java.util.HashSet;
  * @author  baltasarq
  */
 public class Gui extends JFrame {
-    public static final String EtqIconName = "res/pooiIcon.png";
+    public static final String EtqIconApp = "res/pooiIcon.png";
+    public static final String EtqIconReset = "res/reset.png";
+    public static final String EtqIconNew = "res/new.png";
     
     /** Creates new form Gui */
     public Gui()
     {
         this.build();
-
-        // Prepare ui dimensions
-        Dimension scrDim = Toolkit.getDefaultToolkit().getScreenSize();
-        this.setTitle( AppInfo.Name + " " + AppInfo.Version );
-        this.setMinimumSize( new Dimension( 620, 460 ) );
-        this.setPreferredSize( new Dimension( 790, 590 ) );
-
-        // Center in screen
-        this.setLocation(
-            ( scrDim.width  - this.getWidth() ) / 2,
-            ( scrDim.height - this.getHeight() ) / 2
-        );
-
-        try {
-            URL url = this.getClass().getClassLoader().getResource( EtqIconName );
-            ImageIcon iconImg = new ImageIcon( url );
-
-            setIconImage( iconImg.getImage() );
-        } catch(Exception exc)
-        {
-            output.append( "[failed to retrieve icon from jar]\n\n" );
-        }
-
-        input.requestFocusInWindow();
+        this.input.requestFocusInWindow();
     }
 
     private void buildFontDialog(int fontSize)
@@ -363,8 +342,11 @@ public class Gui extends JFrame {
 
     private void buildToolbar()
     {
-        JButton btReset = new JButton( "Reset" );
-        JButton btNewObject = new JButton( "New object" );
+        JButton btReset = new JButton( this.iconReset );
+        JButton btNewObject = new JButton( this.iconNew);
+
+        btReset.setToolTipText( "reset" );
+        btNewObject.setToolTipText( "new object" );
 
         this.tbIconBar = new JToolBar();
         this.tbIconBar.setFloatable( false );
@@ -378,11 +360,30 @@ public class Gui extends JFrame {
         // Events
         btReset.addActionListener( e -> Gui.this.onReset() );
 
-        btNewObject.addActionListener( e -> {
-            Gui.this.simulate( "(anObject copy)" );
-        });
+        btNewObject.addActionListener( e -> Gui.this.onNewObject() );
     }
-    
+
+    /** Retries icons from jar for future use */
+    private void buildIcons()
+    {
+        URL url;
+
+        try {
+            url = this.getClass().getClassLoader().getResource(EtqIconApp);
+            this.iconApp = new ImageIcon( url );
+
+            url = this.getClass().getClassLoader().getResource( EtqIconReset );
+            this.iconReset = new ImageIcon( url );
+
+            url = this.getClass().getClassLoader().getResource(EtqIconNew);
+            this.iconNew = new ImageIcon( url );
+
+        } catch(Exception exc)
+        {
+            output.append( "[failed to retrieve icons from jar]\n\n" );
+        }
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      */
@@ -393,6 +394,7 @@ public class Gui extends JFrame {
         this.spPanel.setDividerLocation( 150 );
 
         // Build components
+        this.buildIcons();
         this.buildMenuBar();
         this.buildToolbar();
         this.buildInput();
@@ -406,14 +408,28 @@ public class Gui extends JFrame {
         this.getContentPane().add( this.tpMain, java.awt.BorderLayout.CENTER );
 
         // Polish the window
-        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        this.setMinimumSize(new java.awt.Dimension(500, 400));
-        this.addWindowListener(new java.awt.event.WindowAdapter() {
+        this.setDefaultCloseOperation( WindowConstants.EXIT_ON_CLOSE );
+        this.setMinimumSize( new java.awt.Dimension( 600, 400 ) );
+        this.addWindowListener( new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
                 Gui.this.close();
             }
         });
+
         this.pack();
+        this.setIconImage( this.iconApp.getImage() );
+
+        // Prepare ui dimensions
+        Dimension scrDim = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setTitle( AppInfo.Name + " " + AppInfo.Version );
+        this.setMinimumSize( new Dimension( 620, 460 ) );
+        this.setPreferredSize( new Dimension( 790, 590 ) );
+
+        // Center in screen
+        this.setLocation(
+                ( scrDim.width  - this.getWidth() ) / 2,
+                ( scrDim.height - this.getHeight() ) / 2
+        );
     }
 
     private void onLoadSession()
@@ -580,6 +596,29 @@ public class Gui extends JFrame {
         this.reset();
     }
 
+    private void onNewObject() {
+        String order = "(anObject copy) rename \"";
+
+        String s = (String) JOptionPane.showInputDialog(
+                this,
+                "New object's name:",
+                AppInfo.Name,
+                JOptionPane.PLAIN_MESSAGE,
+                this.iconNew,
+                null,
+                "obj" );
+
+        if ( s != null ) {
+            s = s.trim();
+
+            if ( s.length() > 0 ) {
+                this.simulate( order + s + '"' );
+            }
+        }
+
+        return;
+    }
+
     private void reset()
     {
         try {
@@ -708,6 +747,10 @@ public class Gui extends JFrame {
     private BufferedImage biCanvas;
     private JLabel lblCanvasFrame;
     private JToolBar tbIconBar;
+
+    private ImageIcon iconReset;
+    private ImageIcon iconNew;
+    private ImageIcon iconApp;
 
     private Interpreter interpreter = null;
 

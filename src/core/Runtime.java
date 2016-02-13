@@ -115,6 +115,20 @@ public final class Runtime {
         this.str.set( NativeMethodStrSub.EtqMthStrSub, new NativeMethodStrSub() );
         this.str.set( NativeMethodStrLeft.EtqMthStrLeft, new NativeMethodStrLeft() );
         this.str.set( NativeMethodStrRight.EtqMthStrRight, new NativeMethodStrRight() );
+
+        // DateTime
+        this.dateTime.set( ObjectDateTime.EtqDateAsStr, new InterpretedMethod( ObjectDateTime.EtqDateAsStr,
+                "( ( ( ( self." + ObjectDateTime.EtqDay + " str ) + \"-\" ) + ( self."
+                        + ObjectDateTime.EtqMonth + " str ) ) + \"-\" ) + ( self."
+                        + ObjectDateTime.EtqYear + " str )" ) );
+
+        this.dateTime.set( ObjectDateTime.EtqTimeAsStr, new InterpretedMethod( ObjectDateTime.EtqTimeAsStr,
+                "( ( ( ( self." + ObjectDateTime.EtqHour + " str ) + \":\" ) + ( self."
+                        + ObjectDateTime.EtqMinute + " str ) ) + \":\" ) + ( self."
+                        + ObjectDateTime.EtqSecond + " str )" ) );
+
+        this.dateTime.set( ObjectDateTime.EtqStr, new InterpretedMethod( ObjectDateTime.EtqStr,
+                "( ( self dateAsStr ) + \" \" ) + ( self timeAsStr )" ) );
     }
 
 

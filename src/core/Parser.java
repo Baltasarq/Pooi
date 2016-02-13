@@ -171,7 +171,7 @@ public class Parser {
 
     /**
      * This method is needed in order to deal with the case in which
-     * you have x,a = y, meaning x set "a" y
+     * you have x.a = y, meaning x set "a" y
      * @param toret the resulting command, as a Command object.
      * @param lex the lexer being used to interpret the command, as a Lexer object.
      */
@@ -188,14 +188,15 @@ public class Parser {
             if ( evl instanceof Reference ) {
                 final Reference ref = (Reference) evl;
 
-                if ( ref.getAttrs().length > 1 ) {
-                    String atr = ref.top();
-
-                    ref.pop();
-                    lex.insertAtCurrentPos( '"' + atr + '"' );
-                } else {
-                    throw new InterpretError( "missing attribute at the end of the reference, left of: " + Reserved.AssignmentOperator );
+                // If no context provided, assume it is in root
+                if ( ref.getAttrs().length == 1 ) {
+                    ref.setAttrs( new String[]{ "Root", ref.getAttrs()[ 0 ] } );
                 }
+
+                String atr = ref.top();
+
+                ref.pop();
+                lex.insertAtCurrentPos( '"' + atr + '"' );
             } else {
                 throw new InterpretError( "reference expected at left of: "  + Reserved.AssignmentOperator );
             }

@@ -21,19 +21,6 @@ public class ObjectDateTime extends ValueObject {
 
     public ObjectDateTime(String n, ObjectBag parent, ObjectBag container) throws InterpretError {
         super( n, parent, container );
-
-        this.set( EtqDateAsStr, new InterpretedMethod( EtqDateAsStr,
-                "( ( ( ( self." + EtqDay + " str ) + \"-\" ) + ( self."
-                + EtqMonth + " str ) ) + \"-\" ) + ( self."
-                + EtqYear + " str )" ) );
-
-        this.set( EtqTimeAsStr, new InterpretedMethod( EtqTimeAsStr,
-                "( ( ( ( self." + EtqHour + " str ) + \":\" ) + ( self."
-                        + EtqMinute + " str ) ) + \":\" ) + ( self."
-                        + EtqSecond + " str )" ) );
-
-        this.set( EtqStr, new InterpretedMethod( EtqStr,
-                "( ( self dateAsStr ) + \" \" ) + ( self timeAsStr )" ) );
     }
 
     @Override
