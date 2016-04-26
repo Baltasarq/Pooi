@@ -13,7 +13,7 @@ public class AppInfo {
     public static final String Name = "Pooi";
     public static final String Email = "jbgarcia@uvigo.es";
     public static final String Author = "Baltasar García Perez-Schofield";
-    public static final String Version = "0.9 20160213";
+    public static final String Version = "1.0 20160426";
 
     public static String getMsgVersion()
     {

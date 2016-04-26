@@ -31,14 +31,14 @@ public class Interpreter {
         // Author object
         ObjectStr name = rt.createString( "name", AppInfo.Author );
         ObjectStr email =  rt.createString( "email", AppInfo.Email );
-        this.objAuthor =  rt.createObject( "objAuthor" );
+        this.objAuthor =  rt.createObject( "author" );
         this.objAuthor.set( name.getName(), name );
         this.objAuthor.set( email.getName(), email );
 
         // objAbout object
         ObjectStr appName =  rt.createString( "appName", AppInfo.Name );
         ObjectStr version =  rt.createString( "appVersion", AppInfo.Version );
-        this.objAbout =  rt.createObject( "objAbout" );
+        this.objAbout =  rt.createObject( "about" );
         this.objAbout.set( appName.getName(), appName );
         this.objAbout.set( version.getName(), version );
 
@@ -69,7 +69,7 @@ public class Interpreter {
                                                + "\n\n"
         );
 
-        this.objHelp = rt.createObject( "objHelp" );
+        this.objHelp = rt.createObject( "help" );
         objHelp.set( use.getName(), use );
         objHelp.set( msgs.getName(), msgs );
     }

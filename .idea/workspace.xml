@@ -7,104 +7,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8a88262f-88f4-4f1f-8fed-10700b7b5117" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/jgraphx.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/App.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Pooi/res/pooiIcon.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodRename.java" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/AppInfo.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/AppInfo.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/Evaluable.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/Evaluable.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/ExecutionStack.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/ExecutionStack.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/Interpreter.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/Interpreter.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/Lexer.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/Lexer.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/ObjectBag.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/ObjectBag.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/Parser.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/Parser.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/Persistence.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/Persistence.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/Reserved.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/Reserved.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/Runtime.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/Runtime.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/TemplateEngine.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/TemplateEngine.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/Attribute.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/Attribute.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/Command.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/Command.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/Literal.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/Literal.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/Member.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/Member.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/Method.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/Method.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/ParentAttribute.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/ParentAttribute.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/Reference.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/Reference.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/literals/BoolLiteral.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/literals/BoolLiteral.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/literals/IntLiteral.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/literals/IntLiteral.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/literals/RealLiteral.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/literals/RealLiteral.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/literals/StrLiteral.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/literals/StrLiteral.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/InterpretedMethod.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/InterpretedMethod.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/NativeMethod.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/NativeMethod.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodCopy.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodCopy.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodCreateChild.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodCreateChild.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodErase.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodErase.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodGetName.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodGetName.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodGetPath.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodGetPath.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodIntAbs.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodIntAbs.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodIntDivideBy.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodIntDivideBy.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodIntIsEqualTo.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodIntIsEqualTo.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodIntIsGreaterThan.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodIntIsGreaterThan.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodIntIsLessThan.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodIntIsLessThan.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodIntIsNegative.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodIntIsNegative.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodIntMultiplyBy.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodIntMultiplyBy.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodIntSubstract.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodIntSubstract.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodIntSum.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodIntSum.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodIs.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodIs.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodList.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodList.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodOsNow.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodOsNow.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodRealAbs.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodRealAbs.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodRealDivideBy.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodRealDivideBy.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodRealIsEqualTo.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodRealIsEqualTo.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodRealIsGreaterThan.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodRealIsGreaterThan.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodRealIsLessThan.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodRealIsLessThan.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodRealIsNegative.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodRealIsNegative.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodRealMultiplyBy.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodRealMultiplyBy.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodRealSubstract.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodRealSubstract.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodRealSum.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodRealSum.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodSet.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodSet.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodSetName.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodSetName.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodStr.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodStr.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodStrCharAt.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodStrCharAt.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodStrConcat.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodStrConcat.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodStrIsEmpty.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodStrIsEmpty.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodStrIsEqualTo.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodStrIsEqualTo.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodStrIsGreaterThan.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodStrIsGreaterThan.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodStrIsLessThan.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodStrIsLessThan.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodStrIsNumber.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodStrIsNumber.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodStrLeft.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodStrLeft.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodStrLength.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodStrLength.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodStrMays.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodStrMays.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodStrMins.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodStrMins.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodStrRight.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodStrRight.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodStrSub.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodStrSub.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodStrToInt.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodStrToInt.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodStrToReal.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodStrToReal.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/evaluables/method/nativemethods/NativeMethodStrTrim.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodStrTrim.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/exceps/AttributeNotFound.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/exceps/AttributeNotFound.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/exceps/InterpretError.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/exceps/InterpretError.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/objs/ObjectBool.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/objs/ObjectBool.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/objs/ObjectDateTime.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/objs/ObjectDateTime.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/objs/ObjectInt.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/objs/ObjectInt.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/objs/ObjectOs.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/objs/ObjectOs.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/objs/ObjectParent.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/objs/ObjectParent.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/objs/ObjectReal.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/objs/ObjectReal.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/objs/ObjectRoot.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/objs/ObjectRoot.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/objs/ObjectStr.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/objs/ObjectStr.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/objs/SysObject.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/objs/SysObject.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/objs/ValueObject.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/objs/ValueObject.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/core/persistence/JsonPersistence.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/persistence/JsonPersistence.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/res/new.png" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/res/new.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/res/pooiIcon.png" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/res/pooiIcon.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/res/reset.png" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/res/reset.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/ui/DlgExport.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/DlgExport.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/ui/Gui.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/Gui.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/artifacts/Pooi_jar.xml" afterPath="$PROJECT_DIR$/.idea/artifacts/Pooi_jar.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Pooi.iml" afterPath="$PROJECT_DIR$/Pooi.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ToDo.txt" afterPath="$PROJECT_DIR$/ToDo.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" afterPath="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/AppInfo.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/AppInfo.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/Interpreter.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/Interpreter.java" />
     </list>
     <ignored path="pooi.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -178,30 +82,34 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Gui.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Gui.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/Gui.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.59601873">
-              <caret line="760" column="38" selection-start-line="760" selection-start-column="0" selection-end-line="760" selection-end-column="0" />
-              <folding>
-                <element signature="e#12119#12120#0" expanded="true" />
-                <element signature="e#12184#12185#0" expanded="true" />
-              </folding>
+            <state vertical-scroll-proportion="0.0">
+              <caret line="760" column="0" selection-start-line="760" selection-start-column="0" selection-end-line="760" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Interpreter.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/Interpreter.java">
+      <file leaf-file-name="AppInfo.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/AppInfo.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="296" column="63" selection-start-line="296" selection-start-column="39" selection-end-line="296" selection-end-column="39" />
+              <caret line="28" column="52" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Interpreter.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/Interpreter.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.517284">
+              <caret line="92" column="16" selection-start-line="92" selection-start-column="16" selection-end-line="92" selection-end-column="16" />
               <folding>
-                <element signature="e#10446#10447#0" expanded="true" />
-                <element signature="e#10483#10484#0" expanded="true" />
-                <element signature="e#10560#10561#0" expanded="true" />
-                <element signature="e#10600#10601#0" expanded="true" />
-                <element signature="e#10635#10636#0" expanded="true" />
+                <element signature="e#10515#10516#0" expanded="true" />
+                <element signature="e#10551#10552#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -256,8 +164,9 @@
         <option value="$PROJECT_DIR$/src/core/Interpreter.java" />
         <option value="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" />
         <option value="$PROJECT_DIR$/src/ui/Gui.java" />
-        <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/Interpreter.java" />
         <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/Gui.java" />
+        <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/AppInfo.java" />
+        <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/Interpreter.java" />
       </list>
     </option>
   </component>
@@ -309,7 +218,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -410,6 +318,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
       <pane id="Scope">
         <subPane subId="Project Files">
           <PATH>
@@ -508,10 +417,7 @@
       <RunnerSettings RunnerId="Run" />
       <ConfigurationWrapper RunnerId="Debug" />
       <ConfigurationWrapper RunnerId="Run" />
-      <method>
-        <option name="BuildArtifacts" enabled="true" />
-        <option name="Make" enabled="true" />
-      </method>
+      <method />
     </configuration>
     <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
       <module name="" />
@@ -997,6 +903,7 @@
       <workItem from="1460289412129" duration="29000" />
       <workItem from="1461100077341" duration="776000" />
       <workItem from="1461660259541" duration="7163000" />
+      <workItem from="1461679922977" duration="386000" />
     </task>
     <task id="LOCAL-00002" summary="Bugfix: last command last in history. Added samples">
       <created>1453802639057</created>
@@ -1014,7 +921,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="36958000" />
+    <option name="totallyTimeSpent" value="37344000" />
   </component>
   <component name="TodoView" selected-index="0">
     <todo-panel id="selected-file">
@@ -1042,18 +949,17 @@
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32955405" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32903865" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16015252" sideWeight="0.915683" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.16015252" sideWeight="0.915683" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20612244" sideWeight="0.33814588" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32936507" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32872504" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20209724" sideWeight="0.6618541" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20209724" sideWeight="0.6618541" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32937685" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27198818" sideWeight="0.40181613" order="3" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27198818" sideWeight="0.39784947" order="3" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3231649" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27198818" sideWeight="0.5981839" order="5" side_tool="true" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.27198818" sideWeight="0.60215056" order="5" side_tool="true" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.8970297" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32955405" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
@@ -1072,6 +978,7 @@
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Problems" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3231649" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -1357,13 +1264,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/AppInfo.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="15" column="54" selection-start-line="15" selection-start-column="54" selection-end-line="15" selection-end-column="54" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/Parser.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1451,27 +1351,29 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/Interpreter.java">
+    <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/Gui.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="296" column="63" selection-start-line="296" selection-start-column="39" selection-end-line="296" selection-end-column="39" />
-          <folding>
-            <element signature="e#10446#10447#0" expanded="true" />
-            <element signature="e#10483#10484#0" expanded="true" />
-            <element signature="e#10560#10561#0" expanded="true" />
-            <element signature="e#10600#10601#0" expanded="true" />
-            <element signature="e#10635#10636#0" expanded="true" />
-          </folding>
+          <caret line="760" column="0" selection-start-line="760" selection-start-column="0" selection-end-line="760" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/Gui.java">
+    <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/AppInfo.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.59601873">
-          <caret line="760" column="38" selection-start-line="760" selection-start-column="0" selection-end-line="760" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="28" column="52" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/Interpreter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.517284">
+          <caret line="92" column="16" selection-start-line="92" selection-start-column="16" selection-end-line="92" selection-end-column="16" />
           <folding>
-            <element signature="e#12119#12120#0" expanded="true" />
-            <element signature="e#12184#12185#0" expanded="true" />
+            <element signature="e#10515#10516#0" expanded="true" />
+            <element signature="e#10551#10552#0" expanded="true" />
           </folding>
         </state>
       </provider>
