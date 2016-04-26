@@ -1,0 +1,3 @@
+> (anObject copy) rename "Pair"
+> Pair.first = anObject
+> Pair.second = anObject

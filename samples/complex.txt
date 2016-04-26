@@ -1,0 +1,10 @@
+> (anObject copy) rename "TraitsComplex"
+> (anObject copy) rename "Complex"
+> Complex.real = 0.0
+> Complex.img = 0.0
+> Complex.parent = TraitsComplex
+> TraitsComplex.str = {: (((self.real str) + " + ") + (self.img str)) + "i" }
+> TraitsComplex.isReal = {: self.img == 0.0 }
+> TraitsComplex.add = {c: self.real = (self.real + c.real); self.img = (self.img + c.img)  }
+> TraitsComplex.sub = {c: self.real = (self.real - c.real); self.img = (self.img - c.img)  }
+> TraitsComplex.mul = {c: self.real = ((self.real * c.real) - (self.img * c.img)); self.img = ((self.img * c.real) + (self.real * c.img)) }

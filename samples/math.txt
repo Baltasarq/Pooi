@@ -1,0 +1,5 @@
+> (anObject copy) rename "Math"
+> Math.PI = 3.1416
+> Math.sqr = {x: x * x }
+> Math.sqrt = {x: x * x }
+> 

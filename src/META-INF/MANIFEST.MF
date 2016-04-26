@@ -1,3 +1,2 @@
 Manifest-Version: 1.0
-Main-Class: ui.Gui
-
+Main-Class: com.devbaltasarq.pooi.ui.App

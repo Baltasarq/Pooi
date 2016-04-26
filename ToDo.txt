@@ -1,5 +1,6 @@
 - The parser has problems interpreting parameters which are complex. For example, Complex add c2
       TraitsComplex.add = { c: self.real = (self.real + c.real); self.imgr = (self.imgr + c.imgr) }
-- Needs Math object with sqr, sqrt, PI. Sys object with time, date, import()... These could be imported objects stored in a special dir (part of the jar) that could be imported.
-- Needs libraries, such as Complex. This could used with import, and loaded as any transcription.
+- Needs Math object with sqr, sqrt, PI.
+- Needs "os" object with import()... These could be imported objects stored in a special dir (part of the jar) that could be imported.
+- Needs libraries, such as Complex. This could be provided with import, and loaded as any transcription.
 - Store the last directory

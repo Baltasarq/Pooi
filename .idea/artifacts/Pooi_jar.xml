@@ -1,11 +1,12 @@
 <component name="ArtifactManager">
-  <artifact type="jar" name="Pooi:jar">
+  <artifact type="jar" build-on-make="true" name="Pooi:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/Pooi_jar</output-path>
     <root id="archive" name="Pooi.jar">
       <element id="directory" name="META-INF">
         <element id="file-copy" path="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" />
       </element>
       <element id="module-output" name="Pooi" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/jgraphx.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>
