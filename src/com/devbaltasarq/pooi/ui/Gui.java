@@ -5,6 +5,7 @@ import com.devbaltasarq.pooi.core.Interpreter;
 import com.devbaltasarq.pooi.core.ObjectBag;
 import com.devbaltasarq.pooi.core.Runtime;
 import com.devbaltasarq.pooi.core.evaluables.Attribute;
+import com.devbaltasarq.pooi.core.evaluables.Reference;
 import com.devbaltasarq.pooi.core.exceps.InterpretError;
 import com.devbaltasarq.pooi.core.objs.ObjectRoot;
 import com.devbaltasarq.pooi.core.objs.SysObject;
@@ -384,7 +385,16 @@ public class Gui extends JFrame {
         miInspect.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                Gui.this.onInspect( Gui.this.getSelectedObjectPath() );
+                ObjectBag objDest = null;
+
+                try {
+                    String objPath = Gui.this.getSelectedObjectPath();
+                    String[] objPathParts = objPath.split( "\\." );
+                    objDest = Gui.this.interpreter.getRuntime().solveToObject( new Reference( objPathParts ) );
+                } catch (InterpretError interpretError) {
+                    objDest = Gui.this.interpreter.getRuntime().getAbsoluteParent();
+                }
+                Gui.this.onInspect( objDest );
             }
         });
         this.popup.add( miInspect );
@@ -427,7 +437,7 @@ public class Gui extends JFrame {
         }
 
         this.setTitle( AppInfo.Name + " " + AppInfo.Version );
-        this.setMinimumSize( realDimension );
+        this.setMinimumSize( new Dimension( 640, 480 ) );
         this.setPreferredSize( realDimension );
     }
 
@@ -603,7 +613,7 @@ public class Gui extends JFrame {
             for (int i = 0; i < pathParts.length; ++i) {
                 toret.append(pathParts[i]);
 
-                if (i < (pathParts.length - 1)) {
+                if ( i < ( pathParts.length - 1 ) ) {
                     toret.append('.');
                 }
             }
@@ -669,9 +679,9 @@ public class Gui extends JFrame {
         return;
     }
 
-    private void onInspect(String objPath)
+    private void onInspect(ObjectBag obj)
     {
-
+        new Inspector( this, obj );
     }
 
     private void onNewObject(String objPath) {
@@ -844,7 +854,7 @@ public class Gui extends JFrame {
         this.menuPpal.setEnabled( status );
     }
 
-    private void simulate(String msg) {
+    void simulate(String msg) {
         this.input.setSelectedItem( msg );
         this.onInputEntered();
     }
