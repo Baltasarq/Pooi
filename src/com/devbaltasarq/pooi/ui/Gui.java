@@ -8,12 +8,8 @@ import com.devbaltasarq.pooi.core.evaluables.Attribute;
 import com.devbaltasarq.pooi.core.exceps.InterpretError;
 import com.devbaltasarq.pooi.core.objs.ObjectRoot;
 import com.devbaltasarq.pooi.core.objs.SysObject;
-import com.mxgraph.swing.mxGraphComponent;
-import com.mxgraph.view.mxGraph;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -47,6 +43,7 @@ public class Gui extends JFrame {
     {
         this.build();
         this.input.requestFocusInWindow();
+        this.fontSize = 10;
     }
 
     private void buildFontDialog(int fontSize)
@@ -68,7 +65,7 @@ public class Gui extends JFrame {
             btCloseDlgFont.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     dlgFont.setVisible( false );
-                    int fontSize = (Integer) spFontSize.getValue();
+                    Gui.this.fontSize = (Integer) spFontSize.getValue();
 
                     if ( fontSize > 4 ) {
                         output.setFont( new Font( "Courier", Font.PLAIN, fontSize ) );
@@ -230,8 +227,6 @@ public class Gui extends JFrame {
     private void buildOutput()
     {
         // Output
-        JScrollPane scrlOutput = new JScrollPane();
-
         this.output = new JTextArea();
         this.output.setBackground( new java.awt.Color( 0, 0, 0 ) );
         this.output.setColumns( 20 );
@@ -240,9 +235,6 @@ public class Gui extends JFrame {
         this.output.setForeground( new java.awt.Color( 255, 255, 255 ) );
         this.output.setRows( 5 );
         this.output.setCursor(new java.awt.Cursor( java.awt.Cursor.DEFAULT_CURSOR ) );
-
-        scrlOutput.setViewportView( output );
-        this.spPanel.setRightComponent( scrlOutput );
     }
 
     private void buildInput()
@@ -319,28 +311,6 @@ public class Gui extends JFrame {
         this.spPanel.setLeftComponent( scrlPaneTree );
     }
 
-    private void buildTabbedPane()
-    {
-        this.tpMain = new JTabbedPane();
-        this.tpMain.setTabPlacement( JTabbedPane.BOTTOM );
-        this.tpMain.addTab( "Console", this.spPanel );
-        this.tpMain.addTab( "Diagram", this.pnlCanvas );
-
-        this.tpMain.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent changeEvent) {
-                if ( Gui.this.tpMain.getSelectedIndex() == 1 ) {
-                    Gui.this.updateDiagram();
-                }
-            }
-        });
-    }
-
-    private void buildCanvas()
-    {
-        this.pnlCanvas = new JPanel( new BorderLayout() );
-    }
-
     private void buildToolbar()
     {
         JButton btReset = new JButton( this.iconReset );
@@ -409,6 +379,16 @@ public class Gui extends JFrame {
         });
         this.popup.add( miList );
 
+        // Inspect
+        JMenuItem miInspect = new JMenuItem( "Inspect" );
+        miInspect.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                Gui.this.onInspect( Gui.this.getSelectedObjectPath() );
+            }
+        });
+        this.popup.add( miInspect );
+
         // Remove
         JMenuItem miErase = new JMenuItem( "Erase" );
         miErase.addActionListener(new ActionListener() {
@@ -420,14 +400,48 @@ public class Gui extends JFrame {
         this.popup.add( miErase );
     }
 
+    private void prepareDimensions()
+    {
+        Dimension realDimension = new Dimension( 640, 480 );
+
+        // Prepare window dimensions
+        Dimension scrDim = Toolkit.getDefaultToolkit().getScreenSize();
+
+        if ( scrDim.getWidth() > 1280 ) {
+            realDimension.height = 768;
+            realDimension.width = 1280;
+
+            if ( scrDim.getHeight() > 800 ) {
+                realDimension.height = 1024;
+            }
+        }
+        else
+        if ( scrDim.getHeight() > 768 ) {
+            realDimension.height = 768;
+            realDimension.width = 1024;
+        }
+        else
+        if ( scrDim.getHeight() > 600 ) {
+            realDimension.height = 600;
+            realDimension.width = 800;
+        }
+
+        this.setTitle( AppInfo.Name + " " + AppInfo.Version );
+        this.setMinimumSize( realDimension );
+        this.setPreferredSize( realDimension );
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      */
     private void build()
     {
         // Split view
+        this.prepareDimensions();
         this.spPanel = new JSplitPane();
         this.spPanel.setDividerLocation( 150 );
+        this.spMain = new JSplitPane();
+        this.spMain.setDividerLocation( this.getHeight() / 2 );
 
         // Build components
         this.buildIcons();
@@ -437,16 +451,18 @@ public class Gui extends JFrame {
         this.buildInput();
         this.buildOutput();
         this.buildTreeView();
-        this.buildCanvas();
-        this.buildTabbedPane();
 
         // Compose it all
+        JScrollPane scrlOutput = new JScrollPane();
+        scrlOutput.setViewportView( this.output );
+        this.spMain.setOrientation( JSplitPane.VERTICAL_SPLIT  );
+        this.spMain.setBottomComponent( scrlOutput );
+        this.spPanel.setRightComponent( this.spMain );
+        this.getContentPane().add( this.spPanel, BorderLayout.CENTER );
         this.getContentPane().add( this.input, BorderLayout.SOUTH );
-        this.getContentPane().add( this.tpMain, BorderLayout.CENTER );
 
         // Polish the window
         this.setDefaultCloseOperation( WindowConstants.EXIT_ON_CLOSE );
-        this.setMinimumSize( new java.awt.Dimension( 600, 400 ) );
         this.addWindowListener( new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
                 Gui.this.close();
@@ -455,14 +471,15 @@ public class Gui extends JFrame {
 
         this.pack();
         this.setIconImage( this.iconApp.getImage() );
+        this.prepareDimensions();
 
-        // Prepare com.devbaltasarq.pooi.ui dimensions
-        Dimension scrDim = Toolkit.getDefaultToolkit().getScreenSize();
-        this.setTitle( AppInfo.Name + " " + AppInfo.Version );
-        this.setMinimumSize( new Dimension( 620, 460 ) );
-        this.setPreferredSize( new Dimension( 790, 590 ) );
+        // Prepare the diagrammer
+        this.pnlCanvas = new Canvas( 2000, 2000 );
+        JScrollPane scrlCanvas = new JScrollPane( this.pnlCanvas );
+        this.spMain.setTopComponent( scrlCanvas );
 
         // Center in screen
+        Dimension scrDim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(
                 ( scrDim.width  - this.getWidth() ) / 2,
                 ( scrDim.height - this.getHeight() ) / 2
@@ -493,7 +510,8 @@ public class Gui extends JFrame {
             );
             output.setCaretPosition( output.getText().length() );
 
-            updateTree();
+            this.updateTree();
+            this.updateDiagram();
         }
     }
 
@@ -547,6 +565,7 @@ public class Gui extends JFrame {
 
                 // Interpret the order
                 this.output.append( interpreter.interpret( msg ) );
+                this.updateDiagram();
                 this.output.append( "\n\n" );
                 this.output.setCaretPosition( output.getText().length() );
 
@@ -650,6 +669,11 @@ public class Gui extends JFrame {
         return;
     }
 
+    private void onInspect(String objPath)
+    {
+
+    }
+
     private void onNewObject(String objPath) {
         String s = (String) JOptionPane.showInputDialog(
                 this,
@@ -693,8 +717,9 @@ public class Gui extends JFrame {
     {
         try {
             this.interpreter = new Interpreter();
-            this.output.setText("");
+            this.output.setText( "" );
             this.updateTree();
+            this.updateDiagram();
 
             this.output.append( "Pooi [Prototype-based, object-oriented interpreter]\n"
                     + "\ntype in your message\n"
@@ -708,11 +733,8 @@ public class Gui extends JFrame {
 
     public void updateDiagram()
     {
+        final int HorizontalSeparation = 25;
         final Runtime rt = this.interpreter.getRuntime();
-        mxGraph graph = new mxGraph();
-        Object parent = graph.getDefaultParent();
-        HashMap<String, Object> boxes = new HashMap<>();
-        HashSet<ObjectBag> inheritanceConnections = new HashSet<>();
 
         // Created unwanted objects to be shown
         HashSet<ObjectBag> doNotAdd = new HashSet<>();
@@ -720,51 +742,92 @@ public class Gui extends JFrame {
         doNotAdd.add( this.interpreter.getAuthorObject() );
         doNotAdd.add( this.interpreter.getHelpObject() );
         doNotAdd.add( rt.getAbsoluteParent() );
+        doNotAdd.add( rt.getAnObject() );
 
-        graph.getModel().beginUpdate();
-        try {
-            // Draw object's boxes
-            int pos = 20;
-            Object rootBox = graph.insertVertex( parent, null, "Object", pos, 20, 60, 30 );
-            boxes.put( rt.getAbsoluteParent().getPath(), rootBox  );
-            for(Attribute atr: rt.getRoot().getAttributes()) {
-                ObjectBag obj = atr.getReference();
+        // Registers
+        HashMap<String, ObjectBox> boxes = new HashMap<>();
 
-                if ( !( obj instanceof SysObject )
-                   && !doNotAdd.contains( obj ) )
-                {
-                    int level = 150;
+        // Create boxes
+        int xUpLevel = 20;
+        int yDownLevel = 20;
+        int upRow = 100;
+        int downRow = 200;
 
-                    if ( obj.getParentObject() != rt.getAbsoluteParent() ) {
-                        level = 300;
-                    }
+        // Inheritance root
+        ObjectBox rootBox = new ObjectBox( rt.getAbsoluteParent(), 20, 20 );
+        rootBox.prepareDrawing( pnlCanvas );
+        boxes.put( rt.getAbsoluteParent().getPath(), rootBox );
 
-                    Object box = graph.insertVertex( parent, null, obj.getName(), pos, level, 60, 30 );
-                    inheritanceConnections.add( obj );
-                    boxes.put( obj.getPath(), box );
+        // anObject
+        ObjectBox anObjectBox = new ObjectBox( rt.getAnObject(), xUpLevel, upRow );
+        xUpLevel += anObjectBox.prepareDrawing( pnlCanvas ).width + HorizontalSeparation;
+        boxes.put( rt.getAnObject().getPath(), anObjectBox );
 
-                    pos += 100;
+        for(Attribute atr: rt.getRoot().getAttributes()) {
+            ObjectBag obj = atr.getReference();
+
+            if ( !( obj instanceof SysObject )
+                && !doNotAdd.contains( obj ) )
+            {
+                int pos = xUpLevel;
+                int level = upRow;
+
+                if ( obj.getParentObject() != rt.getAbsoluteParent() ) {
+                    level = downRow;
+                    pos = yDownLevel;
+                }
+
+                ObjectBox box = new ObjectBox( obj, pos, level );
+                boxes.put( obj.getPath(), box );
+
+                Dimension dimension = box.prepareDrawing( pnlCanvas );
+                if ( obj.getParentObject() == rt.getAbsoluteParent() ) {
+                    xUpLevel += dimension.width + HorizontalSeparation;
+                } else {
+                    yDownLevel += dimension.width + HorizontalSeparation;
                 }
             }
+        }
 
-            // Draw inheritance vertexes
-            for(ObjectBag obj: inheritanceConnections) {
-                graph.insertEdge( parent, null, "", boxes.get( obj.getPath() ), boxes.get( obj.getParentObject().getPath() ) );
+        // Calculate max height for first level
+        int maxHeight = 0;
+        for (ObjectBox box: boxes.values()) {
+            if ( box.getY() == upRow ) {
+                int height = box.getMeasuredDimension().height;
+                if ( height > maxHeight ) {
+                    maxHeight = height;
+                }
             }
         }
-        finally
-        {
-            graph.getModel().endUpdate();
-            graph.setCellsEditable( false  );
-            graph.setConnectableEdges( false  );
+
+        if ( maxHeight >= ( upRow - HorizontalSeparation ) ) {
+            for (ObjectBox box: boxes.values()) {
+                if ( box.getY() == downRow ) {
+                    box.setY( upRow + maxHeight + HorizontalSeparation );
+                }
+            }
         }
 
-        mxGraphComponent graphComponent = new mxGraphComponent( graph );
-        JScrollPane scroll = new JScrollPane( graphComponent );
-        this.pnlCanvas.removeAll();
-        this.pnlCanvas.add( scroll, BorderLayout.CENTER );
+        // Draw inheritance vertexes
+        this.pnlCanvas.setBackgroundColor( Color.lightGray );
+        this.pnlCanvas.setColor( Color.black );
+        for(ObjectBox box: boxes.values()) {
+            ObjectBox parentBox = boxes.get( box.getObj().getParentObject().getPath() );
+            Dimension dimChild = box.getMeasuredDimension();
+            Dimension dimParent = parentBox.getMeasuredDimension();
+
+            int childPosX = box.getX() + ( (int) ( dimChild.width / 2 ) );
+            int parentPosX = parentBox.getX() + ( (int) ( dimParent.width / 2 ) );
+            this.pnlCanvas.drawLine( childPosX, box.getY(), parentPosX, parentBox.getY() + dimParent.height  );
+        }
+
+        // Draw boxes
+        this.pnlCanvas.setFontSize( this.fontSize );
+        for(ObjectBox box: boxes.values()) {
+            box.draw( this.pnlCanvas );
+        }
     }
-    
+
     public void activateGui()
     {
         this.setGuiEnabled( true );
@@ -858,13 +921,14 @@ public class Gui extends JFrame {
     private JTree trObjectsTree;
     private JSpinner spFontSize;
     private JSplitPane spPanel;
-    private JTabbedPane tpMain;
-    private JPanel pnlCanvas;
+    private JSplitPane spMain;
+    private Canvas pnlCanvas;
     private BufferedImage biCanvas;
     private JLabel lblCanvasFrame;
     private JToolBar tbIconBar;
     private JPopupMenu popup;
 
+    private int fontSize;
     private ImageIcon iconReset;
     private ImageIcon iconNew;
     private ImageIcon iconApp;

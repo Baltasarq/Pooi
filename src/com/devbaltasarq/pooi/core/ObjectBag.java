@@ -102,6 +102,16 @@ public class ObjectBag {
     }
 
     /**
+     * Returns the collection of methods, as a native vector
+     *
+     * @return The collection of methods, as a native vector
+     */
+    public Method[] getLocalMethods()
+    {
+        return this.methods.values().toArray( new Method[ this.methods.size() ] );
+    }
+
+    /**
      * Returns the name of the object
      *
      * @return The name of the object, as a String

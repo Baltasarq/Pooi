@@ -22,14 +22,11 @@ public class App {
         final Gui g = new Gui();
 
         try {
-            // Prepare interpreter
-            g.reset();
-
-            // run
+            // Prepare interpreter & run
             java.awt.EventQueue.invokeLater( new Runnable() {
                 @Override
                 public void run() {
-                    g.setVisible( true );
+                    g.setVisible( true );  g.reset();
                 }
             } );
         } catch(Exception e)
