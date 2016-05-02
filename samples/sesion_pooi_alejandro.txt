@@ -1,0 +1,64 @@
+> ( anObject copy ) setName "Persona"
+Persona = Object Persona = {
+	parent = Object Object : {}
+
+}
+
+> ( Persona createChild ) setName "alejandro"
+Persona alejandro = {
+	parent = Object Persona : {}
+
+}
+
+> alejandro.nombre = "Alejandro Magno"
+Persona alejandro = {
+	parent = Object Persona : {}
+	nombre = String nombre : {}
+		"Alejandro Magno"
+
+}
+> alejandro.edad = 32
+Persona alejandro = {
+	parent = Object Persona : {}
+	nombre = String nombre : {}
+		"Alejandro Magno"
+	edad = Integer edad : {}
+		32
+
+}
+> alejandro list
+> ( alejandro copy ) setName "hefestion"
+hefestion = Persona hefestion = {
+	parent = Object Persona : {}
+	nombre = nombre nombre : {}
+		"Alejandro Magno"
+	edad = edad edad : {}
+		32
+
+}
+> alejandro list
+> hefestion list
+> hefestion.nombre = "Hefestion"
+Persona hefestion = {
+	parent = Object Persona : {}
+	nombre = String nombre : {}
+		"Hefestion"
+	edad = edad edad : {}
+		32
+
+}
+
+> alejandro.amigo = hefestion
+Persona alejandro = {
+	parent = Object Persona : {}
+	nombre = String nombre : {}
+		"Alejandro Magno"
+	edad = Integer edad : {}
+		32
+	amigo = Persona hefestion : {}
+
+}
+> alejandro str
+{ nombre = "Alejandro Magno" edad = 32 amigo = { nombre = "Hefestion" edad = 32 } }
+> hefestion str
+{ nombre = "Hefestion" edad = 32 }

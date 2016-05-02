@@ -1,0 +1,179 @@
+Pooi [Prototype-based, object-oriented interpreter]
+
+type in your message
+try "Root list", "help" or "about" to start
+
+
+> (anObject copy) setName "Punto2D"
+anObject was copied into Root as 'anObject3'
+anObject3 renamed to Root.Punto2D
+
+
+> Punto2D.x = 0
+> Punto2D.y = 0
+> Punto2D.str = {: ( ( self.x str ) + ", " ) + ( self.y str ) }
+
+
+> (anObject copy) setName "Punto3D"
+anObject was copied into Root as 'anObject4'
+anObject4 renamed to Root.Punto3D
+
+
+> Punto3D.x = 0
+> Punto3D.y = 0
+> Punto3D.z = 0
+> Punto3D.str = {: ( ( ( ( self.x str ) + ", " ) + ( self.y str ) ) + ", " ) + (self.z str) ) }
+
+
+> Root.Punto2D
+{ x = 0 y = 0 }
+
+> Root.Punto3D
+{ x = 0 z = 0 y = 0 }
+
+
+> (anObject copy) setName "p1"
+anObject was copied into Root as 'anObject5'
+anObject5 renamed to Root.p1
+
+
+> p1.parent = Punto2D
+Punto2D p1 = {
+	parent = Object Punto2D : {}
+
+}
+
+
+> p1
+{ x = 0 y = 0 }
+
+
+> p1.parent = Punto3D
+Punto3D p1 = {
+	parent = Object Punto3D : {}
+
+}
+
+
+> Root.p1
+{ x = 0 z = 0 y = 0 }
+
+
+> p1.x = 100
+Punto3D p1 = {
+	x = Int Int0 : {}
+		100
+	parent = Object Punto3D : {}
+
+}
+
+
+> p1.y = 10
+Punto3D p1 = {
+	x = Int Int0 : {}
+		100
+	parent = Object Punto3D : {}
+	y = Int Int0 : {}
+		10
+
+}
+
+
+> p1
+{ x = 100 y = 10 z = 0 }
+
+
+> p1.parent = Punto2D
+Punto2D p1 = {
+	x = Int Int0 : {}
+		100
+	parent = Object Punto2D : {}
+	y = Int Int0 : {}
+		10
+
+}
+
+
+> p1
+{ x = 100 y = 10 }
+
+
+> p1 list
+Punto2D p1 = {
+	x = Int Int0 : {}
+		100
+	parent = Object Punto2D : {}
+	y = Int Int0 : {}
+		10
+
+}
+
+
+> p1.parent = Punto3D
+Punto3D p1 = {
+	x = Int Int0 : {}
+		100
+	parent = Object Punto3D : {}
+	y = Int Int0 : {}
+		10
+
+}
+
+
+> p1.z = 5
+Punto3D p1 = {
+	x = Int Int0 : {}
+		100
+	parent = Object Punto3D : {}
+	z = Int Int0 : {}
+		5
+	y = Int Int0 : {}
+		10
+
+}
+
+
+> p1
+{ x = 100 z = 5 y = 10 }
+
+
+> p1.parent = Punto2D
+Punto2D p1 = {
+	x = Int Int0 : {}
+		100
+	parent = Object Punto2D : {}
+	z = Int Int0 : {}
+		5
+	y = Int Int0 : {}
+		10
+
+}
+
+
+> p1
+{ x = 100 z = 5 y = 10 }
+
+
+> p1 list
+Punto2D p1 = {
+	x = Int Int0 : {}
+		100
+	parent = Object Punto2D : {}
+	z = Int Int0 : {}
+		5
+	y = Int Int0 : {}
+		10
+
+}
+
+
+> Root.Punto3D.x
+0
+
+
+> Punto2D
+{ x = 0 y = 0 }
+
+
+> Punto3D
+{ x = 0 z = 0 y = 0 }

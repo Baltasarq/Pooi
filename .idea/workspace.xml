@@ -8,10 +8,6 @@
   <component name="ChangeListManager">
     <list default="true" id="8a88262f-88f4-4f1f-8fed-10700b7b5117" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/AppInfo.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/AppInfo.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/Gui.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/Gui.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/Inspector.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/Inspector.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/ObjectBox.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/ObjectBox.java" />
     </list>
     <ignored path="pooi.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -121,8 +117,8 @@
       <file leaf-file-name="AppInfo.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/AppInfo.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.22058824">
-              <caret line="15" column="54" selection-start-line="15" selection-start-column="54" selection-end-line="15" selection-end-column="54" />
+            <state vertical-scroll-proportion="0.4227941">
+              <caret line="26" column="79" selection-start-line="26" selection-start-column="42" selection-end-line="26" selection-end-column="42" />
               <folding />
             </state>
           </provider>
@@ -1070,7 +1066,7 @@
       <workItem from="1462002418730" duration="5399000" />
       <workItem from="1462012876949" duration="2682000" />
       <workItem from="1462024890180" duration="4580000" />
-      <workItem from="1462171685052" duration="9658000" />
+      <workItem from="1462171685052" duration="9725000" />
     </task>
     <task id="LOCAL-00002" summary="Bugfix: last command last in history. Added samples">
       <created>1453802639057</created>
@@ -1096,11 +1092,17 @@
       <option name="project" value="LOCAL" />
       <updated>1462029666850</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Improved inspector&#10;">
+      <created>1462200187539</created>
+      <option name="number" value="00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1462200187539</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="95374000" />
+    <option name="totallyTimeSpent" value="95441000" />
   </component>
   <component name="TodoView" selected-index="0">
     <todo-panel id="selected-file">
@@ -1177,7 +1179,8 @@
     <MESSAGE value="Single attribute is from root in assignments&#10;New icons.&#10;&quot;os&quot; object.&#10;DateTime objects.&#10;" />
     <MESSAGE value="Better diagramming&#10;" />
     <MESSAGE value="Drafted new inspector&#10;" />
-    <option name="LAST_COMMIT_MESSAGE" value="Drafted new inspector&#10;" />
+    <MESSAGE value="Improved inspector&#10;" />
+    <option name="LAST_COMMIT_MESSAGE" value="Improved inspector&#10;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1575,8 +1578,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/AppInfo.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.22058824">
-          <caret line="15" column="54" selection-start-line="15" selection-start-column="54" selection-end-line="15" selection-end-column="54" />
+        <state vertical-scroll-proportion="0.4227941">
+          <caret line="26" column="79" selection-start-line="26" selection-start-column="42" selection-end-line="26" selection-end-column="42" />
           <folding />
         </state>
       </provider>
