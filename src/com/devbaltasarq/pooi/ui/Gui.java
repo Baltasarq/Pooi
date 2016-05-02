@@ -485,8 +485,45 @@ public class Gui extends JFrame {
 
         // Prepare the diagrammer
         this.pnlCanvas = new Canvas( 2000, 2000 );
-        JScrollPane scrlCanvas = new JScrollPane( this.pnlCanvas );
-        this.spMain.setTopComponent( scrlCanvas );
+        this.scrCanvas = new JScrollPane( this.pnlCanvas );
+        this.spMain.setTopComponent( scrCanvas );
+        this.pnlCanvas.addMouseListener( new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                for(ObjectBox box: Gui.this.diagramBoxes.values()) {
+                    Dimension dim = box.getCurrentDimension();
+                    int boxX = Gui.this.scrCanvas.getX() + box.getX();
+                    int boxY = Gui.this.scrCanvas.getY() + box.getY();
+
+                    if ( e.getX() >= boxX && e.getY() >= boxY
+                            && e.getX() < ( boxX + dim.width )
+                            && e.getY() < ( boxY + dim.height ) )
+                    {
+                        Gui.this.onInspect( box.getObj() );
+                    }
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        } );
 
         // Center in screen
         Dimension scrDim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -755,7 +792,7 @@ public class Gui extends JFrame {
         doNotAdd.add( rt.getAnObject() );
 
         // Registers
-        HashMap<String, ObjectBox> boxes = new HashMap<>();
+        this.diagramBoxes = new HashMap<>();
 
         // Create boxes
         int xUpLevel = 20;
@@ -766,12 +803,12 @@ public class Gui extends JFrame {
         // Inheritance root
         ObjectBox rootBox = new ObjectBox( rt.getAbsoluteParent(), 20, 20 );
         rootBox.prepareDrawing( pnlCanvas );
-        boxes.put( rt.getAbsoluteParent().getPath(), rootBox );
+        diagramBoxes.put( rt.getAbsoluteParent().getPath(), rootBox );
 
         // anObject
         ObjectBox anObjectBox = new ObjectBox( rt.getAnObject(), xUpLevel, upRow );
         xUpLevel += anObjectBox.prepareDrawing( pnlCanvas ).width + HorizontalSeparation;
-        boxes.put( rt.getAnObject().getPath(), anObjectBox );
+        diagramBoxes.put( rt.getAnObject().getPath(), anObjectBox );
 
         for(Attribute atr: rt.getRoot().getAttributes()) {
             ObjectBag obj = atr.getReference();
@@ -788,7 +825,7 @@ public class Gui extends JFrame {
                 }
 
                 ObjectBox box = new ObjectBox( obj, pos, level );
-                boxes.put( obj.getPath(), box );
+                diagramBoxes.put( obj.getPath(), box );
 
                 Dimension dimension = box.prepareDrawing( pnlCanvas );
                 if ( obj.getParentObject() == rt.getAbsoluteParent() ) {
@@ -801,7 +838,7 @@ public class Gui extends JFrame {
 
         // Calculate max height for first level
         int maxHeight = 0;
-        for (ObjectBox box: boxes.values()) {
+        for (ObjectBox box: diagramBoxes.values()) {
             if ( box.getY() == upRow ) {
                 int height = box.getMeasuredDimension().height;
                 if ( height > maxHeight ) {
@@ -811,7 +848,7 @@ public class Gui extends JFrame {
         }
 
         if ( maxHeight >= ( upRow - HorizontalSeparation ) ) {
-            for (ObjectBox box: boxes.values()) {
+            for (ObjectBox box: diagramBoxes.values()) {
                 if ( box.getY() == downRow ) {
                     box.setY( upRow + maxHeight + HorizontalSeparation );
                 }
@@ -821,8 +858,8 @@ public class Gui extends JFrame {
         // Draw inheritance vertexes
         this.pnlCanvas.setBackgroundColor( Color.lightGray );
         this.pnlCanvas.setColor( Color.black );
-        for(ObjectBox box: boxes.values()) {
-            ObjectBox parentBox = boxes.get( box.getObj().getParentObject().getPath() );
+        for(ObjectBox box: diagramBoxes.values()) {
+            ObjectBox parentBox = diagramBoxes.get( box.getObj().getParentObject().getPath() );
             Dimension dimChild = box.getMeasuredDimension();
             Dimension dimParent = parentBox.getMeasuredDimension();
 
@@ -833,7 +870,7 @@ public class Gui extends JFrame {
 
         // Draw boxes
         this.pnlCanvas.setFontSize( this.fontSize );
-        for(ObjectBox box: boxes.values()) {
+        for(ObjectBox box: diagramBoxes.values()) {
             box.draw( this.pnlCanvas );
         }
     }
@@ -932,6 +969,7 @@ public class Gui extends JFrame {
     private JSpinner spFontSize;
     private JSplitPane spPanel;
     private JSplitPane spMain;
+    private JScrollPane scrCanvas;
     private Canvas pnlCanvas;
     private BufferedImage biCanvas;
     private JLabel lblCanvasFrame;
@@ -943,7 +981,9 @@ public class Gui extends JFrame {
     private ImageIcon iconNew;
     private ImageIcon iconApp;
 
-    private Interpreter interpreter = null;
+    private HashMap<String, ObjectBox> diagramBoxes;
+
+    Interpreter interpreter = null;
 
     private static boolean rebuildingTree = false;
 }

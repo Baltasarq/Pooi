@@ -54,6 +54,10 @@ public class ObjectBox {
         return this.measuredDimension;
     }
 
+    public Dimension getCurrentDimension() {
+        return this.currentDimension;
+    }
+
     public void draw(Canvas canvas)
     {
         this.draw( canvas, this.x, this.y  );
@@ -138,6 +142,7 @@ public class ObjectBox {
             posY += cr;
         }
 
+        this.currentDimension = this.measuredDimension;
         this.measuredDimension = null;
         canvas.repaint();
     }
@@ -147,4 +152,5 @@ public class ObjectBox {
     private int y;
     private String[] infoLines;
     private Dimension measuredDimension;
+    private Dimension currentDimension;
 }
