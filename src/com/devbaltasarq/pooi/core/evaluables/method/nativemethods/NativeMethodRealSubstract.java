@@ -68,4 +68,8 @@ public class NativeMethodRealSubstract extends NativeMethod {
 
         return toret;
     }
+
+    public int getNumParams() {
+        return 1;
+    }
 }

@@ -69,4 +69,8 @@ public class NativeMethodRealMultiplyBy extends NativeMethod {
 
         return toret;
     }
+
+    public int getNumParams() {
+        return 1;
+    }
 }

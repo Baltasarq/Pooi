@@ -76,4 +76,8 @@ public class NativeMethodIntDivideBy extends NativeMethod {
 
         return toret;
     }
+
+    public int getNumParams() {
+        return 1;
+    }
 }

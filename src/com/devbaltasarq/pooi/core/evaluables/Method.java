@@ -18,6 +18,8 @@ public abstract class Method extends Member {
         super( name );
     }
 
+    public abstract int getNumParams();
+
     public void chkParametersNumber(int num, Evaluable[] params)
             throws InterpretError
     {

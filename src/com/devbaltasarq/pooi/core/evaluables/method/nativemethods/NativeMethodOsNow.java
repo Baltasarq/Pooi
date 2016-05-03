@@ -42,4 +42,8 @@ public class NativeMethodOsNow extends NativeMethod {
         msg.append( "Obtained current date and time" );
         return toret;
     }
+
+    public int getNumParams() {
+        return 0;
+    }
 }

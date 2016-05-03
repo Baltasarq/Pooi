@@ -31,4 +31,8 @@ public class NativeMethodStr extends NativeMethod {
         msg.append( toret );
         return rt.createLiteral( new StrLiteral( toret ) );
     }
+
+    public int getNumParams() {
+        return 0;
+    }
 }

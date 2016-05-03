@@ -184,6 +184,10 @@ public class InterpretedMethod extends Method {
         return toret;
     }
 
+    public int getNumParams() {
+        return this.formalParams.length;
+    }
+
     private ArrayList<Command> stackCmds;
     private HashMap<String, Evaluable> params;
     private String[] formalParams;

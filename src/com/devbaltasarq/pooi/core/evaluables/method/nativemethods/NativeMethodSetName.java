@@ -54,4 +54,8 @@ public class NativeMethodSetName extends NativeMethod {
         msg.append( oldName + " renamed to " + ref.getPath() );
         return ref;
     }
+
+    public int getNumParams() {
+        return 1;
+    }
 }

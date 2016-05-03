@@ -35,4 +35,8 @@ public class NativeMethodErase extends NativeMethod {
 
         return ref;
     }
+
+    public int getNumParams() {
+        return 1;
+    }
 }

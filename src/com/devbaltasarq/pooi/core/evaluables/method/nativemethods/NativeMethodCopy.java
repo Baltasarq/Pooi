@@ -37,4 +37,8 @@ public class NativeMethodCopy extends NativeMethod {
 
         return toret;
     }
+
+    public int getNumParams() {
+        return 0;
+    }
 }

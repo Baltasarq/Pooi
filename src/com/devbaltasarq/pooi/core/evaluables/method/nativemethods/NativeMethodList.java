@@ -29,4 +29,8 @@ public class NativeMethodList extends NativeMethod {
         msg.append( ref.list() );
         return rt.createString( ref.list() );
     }
+
+    public int getNumParams() {
+        return 0;
+    }
 }

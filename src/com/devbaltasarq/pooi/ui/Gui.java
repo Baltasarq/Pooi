@@ -983,7 +983,7 @@ public class Gui extends JFrame {
 
     private HashMap<String, ObjectBox> diagramBoxes;
 
-    Interpreter interpreter = null;
+    private Interpreter interpreter = null;
 
     private static boolean rebuildingTree = false;
 }

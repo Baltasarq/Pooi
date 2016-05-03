@@ -56,4 +56,8 @@ public class NativeMethodSet extends NativeMethod {
         msg.append( ref.getPath()  );
         return ref;
     }
+
+    public int getNumParams() {
+        return 2;
+    }
 }

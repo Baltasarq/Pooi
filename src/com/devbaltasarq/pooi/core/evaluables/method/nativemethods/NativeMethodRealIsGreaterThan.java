@@ -60,4 +60,8 @@ public class NativeMethodRealIsGreaterThan extends NativeMethod {
         msg.append( Boolean.toString( result ) );
         return rt.createBool( result );
     }
+
+    public int getNumParams() {
+        return 1;
+    }
 }

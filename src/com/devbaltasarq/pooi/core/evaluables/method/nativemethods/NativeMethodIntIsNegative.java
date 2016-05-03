@@ -40,4 +40,8 @@ public class NativeMethodIntIsNegative extends NativeMethod {
         msg.append( Boolean.toString( result ) );
         return rt.createBool( result  );
     }
+
+    public int getNumParams() {
+        return 0;
+    }
 }

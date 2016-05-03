@@ -52,4 +52,8 @@ public class NativeMethodStrToInt extends NativeMethod {
         msg.append( Long.toString( result ) );
         return rt.createInt( result );
     }
+
+    public int getNumParams() {
+        return 0;
+    }
 }

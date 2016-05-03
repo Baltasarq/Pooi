@@ -41,4 +41,8 @@ public class NativeMethodStrMins extends NativeMethod {
         msg.append( result );
         return rt.createLiteral( new StrLiteral( result ) );
     }
+
+    public int getNumParams() {
+        return 0;
+    }
 }

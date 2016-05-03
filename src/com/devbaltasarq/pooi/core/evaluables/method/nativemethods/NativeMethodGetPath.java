@@ -29,4 +29,8 @@ public class NativeMethodGetPath extends NativeMethod {
         msg.append( ref.getPath() );
         return rt.createString( ref.getPath() );
     }
+
+    public int getNumParams() {
+        return 0;
+    }
 }

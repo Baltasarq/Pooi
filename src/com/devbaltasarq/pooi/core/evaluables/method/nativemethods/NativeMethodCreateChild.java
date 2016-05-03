@@ -33,4 +33,8 @@ public class NativeMethodCreateChild extends NativeMethod {
         msg.append( '\'' );
         return toret;
     }
+
+    public int getNumParams() {
+        return 0;
+    }
 }

@@ -2,6 +2,7 @@ package com.devbaltasarq.pooi.ui;
 
 import com.devbaltasarq.pooi.core.AppInfo;
 import com.devbaltasarq.pooi.core.ObjectBag;
+import com.devbaltasarq.pooi.core.Runtime;
 import com.devbaltasarq.pooi.core.evaluables.Attribute;
 import com.devbaltasarq.pooi.core.evaluables.Method;
 import com.devbaltasarq.pooi.core.objs.ValueObject;
@@ -19,6 +20,14 @@ import java.awt.event.MouseListener;
  */
 public class Inspector extends JDialog {
     public Inspector(Gui parent, ObjectBag obj) {
+        try {
+            this.objRoot = Runtime.getRuntime().getAbsoluteParent();
+        }
+        catch(Exception exc) {
+            this.setVisible( false );
+            JOptionPane.showMessageDialog( this, "Unexpected ERROR retrieveing root object" );
+        }
+
         this.app = parent;
         this.obj = obj;
         this.setIconImage( parent.getIconImage() );
@@ -48,34 +57,44 @@ public class Inspector extends JDialog {
         JPanel pnlButtons = new JPanel();
         pnlButtons.setBorder( new EmptyBorder( 10, 10, 10, 10 ) );
         pnlButtons.setLayout( new BoxLayout( pnlButtons, BoxLayout.LINE_AXIS ) );
-        JButton addAttribute = new JButton( "+Attr" );
-        JButton addMethod = new JButton( "+Mth" );
-        JButton rename = new JButton( "Ren" );
-        pnlButtons.add( addAttribute );
+        JButton btAddAttribute = new JButton( "+Attr" );
+        JButton btAddMethod = new JButton( "+Mth" );
+        JButton btRename = new JButton( "Ren" );
+        JButton btCopy = new JButton( "Copy" );
+        pnlButtons.add( btAddAttribute );
         pnlButtons.add( new JSeparator( SwingConstants.HORIZONTAL ) );
-        pnlButtons.add( addMethod );
+        pnlButtons.add( btAddMethod );
         pnlButtons.add( new JSeparator( SwingConstants.HORIZONTAL ) );
-        pnlButtons.add( rename );
+        pnlButtons.add( btRename );
+        pnlButtons.add( new JSeparator( SwingConstants.HORIZONTAL ) );
+        pnlButtons.add( btCopy );
         pnlAction.add( pnlButtons );
 
-        addAttribute.addActionListener( new ActionListener() {
+        btAddAttribute.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Inspector.this.addAttribute();
             }
         } );
 
-        addMethod.addActionListener( new ActionListener() {
+        btAddMethod.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Inspector.this.addMethod();
             }
         } );
 
-        rename.addActionListener( new ActionListener() {
+        btRename.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Inspector.this.rename();
+                Inspector.this.renameObject();
+            }
+        } );
+
+        btCopy.addActionListener( new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Inspector.this.copyObject();
             }
         } );
 
@@ -85,11 +104,11 @@ public class Inspector extends JDialog {
             JPanel panel = new JPanel();
             panel.setBorder(new EmptyBorder( 10, 10, 10, 10 ) );
             panel.setLayout( new BoxLayout( panel, BoxLayout.LINE_AXIS ) );
-            JLabel contents = new JLabel( objDest.getName() );
+            JLabel lblContents = new JLabel( objDest.getName() );
             JLabel lblName = new JLabel( atr.getName() );
             panel.add( lblName );
             panel.add( new JSeparator( SwingConstants.HORIZONTAL ) );
-            panel.add( contents );
+            panel.add( lblContents );
             this.pnlAction.add( panel );
             lblName.addMouseListener(new MouseListener() {
                 @Override
@@ -116,47 +135,109 @@ public class Inspector extends JDialog {
 
                 }
             });
-            contents.addMouseListener( lblName.getMouseListeners()[ 0 ] );
 
             if ( objDest instanceof ValueObject ) {
-                contents.setText( objDest.toString() );
+                lblContents.setText( objDest.toString() );
             }
+
+            lblContents.addMouseListener( new MouseListener() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mousePressed(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent e) {
+                    Inspector.this.changeAttributeValue( lblName.getText(), lblContents.getText()  );
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+
+                }
+            } );
         }
 
-        for(Method mth: this.getObj().getLocalMethods()) {
-            JPanel panel = new JPanel();
-            JLabel lblName = new JLabel( mth.getName() + "()" );
-            JLabel contents = new JLabel( "{...}" );
-            panel.add( lblName, BorderLayout.CENTER );
-            panel.add( contents, BorderLayout.EAST );
-            this.pnlAction.add( panel );
-            lblName.addMouseListener(new MouseListener() {
-                @Override
-                public void mouseClicked(MouseEvent mouseEvent) {
+        ObjectBag obj = this.getObj();
+        do {
+            for (Method mth : obj.getLocalMethods()) {
+                JPanel panel = new JPanel();
+                panel.setBorder( new EmptyBorder( 10, 10, 10, 10 ) );
+                panel.setLayout( new BoxLayout( panel, BoxLayout.LINE_AXIS ) );
+                JLabel lblName = new JLabel( mth.getName() + "()" );
+                JLabel lblContents = new JLabel( "{:}" );
+                panel.add( lblName );
+                panel.add( new JSeparator( SwingConstants.HORIZONTAL ) );
+                panel.add( lblContents );
+                this.pnlAction.add( panel );
+                lblName.addMouseListener( new MouseListener() {
+                    @Override
+                    public void mouseClicked(MouseEvent mouseEvent) {
 
-                }
+                    }
 
-                @Override
-                public void mousePressed(MouseEvent mouseEvent) {
+                    @Override
+                    public void mousePressed(MouseEvent mouseEvent) {
 
-                }
+                    }
 
-                @Override
-                public void mouseReleased(MouseEvent mouseEvent) {
-                   // Inspector.this.launchMethodExecution();
-                }
+                    @Override
+                    public void mouseReleased(MouseEvent mouseEvent) {
+                        Inspector.this.launchMethodExecution( lblName.getText() );
+                    }
 
-                @Override
-                public void mouseEntered(MouseEvent mouseEvent) {
+                    @Override
+                    public void mouseEntered(MouseEvent mouseEvent) {
 
-                }
+                    }
 
-                @Override
-                public void mouseExited(MouseEvent mouseEvent) {
+                    @Override
+                    public void mouseExited(MouseEvent mouseEvent) {
 
-                }
-            });
-        }
+                    }
+                } );
+
+                lblContents.addMouseListener( new MouseListener() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+
+                    }
+
+                    @Override
+                    public void mousePressed(MouseEvent e) {
+
+                    }
+
+                    @Override
+                    public void mouseReleased(MouseEvent e) {
+                        Inspector.this.changeMethod( lblName.getText(), lblContents.getText() );
+                    }
+
+                    @Override
+                    public void mouseEntered(MouseEvent e) {
+
+                    }
+
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+
+                    }
+                } );
+            }
+
+            obj = obj.getParentObject();
+        } while( obj != objRoot
+              && obj != null );
     }
 
     private void build() {
@@ -191,6 +272,27 @@ public class Inspector extends JDialog {
         this.setVisible( false );
     }
 
+    private void launchMethodExecution(String methodName)
+    {
+        String arguments = "";
+        methodName = methodName.substring( 0, methodName.length() - 2 );
+        Method mth = this.getObj().lookUpMethod( methodName );
+
+        if ( mth.getNumParams() > 0 ) {
+            arguments = (String) JOptionPane.showInputDialog(
+                    this,
+                    "Method's arguments:",
+                    AppInfo.Name,
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    null,
+                    "0" );
+        }
+
+        app.simulate( obj.getPath() + " " + methodName + " " + arguments );
+        this.setVisible( false );
+    }
+
     private void addMethod() {
         String mthName = (String) JOptionPane.showInputDialog(
                 this,
@@ -214,8 +316,22 @@ public class Inspector extends JDialog {
         this.setVisible( false );
     }
 
-    private void rename() {
-        String attrName = (String) JOptionPane.showInputDialog(
+    private void changeMethod(String methodName, String body) {
+        String mthBody = (String) JOptionPane.showInputDialog(
+                this,
+                methodName + "'s body:",
+                AppInfo.Name,
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                null,
+                body );
+
+        app.simulate( this.getObj().getPath() + "." + methodName + " = " + mthBody );
+        this.setVisible( false );
+    }
+
+    private void renameObject() {
+        String newName = (String) JOptionPane.showInputDialog(
                 this,
                 "New object's name:",
                 AppInfo.Name,
@@ -224,7 +340,35 @@ public class Inspector extends JDialog {
                 null,
                 "x" );
 
-        app.simulate( obj.getPath() + " rename \"" + attrName + '\"' );
+        app.simulate( obj.getPath() + " rename \"" + newName + '\"' );
+        this.setVisible( false );
+    }
+
+    private void copyObject() {
+        String newName = (String) JOptionPane.showInputDialog(
+                this,
+                "New object's name:",
+                AppInfo.Name,
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                null,
+                "x" );
+
+        app.simulate( "(" + obj.getPath() + " copy) rename \"" + newName + '\"' );
+        this.setVisible( false );
+    }
+
+    private void changeAttributeValue(String attrName, String currentValue) {
+        String newValue = (String) JOptionPane.showInputDialog(
+                this,
+                attrName + "'s value:",
+                AppInfo.Name,
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                null,
+                currentValue );
+
+        app.simulate( obj.getPath() + "." + attrName + " = " + newValue );
         this.setVisible( false );
     }
 
@@ -237,4 +381,5 @@ public class Inspector extends JDialog {
     private JButton btClose;
     private JPanel pnlAction;
     private Gui app;
+    private ObjectBag objRoot;
 }

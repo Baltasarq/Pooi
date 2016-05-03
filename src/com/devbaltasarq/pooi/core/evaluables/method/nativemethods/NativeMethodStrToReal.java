@@ -47,4 +47,8 @@ public class NativeMethodStrToReal extends NativeMethod {
         msg.append( Double.toString( result ) );
         return rt.createReal( result );
     }
+
+    public int getNumParams() {
+        return 0;
+    }
 }

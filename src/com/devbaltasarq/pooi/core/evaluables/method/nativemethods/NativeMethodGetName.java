@@ -29,4 +29,8 @@ public class NativeMethodGetName extends NativeMethod {
         msg.append( ref.getName() );
         return rt.createString( ref.getName() );
     }
+
+    public int getNumParams() {
+        return 0;
+    }
 }
