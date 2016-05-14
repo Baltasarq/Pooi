@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 /*
- * Gui.java
+ * VisualEngine.java
  *
  * Created on 1 de febrero de 2008, 13:26
  */
@@ -34,13 +34,13 @@ import java.util.HashSet;
  * Interfaz de la app
  * @author  baltasarq
  */
-public class Gui extends JFrame {
+public class VisualEngine extends JFrame {
     public static final String EtqIconApp = "com/devbaltasarq/pooi/res/pooiIcon.png";
     public static final String EtqIconReset = "com/devbaltasarq/pooi/res/reset.png";
     public static final String EtqIconNew = "com/devbaltasarq/pooi/res/new.png";
     
-    /** Creates new form Gui */
-    public Gui()
+    /** Creates new form VisualEngine */
+    public VisualEngine()
     {
         this.build();
         this.input.requestFocusInWindow();
@@ -66,7 +66,7 @@ public class Gui extends JFrame {
             btCloseDlgFont.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     dlgFont.setVisible( false );
-                    Gui.this.fontSize = (Integer) spFontSize.getValue();
+                    VisualEngine.this.fontSize = (Integer) spFontSize.getValue();
 
                     if ( fontSize > 4 ) {
                         output.setFont( new Font( "Courier", Font.PLAIN, fontSize ) );
@@ -282,9 +282,9 @@ public class Gui extends JFrame {
             public void mouseClicked(MouseEvent e)
             {
                 if ( e.getButton() == MouseEvent.BUTTON3 ) {
-                    TreePath selPath = Gui.this.trObjectsTree.getPathForLocation( e.getX(), e.getY() );
-                    Gui.this.trObjectsTree.setSelectionPath( selPath );
-                    Gui.this.popup.show( e.getComponent(), e.getX(), e.getY() );
+                    TreePath selPath = VisualEngine.this.trObjectsTree.getPathForLocation( e.getX(), e.getY() );
+                    VisualEngine.this.trObjectsTree.setSelectionPath( selPath );
+                    VisualEngine.this.popup.show( e.getComponent(), e.getX(), e.getY() );
                 }
 
                 return;
@@ -330,9 +330,9 @@ public class Gui extends JFrame {
         this.getContentPane().add( this.tbIconBar, BorderLayout.NORTH );
 
         // Events
-        btReset.addActionListener( e -> Gui.this.onReset() );
+        btReset.addActionListener( e -> VisualEngine.this.onReset() );
 
-        btNewObject.addActionListener( e -> Gui.this.onNewObject( Runtime.EtqNameAnObject ) );
+        btNewObject.addActionListener( e -> VisualEngine.this.onNewObject( Runtime.EtqNameAnObject ) );
     }
 
     /** Retries icons from jar for future use */
@@ -365,7 +365,7 @@ public class Gui extends JFrame {
         miCopy.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                Gui.this.onNewObject( Gui.this.getSelectedObjectPath() );
+                VisualEngine.this.onNewObject( VisualEngine.this.getSelectedObjectPath() );
             }
         });
         this.popup.add( miCopy );
@@ -375,7 +375,7 @@ public class Gui extends JFrame {
         miList.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                Gui.this.simulate( Gui.this.getSelectedObjectPath() + " list" );
+                VisualEngine.this.simulate( VisualEngine.this.getSelectedObjectPath() + " list" );
             }
         });
         this.popup.add( miList );
@@ -388,23 +388,61 @@ public class Gui extends JFrame {
                 ObjectBag objDest = null;
 
                 try {
-                    String objPath = Gui.this.getSelectedObjectPath();
+                    String objPath = VisualEngine.this.getSelectedObjectPath();
                     String[] objPathParts = objPath.split( "\\." );
-                    objDest = Gui.this.interpreter.getRuntime().solveToObject( new Reference( objPathParts ) );
+                    objDest = VisualEngine.this.interpreter.getRuntime().solveToObject( new Reference( objPathParts ) );
                 } catch (InterpretError interpretError) {
-                    objDest = Gui.this.interpreter.getRuntime().getAbsoluteParent();
+                    objDest = VisualEngine.this.interpreter.getRuntime().getAbsoluteParent();
                 }
-                Gui.this.onInspect( objDest );
+                VisualEngine.this.onInspect( objDest );
             }
         });
         this.popup.add( miInspect );
+
+        // Add attribute
+        JMenuItem miAddAttribbute = new JMenuItem( "Add attribute" );
+        miAddAttribbute.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                ObjectBag objDest = null;
+
+                try {
+                    String objPath = VisualEngine.this.getSelectedObjectPath();
+                    String[] objPathParts = objPath.split( "\\." );
+                    objDest = VisualEngine.this.interpreter.getRuntime().solveToObject( new Reference( objPathParts ) );
+                } catch (InterpretError interpretError) {
+                    objDest = VisualEngine.this.interpreter.getRuntime().getAbsoluteParent();
+                }
+                Inspector.addAttribute( VisualEngine.this, VisualEngine.this, objDest );
+            }
+        });
+        this.popup.add( miAddAttribbute );
+
+        // Add method
+        JMenuItem miAddMethod = new JMenuItem( "Add method" );
+        miAddMethod.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                ObjectBag objDest = null;
+
+                try {
+                    String objPath = VisualEngine.this.getSelectedObjectPath();
+                    String[] objPathParts = objPath.split( "\\." );
+                    objDest = VisualEngine.this.interpreter.getRuntime().solveToObject( new Reference( objPathParts ) );
+                } catch (InterpretError interpretError) {
+                    objDest = VisualEngine.this.interpreter.getRuntime().getAbsoluteParent();
+                }
+                Inspector.addMethod( VisualEngine.this, VisualEngine.this, objDest );
+            }
+        });
+        this.popup.add( miAddMethod );
 
         // Remove
         JMenuItem miErase = new JMenuItem( "Erase" );
         miErase.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                Gui.this.eraseObject( Gui.this.getSelectedObjectPath() );
+                VisualEngine.this.eraseObject( VisualEngine.this.getSelectedObjectPath() );
             }
         });
         this.popup.add( miErase );
@@ -451,7 +489,7 @@ public class Gui extends JFrame {
         this.spPanel = new JSplitPane();
         this.spPanel.setDividerLocation( 150 );
         this.spMain = new JSplitPane();
-        this.spMain.setDividerLocation( this.getHeight() / 2 );
+        this.spMain.setDividerLocation( (int) ( this.getHeight() - ( this.getHeight() * 0.25 ) ) );
 
         // Build components
         this.buildIcons();
@@ -475,7 +513,7 @@ public class Gui extends JFrame {
         this.setDefaultCloseOperation( WindowConstants.EXIT_ON_CLOSE );
         this.addWindowListener( new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
-                Gui.this.close();
+                VisualEngine.this.close();
             }
         });
 
@@ -490,16 +528,21 @@ public class Gui extends JFrame {
         this.pnlCanvas.addMouseListener( new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                for(ObjectBox box: Gui.this.diagramBoxes.values()) {
+                for(ObjectBox box: VisualEngine.this.diagramBoxes.values()) {
                     Dimension dim = box.getCurrentDimension();
-                    int boxX = Gui.this.scrCanvas.getX() + box.getX();
-                    int boxY = Gui.this.scrCanvas.getY() + box.getY();
+                    int boxX = VisualEngine.this.scrCanvas.getX() + box.getX();
+                    int boxY = VisualEngine.this.scrCanvas.getY() + box.getY();
 
                     if ( e.getX() >= boxX && e.getY() >= boxY
                             && e.getX() < ( boxX + dim.width )
                             && e.getY() < ( boxY + dim.height ) )
                     {
-                        Gui.this.onInspect( box.getObj() );
+                        if ( e.getButton() == MouseEvent.BUTTON3 ) {
+                            VisualEngine.this.setSelectedObject( box.getObj() );
+                            VisualEngine.this.popup.show( e.getComponent(), e.getX(), e.getY() );
+                        } else {
+                            VisualEngine.this.onInspect( box.getObj() );
+                        }
                     }
                 }
             }
@@ -637,6 +680,35 @@ public class Gui extends JFrame {
             this.input.setEnabled( true );
             this.input.requestFocus();
         }
+    }
+
+    private void setSelectedObject(ObjectBag obj)
+    {
+        String[] objParts = obj.getPath().split( "\\." );
+        int control = 0;
+        int numPart = 1;
+        DefaultTreeModel model = (DefaultTreeModel) this.trObjectsTree.getModel();
+        DefaultMutableTreeNode currentNode = (DefaultMutableTreeNode) model.getRoot();
+
+        while( numPart < objParts.length
+            && control < 10000 )
+        {
+            for (int i = 0; i < currentNode.getChildCount(); ++i) {
+                DefaultMutableTreeNode subNode = (DefaultMutableTreeNode) currentNode.getChildAt( i );
+                String subObj = (String) subNode.getUserObject();
+
+                if ( subObj.equals( objParts[ numPart ] ) ) {
+                    currentNode = subNode;
+                    ++numPart;
+                    break;
+                }
+            }
+
+            ++control;  // Safety -- it is not guaranteed to exit from here if the object does not exist
+        }
+
+        this.trObjectsTree.setSelectionPath( new TreePath( currentNode.getPath() ) );
+
     }
 
     private String getSelectedObjectPath() {

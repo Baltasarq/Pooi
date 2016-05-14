@@ -18,8 +18,8 @@ public class App {
         } catch(Exception ignored) {
         }
 
-        // Prepare Gui
-        final Gui g = new Gui();
+        // Prepare VisualEngine
+        final VisualEngine g = new VisualEngine();
 
         try {
             // Prepare interpreter & run
