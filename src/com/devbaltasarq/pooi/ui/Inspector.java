@@ -5,6 +5,7 @@ import com.devbaltasarq.pooi.core.ObjectBag;
 import com.devbaltasarq.pooi.core.Runtime;
 import com.devbaltasarq.pooi.core.evaluables.Attribute;
 import com.devbaltasarq.pooi.core.evaluables.Method;
+import com.devbaltasarq.pooi.core.exceps.InterpretError;
 import com.devbaltasarq.pooi.core.objs.ValueObject;
 
 import javax.swing.*;
@@ -19,6 +20,8 @@ import java.awt.event.MouseListener;
  * Created by Baltasar on 30/04/2016.
  */
 public class Inspector extends JDialog {
+    public static final int MaxCharsContents = 25;
+
     public Inspector(VisualEngine parent, ObjectBag obj) {
         try {
             this.objRoot = Runtime.getRuntime().getAbsoluteParent();
@@ -98,7 +101,7 @@ public class Inspector extends JDialog {
             }
         } );
 
-        // Add controls for each member
+        // Add controls for each attribute
         for(Attribute atr: this.getObj().getAttributes()) {
             ObjectBag objDest = atr.getReference();
             JPanel panel = new JPanel();
@@ -106,6 +109,11 @@ public class Inspector extends JDialog {
             panel.setLayout( new BoxLayout( panel, BoxLayout.LINE_AXIS ) );
             JLabel lblContents = new JLabel( objDest.getName() );
             JLabel lblName = new JLabel( atr.getName() );
+
+            if ( objDest instanceof ValueObject ) {
+                lblContents.setText( prepareToShowInWindow( objDest.toString() ) );
+            }
+
             panel.add( lblName );
             panel.add( new JSeparator( SwingConstants.HORIZONTAL ) );
             panel.add( lblContents );
@@ -136,10 +144,6 @@ public class Inspector extends JDialog {
                 }
             });
 
-            if ( objDest instanceof ValueObject ) {
-                lblContents.setText( objDest.toString() );
-            }
-
             lblContents.addMouseListener( new MouseListener() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
@@ -168,6 +172,7 @@ public class Inspector extends JDialog {
             } );
         }
 
+        // Add controls for each local method, as well as inherited ones
         ObjectBag obj = this.getObj();
         do {
             for (Method mth : obj.getLocalMethods()) {
@@ -255,7 +260,7 @@ public class Inspector extends JDialog {
     }
 
     private void launchFieldInspection(String id) {
-        visualEngine.simulate( this.obj.getPath() + "." + id );
+        visualEngine.execute( this.obj.getPath() + "." + id );
     }
 
     private void addAttribute() {
@@ -282,7 +287,7 @@ public class Inspector extends JDialog {
             if ( arguments != null ) {
                 arguments = arguments.trim();
                 if ( arguments.length() > 0 ) {
-                    visualEngine.simulate( obj.getPath() + " " + methodName + " " + arguments );
+                    visualEngine.execute( obj.getPath() + " " + methodName + " " + arguments );
                     this.setVisible( false );
                 }
             }
@@ -311,7 +316,7 @@ public class Inspector extends JDialog {
         if ( newName != null ) {
             newName = newName.trim();
             if ( newName.length() > 0 ) {
-                visualEngine.simulate( obj.getPath() + " rename \"" + newName + '\"' );
+                visualEngine.execute( obj.getPath() + " rename \"" + newName + '\"' );
                 this.setVisible( false );
             }
         }
@@ -330,28 +335,38 @@ public class Inspector extends JDialog {
         if ( newName != null ) {
             newName = newName.trim();
             if ( newName.length() > 0 ) {
-                visualEngine.simulate( "(" + obj.getPath() + " copy) rename \"" + newName + '\"' );
+                visualEngine.execute( "(" + obj.getPath() + " copy) rename \"" + newName + '\"' );
                 this.setVisible( false );
             }
         }
     }
 
     private void changeAttributeValue(String attrName, String currentValue) {
-        String newValue = (String) JOptionPane.showInputDialog(
-                this,
-                attrName + "'s value:",
-                AppInfo.Name,
-                JOptionPane.PLAIN_MESSAGE,
-                null,
-                null,
-                currentValue );
-
-        if ( newValue != null ) {
-            newValue = newValue.trim();
-            if ( newValue.length() > 0 ) {
-                visualEngine.simulate( obj.getPath() + "." + attrName + " = " + newValue );
-                this.setVisible( false );
+        try {
+            // Get the names of the available objects
+            final Runtime rt = Runtime.getRuntime();
+            Attribute[] attrs = rt.getRoot().getAttributes();
+            String[] objsNames = new String[ attrs.length + 1 ];
+            objsNames[ 0 ] = "0";
+            for(int i = 0; i < attrs.length; ++i) {
+                objsNames[ i + 1 ] = attrs[ i ].getName();
             }
+
+            // Create the combo box dialog
+            JComboBox cbObjectNames = new JComboBox( objsNames );
+            cbObjectNames.setEditable( true );
+            JOptionPane.showMessageDialog( this, cbObjectNames, attrName + "'s value:", JOptionPane.QUESTION_MESSAGE);
+
+            String newValue = (String) cbObjectNames.getSelectedItem();
+            if ( newValue != null ) {
+                newValue = newValue.trim();
+                if ( newValue.length() > 0 ) {
+                    visualEngine.execute( obj.getPath() + "." + attrName + " = " + newValue );
+                    this.setVisible( false );
+                }
+            }
+        } catch(InterpretError exc) {
+            visualEngine.makeOutput( "Interpreter error: " + exc.getMessage() );
         }
     }
 
@@ -373,7 +388,7 @@ public class Inspector extends JDialog {
             attrName = attrName.trim();
 
             if ( attrName.length() > 0 ) {
-                visualEngine.simulate( obj.getPath() + "." + attrName + " = 0" );
+                visualEngine.execute( obj.getPath() + "." + attrName + " = 0" );
             }
         }
     }
@@ -412,12 +427,24 @@ public class Inspector extends JDialog {
         if ( mthBody != null ) {
             mthBody = mthBody.trim();
             if ( mthBody.length() > 0 ) {
-                visualEngine.simulate( obj.getPath() + "." + name + " = " + mthBody );
+                visualEngine.execute( obj.getPath() + "." + name + " = " + mthBody );
             }
 
         }
 
         return;
+    }
+
+    /** Prepares a string to be shown in a window (no CR's...) */
+    public static String prepareToShowInWindow(String msg) {
+        if ( msg.length() > MaxCharsContents ) {
+            msg = msg.substring( 0, MaxCharsContents ) + "...\"";
+        }
+
+        msg = msg.replace( '\n', ' ' );
+        msg = msg.replace( '\t', ' ' );
+
+        return msg;
     }
 
     private ObjectBag obj;

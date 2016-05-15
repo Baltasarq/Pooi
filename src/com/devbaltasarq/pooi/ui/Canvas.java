@@ -23,7 +23,6 @@ public class Canvas extends JPanel {
         this.add( canvasFrame );
         this.setColor( Color.black );
         this.setBackgroundColor( Color.white );
-        this.setFontSize( 10  );
     }
 
     /** Gets the foreground color
@@ -144,34 +143,10 @@ public class Canvas extends JPanel {
         if ( str != null ) {
             final Graphics grfs = canvas.getGraphics();
 
+            grfs.setFont( this.getFont() );
             grfs.setColor( this.getColor() );
             grfs.drawChars( str.toCharArray(), 0, str.length(), x, y );
         }
-    }
-
-    /** Changes the font size
-     * @param newSize The font size, as an int
-     */
-    public void setFontSize(int newSize)
-    {
-        final Graphics grfs = this.canvas.getGraphics();
-
-        grfs.setFont( new Font( "mono", Font.PLAIN, newSize ) );
-        this.fontSize = newSize;
-    }
-
-    public int getTextHeight() {
-        final Graphics grfs = this.canvas.getGraphics();
-        FontMetrics metrics = grfs.getFontMetrics( grfs.getFont() );
-
-        return metrics.getHeight();
-    }
-
-    public int getTextWidth(String text) {
-        final Graphics grfs = this.canvas.getGraphics();
-        FontMetrics metrics = grfs.getFontMetrics( grfs.getFont() );
-
-        return metrics.stringWidth( text );
     }
 
     private BufferedImage canvas;

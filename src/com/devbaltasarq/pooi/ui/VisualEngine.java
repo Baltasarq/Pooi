@@ -19,7 +19,6 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -35,6 +34,8 @@ import java.util.HashSet;
  * @author  baltasarq
  */
 public class VisualEngine extends JFrame {
+    public static final int MinFontSize = 10;
+    public static final int MaxFontSize = 32;
     public static final String EtqIconApp = "com/devbaltasarq/pooi/res/pooiIcon.png";
     public static final String EtqIconReset = "com/devbaltasarq/pooi/res/reset.png";
     public static final String EtqIconNew = "com/devbaltasarq/pooi/res/new.png";
@@ -44,14 +45,15 @@ public class VisualEngine extends JFrame {
     {
         this.build();
         this.input.requestFocusInWindow();
-        this.fontSize = 10;
     }
 
-    private void buildFontDialog(int fontSize)
+    private void buildFontDialog()
     {
         if ( this.dlgFont == null ) {
             final JLabel lblFontSize = new JLabel();
-            this.spFontSize = new JSpinner();
+            // Create spinner from MinFontSize to MaxFontSize, in 1.0 steps start value MinFontSize
+            final SpinnerNumberModel spinnerModel = new SpinnerNumberModel( MinFontSize, MinFontSize, MaxFontSize, 1.0 );
+            this.spFontSize = new JSpinner( spinnerModel );
             final JButton btCloseDlgFont = new JButton();
 
             this.dlgFont = new JDialog();
@@ -66,10 +68,14 @@ public class VisualEngine extends JFrame {
             btCloseDlgFont.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     dlgFont.setVisible( false );
-                    VisualEngine.this.fontSize = (Integer) spFontSize.getValue();
+                    int fontSize = Math.toIntExact( Math.round( (Double) spFontSize.getValue() ) );
 
-                    if ( fontSize > 4 ) {
-                        output.setFont( new Font( "Courier", Font.PLAIN, fontSize ) );
+                    if ( fontSize >= MinFontSize
+                      && fontSize <= MaxFontSize )
+                    {
+                        VisualEngine.this.font = new Font( "monospaced", Font.PLAIN, fontSize );
+                        VisualEngine.this.output.setFont( VisualEngine.this.font );
+                        VisualEngine.this.updateDiagram();
                     }
                 }
             });
@@ -107,7 +113,7 @@ public class VisualEngine extends JFrame {
         p.y += ( this.getHeight() - this.dlgFont.getHeight() ) / 2;
         this.dlgFont.setLocation( p );
 
-        this.spFontSize.setValue( fontSize );
+        this.spFontSize.setValue( this.font.getSize() );
         return;
     }
 
@@ -375,7 +381,7 @@ public class VisualEngine extends JFrame {
         miList.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                VisualEngine.this.simulate( VisualEngine.this.getSelectedObjectPath() + " list" );
+                VisualEngine.this.execute( VisualEngine.this.getSelectedObjectPath() + " list" );
             }
         });
         this.popup.add( miList );
@@ -489,7 +495,7 @@ public class VisualEngine extends JFrame {
         this.spPanel = new JSplitPane();
         this.spPanel.setDividerLocation( 150 );
         this.spMain = new JSplitPane();
-        this.spMain.setDividerLocation( (int) ( this.getHeight() - ( this.getHeight() * 0.25 ) ) );
+        this.spMain.setDividerLocation( (int) ( this.getHeight() - ( this.getHeight() * 0.15 ) ) );
 
         // Build components
         this.buildIcons();
@@ -499,6 +505,10 @@ public class VisualEngine extends JFrame {
         this.buildInput();
         this.buildOutput();
         this.buildTreeView();
+
+        // The font
+        this.font = new Font( "monospaced", Font.PLAIN, 12 );
+        this.output.setFont( this.font );
 
         // Compose it all
         JScrollPane scrlOutput = new JScrollPane();
@@ -629,13 +639,13 @@ public class VisualEngine extends JFrame {
 
     private void onHelp()
     {
-        this.simulate( "help" );
+        this.execute( "help" );
     }
 
     private void onAbout()
     {
-        this.simulate( "about" );
-        this.simulate( "author" );
+        this.execute( "about" );
+        this.execute( "author" );
     }
 
     private void onInputEntered()
@@ -750,8 +760,8 @@ public class VisualEngine extends JFrame {
 
     private void onChangeFont()
     {
-        this.buildFontDialog(output.getFont().getSize());
-        this.dlgFont.setVisible(true);
+        this.buildFontDialog();
+        this.dlgFont.setVisible( true );
     }
 
     private void onExport()
@@ -816,7 +826,7 @@ public class VisualEngine extends JFrame {
         name = name.trim();
 
         if ( !name.isEmpty() ) {
-            this.simulate( order + name + '"' );
+            this.execute( order + name + '"' );
         }
     }
 
@@ -828,7 +838,7 @@ public class VisualEngine extends JFrame {
             int lastPointPos = objPath.lastIndexOf( '.' );
             String objParentPath = objPath.substring( 0, lastPointPos );
             String objName = objPath.substring( lastPointPos + 1 );
-            this.simulate( objParentPath + " erase \"" + objName + "\"" );
+            this.execute( objParentPath + " erase \"" + objName + "\"" );
         }
     }
 
@@ -853,7 +863,10 @@ public class VisualEngine extends JFrame {
     public void updateDiagram()
     {
         final int HorizontalSeparation = 25;
+        final int VerticalSeparation = 50;
         final Runtime rt = this.interpreter.getRuntime();
+
+        this.pnlCanvas.setFont( this.font );
 
         // Created unwanted objects to be shown
         HashSet<ObjectBag> doNotAdd = new HashSet<>();
@@ -868,9 +881,9 @@ public class VisualEngine extends JFrame {
 
         // Create boxes
         int xUpLevel = 20;
-        int yDownLevel = 20;
-        int upRow = 100;
-        int downRow = 200;
+        int xDownLevel = 20;
+        final int UpRowLevel = 150;
+        final int DownRowLevel = 300;
 
         // Inheritance root
         ObjectBox rootBox = new ObjectBox( rt.getAbsoluteParent(), 20, 20 );
@@ -878,7 +891,7 @@ public class VisualEngine extends JFrame {
         diagramBoxes.put( rt.getAbsoluteParent().getPath(), rootBox );
 
         // anObject
-        ObjectBox anObjectBox = new ObjectBox( rt.getAnObject(), xUpLevel, upRow );
+        ObjectBox anObjectBox = new ObjectBox( rt.getAnObject(), xUpLevel, UpRowLevel );
         xUpLevel += anObjectBox.prepareDrawing( pnlCanvas ).width + HorizontalSeparation;
         diagramBoxes.put( rt.getAnObject().getPath(), anObjectBox );
 
@@ -889,11 +902,11 @@ public class VisualEngine extends JFrame {
                 && !doNotAdd.contains( obj ) )
             {
                 int pos = xUpLevel;
-                int level = upRow;
+                int level = UpRowLevel;
 
                 if ( obj.getParentObject() != rt.getAbsoluteParent() ) {
-                    level = downRow;
-                    pos = yDownLevel;
+                    level = DownRowLevel;
+                    pos = xDownLevel;
                 }
 
                 ObjectBox box = new ObjectBox( obj, pos, level );
@@ -903,7 +916,7 @@ public class VisualEngine extends JFrame {
                 if ( obj.getParentObject() == rt.getAbsoluteParent() ) {
                     xUpLevel += dimension.width + HorizontalSeparation;
                 } else {
-                    yDownLevel += dimension.width + HorizontalSeparation;
+                    xDownLevel += dimension.width + HorizontalSeparation;
                 }
             }
         }
@@ -911,18 +924,17 @@ public class VisualEngine extends JFrame {
         // Calculate max height for first level
         int maxHeight = 0;
         for (ObjectBox box: diagramBoxes.values()) {
-            if ( box.getY() == upRow ) {
-                int height = box.getMeasuredDimension().height;
-                if ( height > maxHeight ) {
-                    maxHeight = height;
-                }
+            if ( box.getY() == UpRowLevel ) {
+                maxHeight = Math.max( maxHeight, box.getMeasuredDimension().height );
             }
         }
 
-        if ( maxHeight >= ( upRow - HorizontalSeparation ) ) {
+        // Recalculate vertical position, if needed
+        if ( ( UpRowLevel + maxHeight ) >= DownRowLevel ) {
+            final int newLevel = UpRowLevel + maxHeight + VerticalSeparation;
             for (ObjectBox box: diagramBoxes.values()) {
-                if ( box.getY() == downRow ) {
-                    box.setY( upRow + maxHeight + HorizontalSeparation );
+                if ( box.getY() == DownRowLevel ) {
+                    box.setY( newLevel );
                 }
             }
         }
@@ -941,7 +953,6 @@ public class VisualEngine extends JFrame {
         }
 
         // Draw boxes
-        this.pnlCanvas.setFontSize( this.fontSize );
         for(ObjectBox box: diagramBoxes.values()) {
             box.draw( this.pnlCanvas );
         }
@@ -963,7 +974,7 @@ public class VisualEngine extends JFrame {
         this.menuPpal.setEnabled( status );
     }
 
-    void simulate(String msg) {
+    void execute(String msg) {
         this.input.setSelectedItem( msg );
         this.onInputEntered();
     }
@@ -1043,12 +1054,10 @@ public class VisualEngine extends JFrame {
     private JSplitPane spMain;
     private JScrollPane scrCanvas;
     private Canvas pnlCanvas;
-    private BufferedImage biCanvas;
-    private JLabel lblCanvasFrame;
     private JToolBar tbIconBar;
     private JPopupMenu popup;
+    private Font font;
 
-    private int fontSize;
     private ImageIcon iconReset;
     private ImageIcon iconNew;
     private ImageIcon iconApp;

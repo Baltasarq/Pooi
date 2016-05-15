@@ -215,7 +215,7 @@ public class ObjectBag {
 
             toret.append( objPathPart.getName() );
 
-            if ( i < ( path.length -1) ) {
+            if ( i < ( path.length - 1 ) ) {
                 toret.append( '.' );
             }
         }

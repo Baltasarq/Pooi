@@ -13,6 +13,11 @@ import java.util.ArrayList;
  * Created by baltasarq on 27/04/16.
  */
 public class ObjectBox {
+    public static final int MaxVisibleLength = 25;
+    public static final int HorizontalPadding = 20;
+    public static final int VerticalPadding = 20;
+    public static final int VerticalSeparation = 2;
+
     public ObjectBox(ObjectBag obj)
     {
         this.obj = obj;
@@ -92,8 +97,8 @@ public class ObjectBox {
 
                         // Prepare info string, truncate if needed
                         String line = atr.getName() + ": " + value;
-                        if ( line.length() > 25 ) {
-                            line = line.substring( 0, 22 ) + "...";
+                        if ( line.length() > MaxVisibleLength ) {
+                            line = line.substring( 0, MaxVisibleLength ) + "...";
                         }
 
                         lines.add( line );
@@ -108,8 +113,10 @@ public class ObjectBox {
             }
         }
 
-        this.measuredDimension.width = canvas.getTextWidth( new String( new char[ maxLength + 2 ]).replace( "\0", "w" ) );
-        this.measuredDimension.height = ( canvas.getTextHeight() + 2 ) * ( 1 + lines.size() );
+        // Measure string sizes
+        FontMetrics metrics = canvas.getGraphics().getFontMetrics( canvas.getFont() );
+        this.measuredDimension.height = ( VerticalPadding * 2 ) + ( ( metrics.getHeight() + VerticalSeparation ) * lines.size() );
+        this.measuredDimension.width = ( HorizontalPadding * 2 ) + metrics.stringWidth( new String( new char[ maxLength ]).replace( "\0", "M" ) );
 
         this.infoLines = new String[ lines.size() ];
         lines.toArray( this.infoLines );
@@ -118,9 +125,9 @@ public class ObjectBox {
 
     public void draw(Canvas canvas, int x, int y)
     {
-        final int cr = canvas.getTextHeight() + 2;
-        int posX = x + 20;
-        int posY = y + 20;
+        final int cr = canvas.getGraphics().getFontMetrics( canvas.getFont() ).getHeight() + VerticalSeparation;
+        int posX = x + HorizontalPadding;
+        int posY = y + VerticalPadding;
 
         if ( this.measuredDimension == null ) {
             this.prepareDrawing( canvas );
