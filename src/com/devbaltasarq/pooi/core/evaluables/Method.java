@@ -62,6 +62,9 @@ public abstract class Method extends Member {
         return toret;
     }
 
+    /** @return Gets the body of the method as a representation in text */
+    public abstract String getMethodBodyAsString();
+
     /**
      * Copies the method, creating another exact copy of this one.
      * @return The copied method, as a Method object.

@@ -22,4 +22,12 @@ public final class ObjectRoot extends SysObject {
     {
         throw new InterpretError( "It is not possible to copy the root object" );
     }
+
+    @Override
+    /** @return the number of objects between this object and root, plus itself
+     *  This is the root, so... 0.
+     */
+    public int getInheritanceLevel() {
+        return 0;
+    }
 }

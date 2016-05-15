@@ -150,12 +150,11 @@ public class InterpretedMethod extends Method {
         return this.formalParams;
     }
 
-    public String toString()
-    {
+    @Override
+    public String getMethodBodyAsString() {
         StringBuilder toret = new StringBuilder();
 
-        toret.append( this.getName() );
-        toret.append( " = {" );
+        toret.append( "{" );
 
         // Add params
         for(String param: this.getFormalParams()) {
@@ -171,7 +170,17 @@ public class InterpretedMethod extends Method {
             toret.append( "; " );
         }
 
-        return toret.append( " }" ).toString();
+        toret.append( "}" );
+        return toret.toString();
+    }
+
+    public String toString()
+    {
+        StringBuilder toret = new StringBuilder();
+
+        toret.append( this.getName() );
+        toret.append( " = " );
+        return toret.append( this.getMethodBodyAsString() ).toString();
     }
 
     public static String createNewMethodId()

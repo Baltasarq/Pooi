@@ -32,7 +32,7 @@ public class NativeMethodSetName extends NativeMethod {
             throws InterpretError
     {
         final ObjectBag container = ref.getContainer();
-        final String oldName = ref.getPath();
+        final String oldName = ref.getName();
 
         // Changing name comprises two steps:
         // Removing it then adding it again

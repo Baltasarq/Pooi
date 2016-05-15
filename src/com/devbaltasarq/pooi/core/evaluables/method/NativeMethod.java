@@ -30,6 +30,7 @@ public abstract class NativeMethod extends Method {
      * Copy the needed NativeMethod by means of reflection
      * @return The copied method, as a Method object.
      */
+    @Override
     public NativeMethod copy()
     {
         NativeMethod toret = null;
@@ -47,8 +48,14 @@ public abstract class NativeMethod extends Method {
         return toret;
     }
 
+    @Override
+    public String getMethodBodyAsString() {
+        return "{: }";
+    }
+
+    @Override
     public String toString()
     {
-        return ( this.getName() + " = {: }" );
+        return ( this.getName() + " = " + this.getMethodBodyAsString() );
     }
 }

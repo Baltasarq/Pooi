@@ -347,13 +347,13 @@ public class VisualEngine extends JFrame {
         URL url;
 
         try {
-            url = this.getClass().getClassLoader().getResource(EtqIconApp);
+            url = this.getClass().getClassLoader().getResource( EtqIconApp );
             this.iconApp = new ImageIcon( url );
 
             url = this.getClass().getClassLoader().getResource( EtqIconReset );
             this.iconReset = new ImageIcon( url );
 
-            url = this.getClass().getClassLoader().getResource(EtqIconNew);
+            url = this.getClass().getClassLoader().getResource( EtqIconNew );
             this.iconNew = new ImageIcon( url );
 
         } catch(Exception exc)
@@ -665,7 +665,6 @@ public class VisualEngine extends JFrame {
 
                 // Interpret the order
                 this.output.append( interpreter.interpret( msg ) );
-                this.updateDiagram();
                 this.output.append( "\n\n" );
                 this.output.setCaretPosition( output.getText().length() );
 
@@ -687,6 +686,7 @@ public class VisualEngine extends JFrame {
         }
         finally {
             this.updateTree();
+            this.updateDiagram();
             this.input.setEnabled( true );
             this.input.requestFocus();
         }

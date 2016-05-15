@@ -15,29 +15,59 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.net.URL;
 
 /**
  * Created by Baltasar on 30/04/2016.
  */
 public class Inspector extends JDialog {
-    public static final int MaxCharsContents = 25;
+    public static final String EtqIconCopy = "com/devbaltasarq/pooi/res/copy.png";
+    public static final String EtqIconAddMethod = "com/devbaltasarq/pooi/res/addMethod.png";
+    public static final String EtqIconAddAttribute = "com/devbaltasarq/pooi/res/addAttribute.png";
 
     public Inspector(VisualEngine parent, ObjectBag obj) {
         try {
-            this.objRoot = Runtime.getRuntime().getAbsoluteParent();
+            this.rt = Runtime.getRuntime();
+            this.objRoot = rt.getAbsoluteParent();
         }
         catch(Exception exc) {
             this.setVisible( false );
-            JOptionPane.showMessageDialog( this, "Unexpected ERROR retrieveing root object" );
+            JOptionPane.showMessageDialog( this, "Unexpected ERROR retrieving root object" );
         }
 
         this.visualEngine = parent;
         this.obj = obj;
         this.setIconImage( parent.getIconImage() );
+        this.setFont( this.visualEngine.getFont() );
         this.build();
     }
 
+    /** Retries icons from jar for future use */
+    private void buildIcons()
+    {
+        URL url;
+
+        try {
+            url = this.getClass().getClassLoader().getResource( EtqIconCopy );
+            this.iconCopy = new ImageIcon( url );
+
+            url = this.getClass().getClassLoader().getResource( EtqIconAddMethod );
+            this.iconAddMethod = new ImageIcon( url );
+
+            url = this.getClass().getClassLoader().getResource( EtqIconAddAttribute );
+            this.iconAddAttribute = new ImageIcon( url );
+
+        } catch(Exception exc)
+        {
+            this.visualEngine.makeOutput( "\n[WARNING: failed to retrieve icons from jar]\n\n" );
+        }
+    }
+
     private void buildCloseButton() {
+        JPanel pnlClose = new JPanel();
+        FlowLayout flow = new FlowLayout();
+        flow.setAlignment( FlowLayout.RIGHT );
+        pnlClose.setLayout( flow );
         this.btClose = new JButton( "Close" );
         this.btClose.addActionListener(new ActionListener()
         {
@@ -46,7 +76,8 @@ public class Inspector extends JDialog {
                 Inspector.this.setVisible( false );
             }
         });
-        this.add( this.btClose, BorderLayout.PAGE_END );
+        pnlClose.add( this.btClose );
+        this.add( pnlClose, BorderLayout.PAGE_END );
     }
 
     private void buildActionArea() {
@@ -56,22 +87,47 @@ public class Inspector extends JDialog {
         this.pnlAction.setLayout( new BoxLayout( this.pnlAction, BoxLayout.PAGE_AXIS ) );
         this.add( scroll, BorderLayout.CENTER );
 
+        // Add panel for object's name
+        JPanel pnlName = new JPanel();
+        pnlName.setBorder( new EmptyBorder( 10, 10, 10, 10 ) );
+        pnlName.setLayout( new BoxLayout( pnlName, BoxLayout.LINE_AXIS ) );
+        JLabel lblObjectName = new JLabel( "Name" );
+        this.edObjectName = new JTextField();
+        edObjectName.setHorizontalAlignment( JTextField.RIGHT );
+        pnlName.add( lblObjectName );
+        pnlName.add( Box.createRigidArea( new Dimension( 10, 0 ) ) );
+        pnlName.add( edObjectName );
+        this.pnlAction.add( pnlName );
+        this.pnlAction.add( Box.createVerticalGlue() );
+        edObjectName.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                Inspector.this.visualEngine.execute(
+                            Inspector.this.getObj().getPath() + " rename \"" + edObjectName.getText() + "\"");
+                Inspector.this.updateObjectName();
+            }
+        });
+
         // Add buttons for management
         JPanel pnlButtons = new JPanel();
         pnlButtons.setBorder( new EmptyBorder( 10, 10, 10, 10 ) );
         pnlButtons.setLayout( new BoxLayout( pnlButtons, BoxLayout.LINE_AXIS ) );
-        JButton btAddAttribute = new JButton( "+Attr" );
-        JButton btAddMethod = new JButton( "+Mth" );
+        JButton btAddAttribute = new JButton( this.iconAddAttribute );
+        btAddAttribute.setToolTipText( "Add attribute" );
+        JButton btAddMethod = new JButton( this.iconAddMethod );
+        btAddMethod.setToolTipText( "Add method" );
         JButton btRename = new JButton( "Ren" );
-        JButton btCopy = new JButton( "Copy" );
+        JButton btCopy = new JButton( this.iconCopy );
+        btCopy.setToolTipText( "Copy this object" );
         pnlButtons.add( btAddAttribute );
-        pnlButtons.add( new JSeparator( SwingConstants.HORIZONTAL ) );
+        pnlButtons.add( Box.createHorizontalGlue() );
         pnlButtons.add( btAddMethod );
-        pnlButtons.add( new JSeparator( SwingConstants.HORIZONTAL ) );
+        pnlButtons.add( Box.createHorizontalGlue() );
         pnlButtons.add( btRename );
-        pnlButtons.add( new JSeparator( SwingConstants.HORIZONTAL ) );
+        pnlButtons.add( Box.createHorizontalGlue() );
         pnlButtons.add( btCopy );
-        pnlAction.add( pnlButtons );
+        this.pnlAction.add( pnlButtons );
+        this.pnlAction.add( Box.createVerticalGlue() );
 
         btAddAttribute.addActionListener( new ActionListener() {
             @Override
@@ -102,22 +158,29 @@ public class Inspector extends JDialog {
         } );
 
         // Add controls for each attribute
+        final Attribute[] attrs = this.rt.getRoot().getAttributes();
+        final String[] objsNames = new String[ attrs.length ];
+        for(int i = 0; i < attrs.length; ++i) {
+            objsNames[ i ] = attrs[ i ].getName();
+        }
+
         for(Attribute atr: this.getObj().getAttributes()) {
             ObjectBag objDest = atr.getReference();
             JPanel panel = new JPanel();
             panel.setBorder(new EmptyBorder( 10, 10, 10, 10 ) );
             panel.setLayout( new BoxLayout( panel, BoxLayout.LINE_AXIS ) );
-            JLabel lblContents = new JLabel( objDest.getName() );
+            JComboBox cbContents = new JComboBox( objsNames );
+            ( (JLabel)cbContents.getRenderer() ).setHorizontalAlignment( JLabel.RIGHT );
+            cbContents.setFont( this.visualEngine.getFont() );
+            cbContents.setEditable( true );
+            cbContents.getModel().setSelectedItem( objDest.getNameOrValueAsString() );
             JLabel lblName = new JLabel( atr.getName() );
 
-            if ( objDest instanceof ValueObject ) {
-                lblContents.setText( prepareToShowInWindow( objDest.toString() ) );
-            }
-
             panel.add( lblName );
-            panel.add( new JSeparator( SwingConstants.HORIZONTAL ) );
-            panel.add( lblContents );
+            panel.add( Box.createRigidArea( new Dimension( 10, 0 ) ) );
+            panel.add( cbContents );
             this.pnlAction.add( panel );
+            this.pnlAction.add( Box.createVerticalGlue() );
             lblName.addMouseListener(new MouseListener() {
                 @Override
                 public void mouseClicked(MouseEvent mouseEvent) {
@@ -144,30 +207,10 @@ public class Inspector extends JDialog {
                 }
             });
 
-            lblContents.addMouseListener( new MouseListener() {
+            cbContents.addActionListener( new ActionListener() {
                 @Override
-                public void mouseClicked(MouseEvent e) {
-
-                }
-
-                @Override
-                public void mousePressed(MouseEvent e) {
-
-                }
-
-                @Override
-                public void mouseReleased(MouseEvent e) {
-                    Inspector.this.changeAttributeValue( lblName.getText(), lblContents.getText()  );
-                }
-
-                @Override
-                public void mouseEntered(MouseEvent e) {
-
-                }
-
-                @Override
-                public void mouseExited(MouseEvent e) {
-
+                public void actionPerformed(ActionEvent evt) {
+                    visualEngine.execute( obj.getPath() + "." + lblName.getText() + " = " + (String) cbContents.getModel().getSelectedItem() );
                 }
             } );
         }
@@ -180,11 +223,13 @@ public class Inspector extends JDialog {
                 panel.setBorder( new EmptyBorder( 10, 10, 10, 10 ) );
                 panel.setLayout( new BoxLayout( panel, BoxLayout.LINE_AXIS ) );
                 JLabel lblName = new JLabel( mth.getName() + "()" );
-                JLabel lblContents = new JLabel( "{:}" );
+                JTextField edContents = new JTextField( mth.getMethodBodyAsString() );
+                edContents.setHorizontalAlignment( JTextField.RIGHT );
                 panel.add( lblName );
-                panel.add( new JSeparator( SwingConstants.HORIZONTAL ) );
-                panel.add( lblContents );
+                panel.add( Box.createRigidArea( new Dimension( 10, 0 ) ) );
+                panel.add( edContents );
                 this.pnlAction.add( panel );
+                this.pnlAction.add( Box.createVerticalGlue() );
                 lblName.addMouseListener( new MouseListener() {
                     @Override
                     public void mouseClicked(MouseEvent mouseEvent) {
@@ -212,7 +257,7 @@ public class Inspector extends JDialog {
                     }
                 } );
 
-                lblContents.addMouseListener( new MouseListener() {
+                edContents.addMouseListener( new MouseListener() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
 
@@ -225,7 +270,7 @@ public class Inspector extends JDialog {
 
                     @Override
                     public void mouseReleased(MouseEvent e) {
-                        Inspector.this.changeMethod( lblName.getText(), lblContents.getText() );
+                        Inspector.this.changeMethod( lblName.getText(), edContents.getText() );
                     }
 
                     @Override
@@ -248,15 +293,21 @@ public class Inspector extends JDialog {
     private void build() {
         this.setLayout( new BorderLayout( 5, 5 ) );
         this.setLocationByPlatform( true  );
+        this.buildIcons();
         this.buildCloseButton();
         this.buildActionArea();
 
-        this.setTitle( this.obj.getPath() );
         this.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
         this.setMinimumSize( new Dimension( 300, 200 ) );
         this.setModal( true );
         this.pack();
+        this.updateObjectName();
         this.setVisible( true );
+    }
+
+    private void updateObjectName() {
+        this.setTitle( this.getObj().getPath() + " - Inspector" );
+        this.edObjectName.setText( this.getObj().getName() );
     }
 
     private void launchFieldInspection(String id) {
@@ -341,35 +392,6 @@ public class Inspector extends JDialog {
         }
     }
 
-    private void changeAttributeValue(String attrName, String currentValue) {
-        try {
-            // Get the names of the available objects
-            final Runtime rt = Runtime.getRuntime();
-            Attribute[] attrs = rt.getRoot().getAttributes();
-            String[] objsNames = new String[ attrs.length + 1 ];
-            objsNames[ 0 ] = "0";
-            for(int i = 0; i < attrs.length; ++i) {
-                objsNames[ i + 1 ] = attrs[ i ].getName();
-            }
-
-            // Create the combo box dialog
-            JComboBox cbObjectNames = new JComboBox( objsNames );
-            cbObjectNames.setEditable( true );
-            JOptionPane.showMessageDialog( this, cbObjectNames, attrName + "'s value:", JOptionPane.QUESTION_MESSAGE);
-
-            String newValue = (String) cbObjectNames.getSelectedItem();
-            if ( newValue != null ) {
-                newValue = newValue.trim();
-                if ( newValue.length() > 0 ) {
-                    visualEngine.execute( obj.getPath() + "." + attrName + " = " + newValue );
-                    this.setVisible( false );
-                }
-            }
-        } catch(InterpretError exc) {
-            visualEngine.makeOutput( "Interpreter error: " + exc.getMessage() );
-        }
-    }
-
     public ObjectBag getObj() {
         return this.obj;
     }
@@ -435,22 +457,15 @@ public class Inspector extends JDialog {
         return;
     }
 
-    /** Prepares a string to be shown in a window (no CR's...) */
-    public static String prepareToShowInWindow(String msg) {
-        if ( msg.length() > MaxCharsContents ) {
-            msg = msg.substring( 0, MaxCharsContents ) + "...\"";
-        }
-
-        msg = msg.replace( '\n', ' ' );
-        msg = msg.replace( '\t', ' ' );
-
-        return msg;
-    }
-
     private ObjectBag obj;
+    private Runtime rt;
+    private ObjectBag objRoot;
 
     private JButton btClose;
+    private JTextField edObjectName;
     private JPanel pnlAction;
+    private ImageIcon iconCopy;
+    private ImageIcon iconAddMethod;
+    private ImageIcon iconAddAttribute;
     private VisualEngine visualEngine;
-    private ObjectBag objRoot;
 }

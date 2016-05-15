@@ -245,6 +245,32 @@ public class ObjectBag {
    }
 
     /**
+     * Returns the name of the object or its value, if its an int, real,...
+     * @return The name of the object or its value as a String.
+     */
+    public String getNameOrValueAsString() {
+        String toret = this.getName();
+
+        if ( this instanceof ValueObject ) {
+            toret = this.toString();
+        }
+
+        return toret;
+    }
+
+    /** @return the number of objects between this object and root, plus itself */
+    public int getInheritanceLevel() {
+        int toret = 1;
+        ObjectBag obj = this.getParentObject();
+
+        while ( !( obj instanceof ObjectRoot ) ) {
+            ++toret;
+        }
+
+        return toret;
+    }
+
+    /**
      * Returns all the recursive info in the object, as a single String
      * It is important here to allow attributes to be included in the listing just once,
      * since a member in a derived object overrides the same member in a parent

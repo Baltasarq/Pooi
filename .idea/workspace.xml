@@ -7,12 +7,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8a88262f-88f4-4f1f-8fed-10700b7b5117" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/TemplateEngine.java" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/ObjectBag.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/ObjectBag.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/Canvas.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/Canvas.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/Method.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/Method.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/InterpretedMethod.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/InterpretedMethod.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/NativeMethod.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/NativeMethod.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodSetName.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodSetName.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/objs/ObjectRoot.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/objs/ObjectRoot.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/Inspector.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/Inspector.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/ObjectBox.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/ObjectBox.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/VisualEngine.java" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/VisualEngine.java" />
     </list>
     <ignored path="pooi.iws" />
@@ -77,12 +79,92 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Inspector.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Inspector.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/Inspector.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="131">
-              <caret line="350" column="51" selection-start-line="350" selection-start-column="51" selection-end-line="350" selection-end-column="51" />
+            <state relative-caret-position="155">
+              <caret line="305" column="0" selection-start-line="305" selection-start-column="0" selection-end-line="305" selection-end-column="0" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ObjectBag.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/ObjectBag.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="132">
+              <caret line="134" column="0" selection-start-line="134" selection-start-column="0" selection-end-line="134" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="NativeMethodSetName.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodSetName.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="120">
+              <caret line="44" column="9" selection-start-line="44" selection-start-column="9" selection-end-line="44" selection-end-column="9" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Interpreter.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/Interpreter.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="278">
+              <caret line="100" column="0" selection-start-line="100" selection-start-column="0" selection-end-line="100" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Reserved.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/Reserved.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="273">
+              <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+              <folding>
+                <element signature="e#1117#1118#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="InterpretedMethod.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/InterpretedMethod.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="182">
+              <caret line="159" column="31" selection-start-line="159" selection-start-column="31" selection-end-line="159" selection-end-column="31" />
+              <folding>
+                <element signature="e#3796#3797#0" expanded="true" />
+                <element signature="e#3881#3882#0" expanded="true" />
+                <element signature="e#4170#4171#0" expanded="true" />
+                <element signature="e#4210#4211#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Method.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/Method.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="368">
+              <caret line="65" column="16" selection-start-line="65" selection-start-column="16" selection-end-line="65" selection-end-column="16" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ObjectRoot.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/objs/ObjectRoot.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="343">
+              <caret line="28" column="7" selection-start-line="28" selection-start-column="7" selection-end-line="28" selection-end-column="7" />
+              <folding>
+                <element signature="e#791#792#0" expanded="true" />
+                <element signature="e#815#816#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -90,45 +172,10 @@
       <file leaf-file-name="VisualEngine.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/VisualEngine.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="190">
-              <caret line="37" column="44" selection-start-line="37" selection-start-column="44" selection-end-line="37" selection-end-column="44" />
+            <state relative-caret-position="323">
+              <caret line="688" column="33" selection-start-line="688" selection-start-column="33" selection-end-line="688" selection-end-column="33" />
               <folding>
                 <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Runtime.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/Runtime.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="527">
-              <caret line="42" column="30" selection-start-line="42" selection-start-column="30" selection-end-line="42" selection-end-column="30" />
-              <folding>
-                <element signature="e#11815#11816#0" expanded="true" />
-                <element signature="e#11852#11853#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Interpreter.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/Interpreter.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3060">
-              <caret line="188" column="24" selection-start-line="188" selection-start-column="24" selection-end-line="188" selection-end-column="24" />
-              <folding>
-                <element signature="imports" expanded="false" />
-                <element signature="e#9242#9243#0" expanded="false" />
-                <element signature="e#9270#9271#0" expanded="false" />
-                <element signature="e#10437#10438#0" expanded="false" />
-                <element signature="e#10474#10475#0" expanded="false" />
-                <element signature="e#10515#10516#0" expanded="false" />
-                <element signature="e#10551#10552#0" expanded="false" />
-                <element signature="e#10591#10592#0" expanded="false" />
-                <element signature="e#10626#10627#0" expanded="false" />
-                <element signature="e#10665#10666#0" expanded="false" />
-                <element signature="e#10695#10696#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -137,50 +184,11 @@
       <file leaf-file-name="ObjectBox.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/ObjectBox.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
-              <caret line="21" column="5" selection-start-line="21" selection-start-column="5" selection-end-line="21" selection-end-column="5" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Canvas.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/Canvas.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="374">
-              <caret line="24" column="47" selection-start-line="24" selection-start-column="47" selection-end-line="24" selection-end-column="47" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="NativeMethodStrToReal.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodStrToReal.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="748">
-              <caret line="54" column="0" selection-start-line="54" selection-start-column="0" selection-end-line="54" selection-end-column="0" />
+            <state relative-caret-position="284">
+              <caret line="132" column="42" selection-start-line="132" selection-start-column="42" selection-end-line="132" selection-end-column="42" />
               <folding>
-                <element signature="imports" expanded="false" />
-                <element signature="e#571#572#0" expanded="false" />
-                <element signature="e#611#612#0" expanded="false" />
-                <element signature="e#1401#1402#0" expanded="false" />
-                <element signature="e#1425#1426#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="NativeMethodStrTrim.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodStrTrim.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="629">
-              <caret line="48" column="0" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
-              <folding>
-                <element signature="imports" expanded="false" />
-                <element signature="e#623#624#0" expanded="false" />
-                <element signature="e#661#662#0" expanded="false" />
-                <element signature="e#1322#1323#0" expanded="false" />
-                <element signature="e#1346#1347#0" expanded="false" />
+                <element signature="e#1421#1422#0" expanded="true" />
+                <element signature="e#1473#1474#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -211,10 +219,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodCopy.java" />
-        <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodCreateChild.java" />
-        <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodErase.java" />
-        <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodGetName.java" />
         <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodGetPath.java" />
         <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodIntAbs.java" />
         <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodIntDivideBy.java" />
@@ -238,7 +242,6 @@
         <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodRealSubstract.java" />
         <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodRealSum.java" />
         <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodSet.java" />
-        <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodSetName.java" />
         <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodStr.java" />
         <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodStrCharAt.java" />
         <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodStrConcat.java" />
@@ -258,10 +261,15 @@
         <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodStrTrim.java" />
         <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/Gui.java" />
         <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/Canvas.java" />
-        <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/ObjectBag.java" />
         <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/ObjectBox.java" />
-        <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/VisualEngine.java" />
+        <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/ObjectBag.java" />
+        <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/objs/ObjectRoot.java" />
+        <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/InterpretedMethod.java" />
+        <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/Method.java" />
+        <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/NativeMethod.java" />
         <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/Inspector.java" />
+        <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/VisualEngine.java" />
+        <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodSetName.java" />
       </list>
     </option>
   </component>
@@ -315,7 +323,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="PackagesPane">
         <subPane>
           <PATH>
@@ -450,6 +457,32 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="objs" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pooi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Pooi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="pooi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="evaluables" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -520,6 +553,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
       <pane id="Scope">
         <subPane subId="Project Files">
           <PATH>
@@ -1113,7 +1147,9 @@
       <workItem from="1462995756099" duration="16000" />
       <workItem from="1463223467038" duration="8700000" />
       <workItem from="1463263273101" duration="6408000" />
-      <workItem from="1463295137455" duration="1844000" />
+      <workItem from="1463295137455" duration="1886000" />
+      <workItem from="1463312680782" duration="795000" />
+      <workItem from="1463341544828" duration="8031000" />
     </task>
     <task id="LOCAL-00002" summary="Bugfix: last command last in history. Added samples">
       <created>1453802639057</created>
@@ -1157,11 +1193,18 @@
       <option name="project" value="LOCAL" />
       <updated>1462266742810</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Better diagram; change attribute now shows available objects&#10;">
+      <created>1463297020632</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1463297020632</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="119280000" />
+    <option name="totallyTimeSpent" value="128148000" />
   </component>
   <component name="TodoView" selected-index="0">
     <todo-panel id="selected-file">
@@ -1199,9 +1242,10 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32937685" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23174603" sideWeight="0.4980916" order="3" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23174603" sideWeight="0.48282441" order="3" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23174603" sideWeight="0.5019084" order="6" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32258064" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23174603" sideWeight="0.51717556" order="6" side_tool="true" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.8970297" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32955405" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
@@ -1218,7 +1262,6 @@
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Problems" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32258064" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -1240,57 +1283,35 @@
     <MESSAGE value="Drafted new inspector&#10;" />
     <MESSAGE value="Improved inspector&#10;" />
     <MESSAGE value="Inspector finished&#10;" />
-    <option name="LAST_COMMIT_MESSAGE" value="Inspector finished&#10;" />
+    <MESSAGE value="Better diagram; change attribute now shows available objects&#10;" />
+    <option name="LAST_COMMIT_MESSAGE" value="Better diagram; change attribute now shows available objects&#10;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/ObjectBag.java</url>
+          <line>134</line>
+          <properties />
+          <option name="timeStamp" value="25" />
+        </line-breakpoint>
+      </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="22" />
+      <option name="time" value="26" />
     </breakpoint-manager>
-    <watches-manager />
+    <watches-manager>
+      <configuration name="Application">
+        <watch expression="this.getObj()" language="JAVA" custom="" />
+      </configuration>
+    </watches-manager>
   </component>
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodGetName.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="33" column="15" selection-start-line="33" selection-start-column="15" selection-end-line="33" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodGetPath.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="33" column="5" selection-start-line="33" selection-start-column="5" selection-end-line="33" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodIntAbs.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="43" column="5" selection-start-line="43" selection-start-column="5" selection-end-line="43" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodIntDivideBy.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="80" column="16" selection-start-line="80" selection-start-column="16" selection-end-line="80" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodIntIsEqualTo.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="64" column="16" selection-start-line="64" selection-start-column="16" selection-end-line="64" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodIntIsGreaterThan.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1424,24 +1445,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodSetName.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="58" column="5" selection-start-line="58" selection-start-column="5" selection-end-line="58" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodStr.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="35" column="16" selection-start-line="35" selection-start-column="16" selection-end-line="35" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodStrCharAt.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="69" column="5" selection-start-line="69" selection-start-column="5" selection-end-line="69" selection-end-column="5" />
         </state>
       </provider>
     </entry>
@@ -1544,13 +1551,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/ObjectBag.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="275">
-          <caret line="226" column="4" selection-start-line="226" selection-start-column="4" selection-end-line="226" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/Runtime.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="527">
@@ -1558,26 +1558,6 @@
           <folding>
             <element signature="e#11815#11816#0" expanded="true" />
             <element signature="e#11852#11853#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/Interpreter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3060">
-          <caret line="188" column="24" selection-start-line="188" selection-start-column="24" selection-end-line="188" selection-end-column="24" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#9242#9243#0" expanded="false" />
-            <element signature="e#9270#9271#0" expanded="false" />
-            <element signature="e#10437#10438#0" expanded="false" />
-            <element signature="e#10474#10475#0" expanded="false" />
-            <element signature="e#10515#10516#0" expanded="false" />
-            <element signature="e#10551#10552#0" expanded="false" />
-            <element signature="e#10591#10592#0" expanded="false" />
-            <element signature="e#10626#10627#0" expanded="false" />
-            <element signature="e#10665#10666#0" expanded="false" />
-            <element signature="e#10695#10696#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1594,13 +1574,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="748">
           <caret line="54" column="0" selection-start-line="54" selection-start-column="0" selection-end-line="54" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#571#572#0" expanded="false" />
-            <element signature="e#611#612#0" expanded="false" />
-            <element signature="e#1401#1402#0" expanded="false" />
-            <element signature="e#1425#1426#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1620,26 +1594,116 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/ObjectBox.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="21" column="5" selection-start-line="21" selection-start-column="5" selection-end-line="21" selection-end-column="5" />
+        <state relative-caret-position="284">
+          <caret line="132" column="42" selection-start-line="132" selection-start-column="42" selection-end-line="132" selection-end-column="42" />
+          <folding>
+            <element signature="e#1421#1422#0" expanded="true" />
+            <element signature="e#1473#1474#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/objs/ObjectRoot.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="343">
+          <caret line="28" column="7" selection-start-line="28" selection-start-column="7" selection-end-line="28" selection-end-column="7" />
+          <folding>
+            <element signature="e#791#792#0" expanded="true" />
+            <element signature="e#815#816#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/InterpretedMethod.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="182">
+          <caret line="159" column="31" selection-start-line="159" selection-start-column="31" selection-end-line="159" selection-end-column="31" />
+          <folding>
+            <element signature="e#3796#3797#0" expanded="true" />
+            <element signature="e#3881#3882#0" expanded="true" />
+            <element signature="e#4170#4171#0" expanded="true" />
+            <element signature="e#4210#4211#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodStrCharAt.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="15" column="7" selection-start-line="15" selection-start-column="7" selection-end-line="15" selection-end-column="7" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/NativeMethod.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="419">
+          <caret line="55" column="13" selection-start-line="55" selection-start-column="13" selection-end-line="55" selection-end-column="13" />
+          <folding>
+            <element signature="e#1374#1375#0" expanded="false" />
+            <element signature="e#1403#1404#0" expanded="false" />
+            <element signature="e#1453#1454#0" expanded="false" />
+            <element signature="e#1533#1534#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/Method.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="368">
+          <caret line="65" column="16" selection-start-line="65" selection-start-column="16" selection-end-line="65" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/Inspector.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="155">
+          <caret line="305" column="0" selection-start-line="305" selection-start-column="0" selection-end-line="305" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/VisualEngine.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="190">
-          <caret line="37" column="44" selection-start-line="37" selection-start-column="44" selection-end-line="37" selection-end-column="44" />
+        <state relative-caret-position="323">
+          <caret line="688" column="33" selection-start-line="688" selection-start-column="33" selection-end-line="688" selection-end-column="33" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/Inspector.java">
+    <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/Reserved.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="131">
-          <caret line="350" column="51" selection-start-line="350" selection-start-column="51" selection-end-line="350" selection-end-column="51" />
+        <state relative-caret-position="273">
+          <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+          <folding>
+            <element signature="e#1117#1118#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/method/nativemethods/NativeMethodSetName.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="44" column="9" selection-start-line="44" selection-start-column="9" selection-end-line="44" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/ObjectBag.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="134" column="0" selection-start-line="134" selection-start-column="0" selection-end-line="134" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/Interpreter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="278">
+          <caret line="100" column="0" selection-start-line="100" selection-start-column="0" selection-end-line="100" selection-end-column="0" />
           <folding />
         </state>
       </provider>
