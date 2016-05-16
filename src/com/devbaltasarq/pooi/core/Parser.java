@@ -8,9 +8,9 @@ import com.devbaltasarq.pooi.core.evaluables.literals.BoolLiteral;
 import com.devbaltasarq.pooi.core.evaluables.literals.IntLiteral;
 import com.devbaltasarq.pooi.core.evaluables.literals.RealLiteral;
 import com.devbaltasarq.pooi.core.evaluables.literals.StrLiteral;
-import com.devbaltasarq.pooi.core.evaluables.method.InterpretedMethod;
-import com.devbaltasarq.pooi.core.evaluables.method.nativemethods.NativeMethodSet;
-import com.devbaltasarq.pooi.core.evaluables.method.nativemethods.NativeMethodStr;
+import com.devbaltasarq.pooi.core.evaluables.methods.InterpretedMethod;
+import com.devbaltasarq.pooi.core.evaluables.methods.nativemethods.NativeMethodSet;
+import com.devbaltasarq.pooi.core.evaluables.methods.nativemethods.NativeMethodStr;
 import com.devbaltasarq.pooi.core.exceps.InterpretError;
 
 import java.util.ArrayList;

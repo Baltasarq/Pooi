@@ -62,6 +62,27 @@ public abstract class Method extends Member {
         return toret;
     }
 
+    /**
+     * Returns a list with the formal parameters of the method
+     * @return a primitive vector of String, containing the formal parameters
+     */
+    public abstract String[] getFormalParameters();
+
+    /**
+     * Returns a string with the formal parameters of the method
+     * @return a String, with the formal parameters
+     */
+    public String getFormalParametersAsString() {
+        StringBuilder toret = new StringBuilder();
+
+        for(String param: this.getFormalParameters()) {
+            toret.append( toret );
+            toret.append( ' ' );
+        }
+
+        return toret.toString().trim();
+    }
+
     /** @return Gets the body of the method as a representation in text */
     public abstract String getMethodBodyAsString();
 

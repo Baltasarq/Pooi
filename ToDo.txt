@@ -3,4 +3,3 @@
 - Needs Math object with sqr, sqrt, PI.
 - Needs "os" object with import()... These could be imported objects stored in a special dir (part of the jar) that could be imported.
 - Needs libraries, such as Complex. This could be provided with import, and loaded as any transcription.
-- Store the last directory

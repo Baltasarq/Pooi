@@ -5,8 +5,11 @@ import com.devbaltasarq.pooi.core.ObjectBag;
 import com.devbaltasarq.pooi.core.Runtime;
 import com.devbaltasarq.pooi.core.evaluables.Attribute;
 import com.devbaltasarq.pooi.core.evaluables.Method;
-import com.devbaltasarq.pooi.core.exceps.InterpretError;
-import com.devbaltasarq.pooi.core.objs.ValueObject;
+import com.devbaltasarq.pooi.core.evaluables.ParentAttribute;
+import com.devbaltasarq.pooi.core.evaluables.methods.nativemethods.NativeMethodList;
+import com.devbaltasarq.pooi.core.evaluables.methods.nativemethods.NativeMethodStr;
+import com.devbaltasarq.pooi.core.objs.ObjectParent;
+import com.devbaltasarq.pooi.core.objs.ObjectRoot;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -16,6 +19,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.net.URL;
+import java.util.HashSet;
 
 /**
  * Created by Baltasar on 30/04/2016.
@@ -24,8 +28,11 @@ public class Inspector extends JDialog {
     public static final String EtqIconCopy = "com/devbaltasarq/pooi/res/copy.png";
     public static final String EtqIconAddMethod = "com/devbaltasarq/pooi/res/addMethod.png";
     public static final String EtqIconAddAttribute = "com/devbaltasarq/pooi/res/addAttribute.png";
+    public static final String EtqIconExecute = "com/devbaltasarq/pooi/res/execute.png";
+    public static final String EtqIconDelete = "com/devbaltasarq/pooi/res/delete.png";
 
     public Inspector(VisualEngine parent, ObjectBag obj) {
+        this.beingBuilt = true;
         try {
             this.rt = Runtime.getRuntime();
             this.objRoot = rt.getAbsoluteParent();
@@ -40,6 +47,8 @@ public class Inspector extends JDialog {
         this.setIconImage( parent.getIconImage() );
         this.setFont( this.visualEngine.getFont() );
         this.build();
+        this.beingBuilt = false;
+        this.setVisible( true );
     }
 
     /** Retries icons from jar for future use */
@@ -56,6 +65,12 @@ public class Inspector extends JDialog {
 
             url = this.getClass().getClassLoader().getResource( EtqIconAddAttribute );
             this.iconAddAttribute = new ImageIcon( url );
+
+            url = this.getClass().getClassLoader().getResource( EtqIconExecute );
+            this.iconExecute = new ImageIcon( url );
+
+            url = this.getClass().getClassLoader().getResource( EtqIconDelete );
+            this.iconDelete = new ImageIcon( url );
 
         } catch(Exception exc)
         {
@@ -80,13 +95,7 @@ public class Inspector extends JDialog {
         this.add( pnlClose, BorderLayout.PAGE_END );
     }
 
-    private void buildActionArea() {
-        // Create a box layout in the center
-        this.pnlAction = new JPanel();
-        JScrollPane scroll = new JScrollPane( this.pnlAction );
-        this.pnlAction.setLayout( new BoxLayout( this.pnlAction, BoxLayout.PAGE_AXIS ) );
-        this.add( scroll, BorderLayout.CENTER );
-
+    private void buildBasicAttrsPanel() {
         // Add panel for object's name
         JPanel pnlName = new JPanel();
         pnlName.setBorder( new EmptyBorder( 10, 10, 10, 10 ) );
@@ -99,16 +108,48 @@ public class Inspector extends JDialog {
         pnlName.add( edObjectName );
         this.pnlAction.add( pnlName );
         this.pnlAction.add( Box.createVerticalGlue() );
-        edObjectName.addActionListener(new ActionListener() {
+        this.edObjectName.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                Inspector.this.visualEngine.execute(
-                            Inspector.this.getObj().getPath() + " rename \"" + edObjectName.getText() + "\"");
-                Inspector.this.updateObjectName();
+                if ( !Inspector.this.beingBuilt ) {
+                    Inspector.this.visualEngine.execute(
+                        Inspector.this.getObj().getPath() + " rename \"" + edObjectName.getText() + "\"" );
+                    Inspector.this.updateObjectBasicAttributes();
+                }
             }
         });
 
-        // Add buttons for management
+        // Add panel for parent attribute
+        if ( !( this.getObj() instanceof ObjectParent ) ) {
+            JPanel pnlAttrParent = new JPanel();
+            pnlAttrParent.setBorder( new EmptyBorder( 10, 10, 10, 10 ) );
+            pnlAttrParent.setLayout( new BoxLayout( pnlAttrParent, BoxLayout.LINE_AXIS ) );
+            JLabel lblParentAttributeName = new JLabel( "Parent" );
+            this.cbParent = new JComboBox( this.availableObjectsNames );
+            ( (JLabel) this.cbParent.getRenderer() ).setHorizontalAlignment( JLabel.RIGHT );
+            ( (JTextField) this.cbParent.getEditor().getEditorComponent() ).setHorizontalAlignment( JTextField.RIGHT  );
+            this.cbParent.setFont( this.visualEngine.getFont() );
+            this.cbParent.setEditable( true );
+            this.cbParent.getModel().setSelectedItem( this.getObj().getParentObject().getNameOrValueAsString() );
+            pnlAttrParent.add( lblParentAttributeName );
+            pnlAttrParent.add( Box.createRigidArea( new Dimension( 10, 0 ) ) );
+            pnlAttrParent.add( this.cbParent );
+            this.pnlAction.add( pnlAttrParent );
+            this.pnlAction.add( Box.createVerticalGlue() );
+            this.cbParent.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent actionEvent) {
+                    if ( !Inspector.this.beingBuilt ) {
+                        Inspector.this.visualEngine.execute(
+                            Inspector.this.getObj().getPath() + ".parent = " + cbParent.getSelectedItem() );
+                        Inspector.this.updateObjectBasicAttributes();
+                    }
+                }
+            });
+        }
+    }
+
+    private void buildManagementButtonsPanel() {
         JPanel pnlButtons = new JPanel();
         pnlButtons.setBorder( new EmptyBorder( 10, 10, 10, 10 ) );
         pnlButtons.setLayout( new BoxLayout( pnlButtons, BoxLayout.LINE_AXIS ) );
@@ -116,14 +157,11 @@ public class Inspector extends JDialog {
         btAddAttribute.setToolTipText( "Add attribute" );
         JButton btAddMethod = new JButton( this.iconAddMethod );
         btAddMethod.setToolTipText( "Add method" );
-        JButton btRename = new JButton( "Ren" );
         JButton btCopy = new JButton( this.iconCopy );
         btCopy.setToolTipText( "Copy this object" );
         pnlButtons.add( btAddAttribute );
         pnlButtons.add( Box.createHorizontalGlue() );
         pnlButtons.add( btAddMethod );
-        pnlButtons.add( Box.createHorizontalGlue() );
-        pnlButtons.add( btRename );
         pnlButtons.add( Box.createHorizontalGlue() );
         pnlButtons.add( btCopy );
         this.pnlAction.add( pnlButtons );
@@ -132,21 +170,20 @@ public class Inspector extends JDialog {
         btAddAttribute.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Inspector.this.addAttribute();
+                String attrName = "attr" + ( Inspector.this.getObj().getNumberOfAttributes()  + 1 );
+                Inspector.this.visualEngine.execute( getObj().getPath() + "." + attrName + " = 0" );
+                Inspector.this.addAttributePanel( getObj().lookUpAttribute( attrName ) );
+                Inspector.this.pack();
             }
         } );
 
         btAddMethod.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Inspector.this.addMethod();
-            }
-        } );
-
-        btRename.addActionListener( new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Inspector.this.renameObject();
+                String mthName = "mth" + ( Inspector.this.getObj().getNumberOfMethods() + 1 );
+                Inspector.this.visualEngine.execute( getObj().getPath() + "." + mthName + " = {:}" );
+                Inspector.this.addMethodPanel( getObj().localLookUpMethod( mthName ) );
+                Inspector.this.pack();
             }
         } );
 
@@ -156,133 +193,172 @@ public class Inspector extends JDialog {
                 Inspector.this.copyObject();
             }
         } );
+    }
 
-        // Add controls for each attribute
-        final Attribute[] attrs = this.rt.getRoot().getAttributes();
-        final String[] objsNames = new String[ attrs.length ];
-        for(int i = 0; i < attrs.length; ++i) {
-            objsNames[ i ] = attrs[ i ].getName();
+    private void addAttributePanel(Attribute attr) {
+        ObjectBag objDest = attr.getReference();
+        JPanel panel = new JPanel();
+        panel.setBorder(new EmptyBorder( 10, 10, 10, 10 ) );
+        panel.setLayout( new BoxLayout( panel, BoxLayout.LINE_AXIS ) );
+
+        JButton btDelete = new JButton( this.iconDelete );
+        btDelete.setToolTipText( "Delete attribute" );
+        JComboBox cbContents = new JComboBox( this.availableObjectsNames );
+        ( (JLabel) cbContents.getRenderer() ).setHorizontalAlignment( JLabel.RIGHT );
+        ( (JTextField) cbContents.getEditor().getEditorComponent() ).setHorizontalAlignment( JTextField.RIGHT  );
+        cbContents.setFont( this.visualEngine.getFont() );
+        cbContents.setEditable( true );
+        cbContents.getModel().setSelectedItem( objDest.getNameOrValueAsString() );
+        JTextField edName = new JTextField( attr.getName() );
+
+        panel.add( btDelete );
+        panel.add( Box.createRigidArea( new Dimension( 10, 0 ) ) );
+        panel.add( edName );
+        panel.add( Box.createRigidArea( new Dimension( 10, 0 ) ) );
+        panel.add( cbContents );
+        this.pnlAttributes.add( panel );
+        this.pnlAttributes.add( Box.createVerticalGlue() );
+
+        edName.addActionListener( new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if ( !Inspector.this.beingBuilt ) {
+                    Inspector.this.visualEngine.execute( getObj().getPath()
+                                    + "." + attr.getName() + " rename \"" + edName.getText() + "\"" );
+                    edName.setText( attr.getName() );
+                }
+            }
+        } );
+
+        cbContents.addActionListener( new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                if ( !Inspector.this.beingBuilt ) {
+                    visualEngine.execute( obj.getPath() + "." + edName.getText() + " = " + cbContents.getModel().getSelectedItem() );
+                }
+            }
+        } );
+
+        btDelete.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                if ( !Inspector.this.beingBuilt ) {
+                    visualEngine.execute( obj.getPath() + " erase \"" + attr.getName() + "\"" );
+                    pnlAttributes.remove( panel );
+                    Inspector.this.pack();
+                }
+            }
+        });
+    }
+
+    private void buildAttributesManagementPanel() {
+        HashSet<String> attrIds = new HashSet<>( this.getObj().getNumberOfMethods() );
+
+        this.pnlAttributes = new JPanel();
+        JScrollPane scroll = new JScrollPane( this.pnlAttributes );
+        this.pnlAttributes.setLayout( new BoxLayout( this.pnlAttributes, BoxLayout.PAGE_AXIS ) );
+        this.pnlAction.add( scroll );
+        this.pnlAction.add( Box.createVerticalGlue() );
+
+        for(Attribute attr: this.getObj().getAttributes()) {
+            if ( attr instanceof ParentAttribute ) {
+                continue;
+            }
+
+            String attrName = attr.getName();
+
+            if ( attrIds.contains( attrName ) ) {
+                continue;
+            } else {
+                attrIds.add( attrName );
+            }
+
+           this.addAttributePanel( attr );
         }
+    }
 
-        for(Attribute atr: this.getObj().getAttributes()) {
-            ObjectBag objDest = atr.getReference();
-            JPanel panel = new JPanel();
-            panel.setBorder(new EmptyBorder( 10, 10, 10, 10 ) );
-            panel.setLayout( new BoxLayout( panel, BoxLayout.LINE_AXIS ) );
-            JComboBox cbContents = new JComboBox( objsNames );
-            ( (JLabel)cbContents.getRenderer() ).setHorizontalAlignment( JLabel.RIGHT );
-            cbContents.setFont( this.visualEngine.getFont() );
-            cbContents.setEditable( true );
-            cbContents.getModel().setSelectedItem( objDest.getNameOrValueAsString() );
-            JLabel lblName = new JLabel( atr.getName() );
+    private void addMethodPanel(Method mth) {
+        String mthName = mth.getName();
+        JPanel panel = new JPanel();
+        panel.setBorder( new EmptyBorder( 10, 10, 10, 10 ) );
+        panel.setLayout( new BoxLayout( panel, BoxLayout.LINE_AXIS ) );
 
-            panel.add( lblName );
-            panel.add( Box.createRigidArea( new Dimension( 10, 0 ) ) );
-            panel.add( cbContents );
-            this.pnlAction.add( panel );
-            this.pnlAction.add( Box.createVerticalGlue() );
-            lblName.addMouseListener(new MouseListener() {
-                @Override
-                public void mouseClicked(MouseEvent mouseEvent) {
+        JButton btDelete = new JButton( this.iconDelete );
+        btDelete.setToolTipText( "Delete method" );
+        JButton btExecute = new JButton( this.iconExecute );
+        btExecute.setToolTipText( "Execute method" );
+        JTextField edName = new JTextField( mthName );
+        JTextField edContents = new JTextField( mth.getMethodBodyAsString() );
+        edContents.setHorizontalAlignment( JTextField.RIGHT );
+        panel.add( btExecute );
+        panel.add( Box.createRigidArea( new Dimension( 10, 0 ) ) );
+        panel.add( btDelete );
+        panel.add( Box.createRigidArea( new Dimension( 10, 0 ) ) );
+        panel.add( edName );
+        panel.add( Box.createRigidArea( new Dimension( 10, 0 ) ) );
+        panel.add( edContents );
+        this.pnlMethods.add( panel );
+        this.pnlMethods.add( Box.createVerticalGlue() );
 
+        edName.addActionListener( new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if ( !Inspector.this.beingBuilt ) {
+                    //Inspector.this.visualEngine.execute( getObj().getPath() + "." + edName.getText() + " = "  );
                 }
+            }
+        } );
 
-                @Override
-                public void mousePressed(MouseEvent mouseEvent) {
-
+        edContents.addActionListener( new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if ( !Inspector.this.beingBuilt ) {
+                    visualEngine.execute( getObj().getPath() + "." + edName.getText() + " = " + edContents.getText() );
                 }
-                @Override
-                public void mouseReleased(MouseEvent mouseEvent) {
-                    Inspector.this.launchFieldInspection( atr.getName() );
+            }
+        } );
+
+        btExecute.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                if ( !Inspector.this.beingBuilt ) {
+                    Inspector.this.launchMethodExecution( mth.getName() );
                 }
+            }
+        });
 
-                @Override
-                public void mouseEntered(MouseEvent mouseEvent) {
-
+        btDelete.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                if ( !Inspector.this.beingBuilt ) {
+                    visualEngine.execute( obj.getPath() + " erase \"" + mth.getName() + "\"" );
+                    pnlAttributes.remove( panel );
+                    Inspector.this.pack();
                 }
+            }
+        });
+    }
 
-                @Override
-                public void mouseExited(MouseEvent mouseEvent) {
+    private void buildMethodsManagementPanel() {
+        this.pnlMethods = new JPanel();
+        JScrollPane scroll = new JScrollPane( this.pnlMethods );
+        this.pnlMethods.setLayout( new BoxLayout( this.pnlMethods, BoxLayout.PAGE_AXIS ) );
+        this.pnlAction.add( scroll );
+        this.pnlAction.add( Box.createVerticalGlue() );
 
-                }
-            });
-
-            cbContents.addActionListener( new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent evt) {
-                    visualEngine.execute( obj.getPath() + "." + lblName.getText() + " = " + (String) cbContents.getModel().getSelectedItem() );
-                }
-            } );
-        }
-
-        // Add controls for each local method, as well as inherited ones
+        HashSet<String> mthIds = new HashSet<>( this.getObj().getNumberOfMethods() );
         ObjectBag obj = this.getObj();
         do {
             for (Method mth : obj.getLocalMethods()) {
-                JPanel panel = new JPanel();
-                panel.setBorder( new EmptyBorder( 10, 10, 10, 10 ) );
-                panel.setLayout( new BoxLayout( panel, BoxLayout.LINE_AXIS ) );
-                JLabel lblName = new JLabel( mth.getName() + "()" );
-                JTextField edContents = new JTextField( mth.getMethodBodyAsString() );
-                edContents.setHorizontalAlignment( JTextField.RIGHT );
-                panel.add( lblName );
-                panel.add( Box.createRigidArea( new Dimension( 10, 0 ) ) );
-                panel.add( edContents );
-                this.pnlAction.add( panel );
-                this.pnlAction.add( Box.createVerticalGlue() );
-                lblName.addMouseListener( new MouseListener() {
-                    @Override
-                    public void mouseClicked(MouseEvent mouseEvent) {
+                String mthName = mth.getName();
 
-                    }
+                if ( mthIds.contains( mthName ) ) {
+                    continue;
+                } else {
+                    mthIds.add( mthName );
+                }
 
-                    @Override
-                    public void mousePressed(MouseEvent mouseEvent) {
-
-                    }
-
-                    @Override
-                    public void mouseReleased(MouseEvent mouseEvent) {
-                        Inspector.this.launchMethodExecution( lblName.getText() );
-                    }
-
-                    @Override
-                    public void mouseEntered(MouseEvent mouseEvent) {
-
-                    }
-
-                    @Override
-                    public void mouseExited(MouseEvent mouseEvent) {
-
-                    }
-                } );
-
-                edContents.addMouseListener( new MouseListener() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-
-                    }
-
-                    @Override
-                    public void mousePressed(MouseEvent e) {
-
-                    }
-
-                    @Override
-                    public void mouseReleased(MouseEvent e) {
-                        Inspector.this.changeMethod( lblName.getText(), edContents.getText() );
-                    }
-
-                    @Override
-                    public void mouseEntered(MouseEvent e) {
-
-                    }
-
-                    @Override
-                    public void mouseExited(MouseEvent e) {
-
-                    }
-                } );
+                this.addMethodPanel( mth );
             }
 
             obj = obj.getParentObject();
@@ -290,39 +366,63 @@ public class Inspector extends JDialog {
               && obj != null );
     }
 
+    private void buildActionArea() {
+        // Create a box layout in the center
+        this.pnlAction = new JPanel();
+        JScrollPane scroll = new JScrollPane( this.pnlAction );
+        this.pnlAction.setLayout( new BoxLayout( this.pnlAction, BoxLayout.PAGE_AXIS ) );
+        this.add( scroll, BorderLayout.CENTER );
+
+        this.buildBasicAttrsPanel();
+        this.buildManagementButtonsPanel();
+        this.buildAttributesManagementPanel();
+        this.buildMethodsManagementPanel();
+    }
+
     private void build() {
+        this.prepareAvailableObjectsNames();
+
+        // Build
         this.setLayout( new BorderLayout( 5, 5 ) );
-        this.setLocationByPlatform( true  );
         this.buildIcons();
         this.buildCloseButton();
         this.buildActionArea();
 
+        // Configure
         this.setDefaultCloseOperation( JFrame.DISPOSE_ON_CLOSE );
-        this.setMinimumSize( new Dimension( 300, 200 ) );
         this.setModal( true );
         this.pack();
-        this.updateObjectName();
-        this.setVisible( true );
+        this.updateObjectBasicAttributes();
+        this.setMinimumSize( new Dimension( 300, 200 ) );
+
+        // Resize and put it in its location
+        Point p = new Point( this.visualEngine.getLocation() );
+        p.x += ( this.visualEngine.getWidth() - this.getWidth() ) / 2;
+        p.y += ( this.visualEngine.getHeight() - this.getHeight() ) / 2;
+        this.setLocation( p );
     }
 
-    private void updateObjectName() {
-        this.setTitle( this.getObj().getPath() + " - Inspector" );
-        this.edObjectName.setText( this.getObj().getName() );
-    }
+    private void updateObjectBasicAttributes() {
+        ObjectBag obj = this.getObj();
+        ObjectBag objParent = this.getObj().getParentObject();
 
-    private void launchFieldInspection(String id) {
-        visualEngine.execute( this.obj.getPath() + "." + id );
-    }
+        if ( obj != null ) {
+            this.setTitle( this.getObj().getPath() + " - Inspector" );
+            this.edObjectName.setText( this.getObj().getName() );
+        } else {
+            this.setTitle( "Inspector" );
+        }
 
-    private void addAttribute() {
-        addAttribute( this, this.visualEngine, this.getObj() );
-        this.setVisible( false );
+        if ( objParent != null
+          && !( obj instanceof ObjectParent ) )
+        {
+            this.cbParent.setSelectedItem( objParent.getName() );
+        }
     }
 
     private void launchMethodExecution(String methodName)
     {
         String arguments = "";
-        methodName = methodName.substring( 0, methodName.length() - 2 );
         Method mth = this.getObj().lookUpMethod( methodName );
 
         if ( mth.getNumParams() > 0 ) {
@@ -345,16 +445,8 @@ public class Inspector extends JDialog {
         }
     }
 
-    private void addMethod() {
-        addMethod( this, this.visualEngine, this.getObj() );
-    }
-
-    private void changeMethod(String methodName, String body) {
-        changeMethod( this, this.visualEngine, this.getObj(), methodName, body );
-        this.setVisible( false );
-    }
-
-    private void renameObject() {
+    private void copyObject()
+    {
         String newName = (String) JOptionPane.showInputDialog(
                 this,
                 "New object's name:",
@@ -362,26 +454,7 @@ public class Inspector extends JDialog {
                 JOptionPane.PLAIN_MESSAGE,
                 null,
                 null,
-                "x" );
-
-        if ( newName != null ) {
-            newName = newName.trim();
-            if ( newName.length() > 0 ) {
-                visualEngine.execute( obj.getPath() + " rename \"" + newName + '\"' );
-                this.setVisible( false );
-            }
-        }
-    }
-
-    private void copyObject() {
-        String newName = (String) JOptionPane.showInputDialog(
-                this,
-                "New object's name:",
-                AppInfo.Name,
-                JOptionPane.PLAIN_MESSAGE,
-                null,
-                null,
-                "x" );
+                "obj" + ( visualEngine.getInterpreter().getRuntime().getRoot().getNumberOfAttributes() + 1 ) );
 
         if ( newName != null ) {
             newName = newName.trim();
@@ -423,7 +496,7 @@ public class Inspector extends JDialog {
                 JOptionPane.PLAIN_MESSAGE,
                 null,
                 null,
-                "x" );
+                "f" );
 
         if ( mthName != null ) {
             mthName = mthName.trim();
@@ -457,15 +530,32 @@ public class Inspector extends JDialog {
         return;
     }
 
+    public String[] prepareAvailableObjectsNames() {
+        final Attribute[] attrs = this.rt.getRoot().getAttributes();
+        this.availableObjectsNames = new String[ attrs.length ];
+        for(int i = 0; i < attrs.length; ++i) {
+            this.availableObjectsNames[ i ] = attrs[ i ].getName();
+        }
+
+        return this.availableObjectsNames;
+    }
+
     private ObjectBag obj;
     private Runtime rt;
     private ObjectBag objRoot;
+    private String[] availableObjectsNames;
+    private Boolean beingBuilt;
 
     private JButton btClose;
     private JTextField edObjectName;
+    private JComboBox cbParent;
     private JPanel pnlAction;
+    private JPanel pnlAttributes;
+    private JPanel pnlMethods;
     private ImageIcon iconCopy;
     private ImageIcon iconAddMethod;
     private ImageIcon iconAddAttribute;
+    private ImageIcon iconDelete;
+    private ImageIcon iconExecute;
     private VisualEngine visualEngine;
 }

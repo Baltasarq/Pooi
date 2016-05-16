@@ -1,6 +1,6 @@
 package com.devbaltasarq.pooi.core.objs;
 
-import com.devbaltasarq.pooi.core.evaluables.method.nativemethods.NativeMethodOsNow;
+import com.devbaltasarq.pooi.core.evaluables.methods.nativemethods.NativeMethodOsNow;
 import com.devbaltasarq.pooi.core.exceps.InterpretError;
 
 /**

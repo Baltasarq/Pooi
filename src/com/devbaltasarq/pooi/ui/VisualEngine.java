@@ -9,6 +9,7 @@ import com.devbaltasarq.pooi.core.evaluables.Reference;
 import com.devbaltasarq.pooi.core.exceps.InterpretError;
 import com.devbaltasarq.pooi.core.objs.ObjectRoot;
 import com.devbaltasarq.pooi.core.objs.SysObject;
+import com.sun.deploy.config.Platform;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -19,6 +20,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -43,6 +45,7 @@ public class VisualEngine extends JFrame {
     /** Creates new form VisualEngine */
     public VisualEngine()
     {
+        this.currentDir = new File( Platform.get().getUserHome() );
         this.build();
         this.input.requestFocusInWindow();
     }
@@ -599,10 +602,13 @@ public class VisualEngine extends JFrame {
                     "Transcript text files", "txt"
         );
         fileSelector.setFileFilter( filter );
+        fileSelector.setCurrentDirectory( this.currentDir );
 
         // Show
         if ( fileSelector.showOpenDialog(this) == JFileChooser.APPROVE_OPTION )
         {
+            this.currentDir = fileSelector.getCurrentDirectory();
+
             // Load
             output.append( "\n" +
                     interpreter.loadSession( fileSelector.getSelectedFile().getAbsolutePath() )
@@ -627,10 +633,12 @@ public class VisualEngine extends JFrame {
                 new FileNameExtensionFilter( 
                     "Transcript text files", "txt"
         );
-        fileSelector.setFileFilter( filter );                
+        fileSelector.setFileFilter( filter );
+        fileSelector.setCurrentDirectory( this.currentDir  );
 
         // Show
         if ( fileSelector.showSaveDialog( this ) == JFileChooser.APPROVE_OPTION ) {
+            this.currentDir = fileSelector.getCurrentDirectory();
             interpreter.activateTranscript(
                     fileSelector.getSelectedFile().getAbsolutePath()
             );
@@ -811,7 +819,7 @@ public class VisualEngine extends JFrame {
                 JOptionPane.PLAIN_MESSAGE,
                 this.iconNew,
                 null,
-                "obj" );
+                "obj" + ( this.getInterpreter().getRuntime().getRoot().getNumberOfAttributes() + 1 ) );
 
         if ( s != null ) {
             this.createNewObject( objPath, s );
@@ -1043,6 +1051,10 @@ public class VisualEngine extends JFrame {
     {
         this.output.append( msg );
     }
+
+    public Interpreter getInterpreter() {
+        return this.interpreter;
+    }
     
     private JDialog dlgFont;
     private JComboBox<String> input;
@@ -1067,4 +1079,5 @@ public class VisualEngine extends JFrame {
     private Interpreter interpreter = null;
 
     private static boolean rebuildingTree = false;
+    private File currentDir;
 }

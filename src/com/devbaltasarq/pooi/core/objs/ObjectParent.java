@@ -10,10 +10,10 @@
 package com.devbaltasarq.pooi.core.objs;
 
 import com.devbaltasarq.pooi.core.exceps.InterpretError;
-import com.devbaltasarq.pooi.core.evaluables.method.nativemethods.NativeMethodStr;
+import com.devbaltasarq.pooi.core.evaluables.methods.nativemethods.NativeMethodStr;
 import com.devbaltasarq.pooi.core.ObjectBag;
 import com.devbaltasarq.pooi.core.Reserved;
-import com.devbaltasarq.pooi.core.evaluables.method.nativemethods.*;
+import com.devbaltasarq.pooi.core.evaluables.methods.nativemethods.*;
 
 /**
  * This is "Object" the parent for all objects

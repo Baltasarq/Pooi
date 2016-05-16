@@ -258,6 +258,22 @@ public class ObjectBag {
         return toret;
     }
 
+    /**
+     * Returns the number of attributes in this object
+     * @return The number of attributes, as an int.
+     */
+    public int getNumberOfAttributes() {
+        return this.attributes.size();
+    }
+
+    /**
+     * Returns the number of methods in this object
+     * @return the number of methods, as an int
+     */
+    public int getNumberOfMethods() {
+        return this.methods.size();
+    }
+
     /** @return the number of objects between this object and root, plus itself */
     public int getInheritanceLevel() {
         int toret = 1;
@@ -407,7 +423,7 @@ public class ObjectBag {
     public Reference toReference()
     {
         Attribute[] path = this.getObjectPath();
-        ArrayList<String> toret = new ArrayList<>();
+        ArrayList<String> toret = new ArrayList<>( path.length );
 
         for(int i = 0; i < path.length; ++i) {
             toret.add( path[ i ].getName() );
@@ -592,6 +608,66 @@ public class ObjectBag {
         }
 
         return toret;
+    }
+
+    public void renameMember(String oldName, String newName) throws InterpretError
+    {
+        final Attribute attr = this.localLookUpAttribute( oldName );
+        final Method mth = this.localLookUpMethod( oldName );
+
+        if ( attr != null ) {
+            this.renameAttribute( oldName, newName );
+        }
+        else
+        if ( mth != null ) {
+            this.renameMethod( oldName, newName );
+        }
+        else {
+            throw new InterpretError( "member " + oldName + " was not found" );
+        }
+
+        return;
+    }
+
+    public void renameMethod(String oldName, String newName) throws InterpretError {
+
+    }
+
+    public void renameAttribute(String oldName, String newName) throws InterpretError {
+        final Attribute attr = this.localLookUpAttribute( oldName );
+        ObjectBag ref = null;
+
+        if ( attr != null ) {
+            try {
+                ref = attr.getReference();
+                if ( ref != null ) {
+                    ref.setName( newName );
+                    attr.setName( newName );
+                    this.attributes.remove( oldName );
+                    this.attributes.put( newName, attr );
+                } else {
+                    throw new InterpretError( "INTERNAL ERROR: reference points to void" );
+                }
+            } catch(InterpretError exc) {
+                if ( ref != null
+                  && ref.getName().equals( newName ) )
+                {
+                    ref.setName( oldName );
+                }
+
+                if ( attr != null
+                  && attr.getName().equals( newName ) )
+                {
+                    attr.setName( oldName );
+                    this.attributes.remove( newName );
+                    this.attributes.put( oldName, attr );
+                }
+
+                throw exc;
+            }
+        } else {
+            throw new InterpretError( "attribute " + oldName + " was not found" );
+        }
     }
 
     /**

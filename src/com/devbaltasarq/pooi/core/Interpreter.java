@@ -3,8 +3,8 @@ package com.devbaltasarq.pooi.core;
 import com.devbaltasarq.pooi.core.evaluables.Command;
 import com.devbaltasarq.pooi.core.evaluables.Method;
 import com.devbaltasarq.pooi.core.evaluables.Reference;
-import com.devbaltasarq.pooi.core.evaluables.method.InterpretedMethod;
-import com.devbaltasarq.pooi.core.evaluables.method.NativeMethod;
+import com.devbaltasarq.pooi.core.evaluables.methods.InterpretedMethod;
+import com.devbaltasarq.pooi.core.evaluables.methods.NativeMethod;
 import com.devbaltasarq.pooi.core.exceps.InterpretError;
 import com.devbaltasarq.pooi.core.objs.ObjectStr;
 
