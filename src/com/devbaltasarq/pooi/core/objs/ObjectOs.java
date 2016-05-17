@@ -1,6 +1,8 @@
 package com.devbaltasarq.pooi.core.objs;
 
+import com.devbaltasarq.pooi.core.evaluables.methods.nativemethods.NativeMethodOsInput;
 import com.devbaltasarq.pooi.core.evaluables.methods.nativemethods.NativeMethodOsNow;
+import com.devbaltasarq.pooi.core.evaluables.methods.nativemethods.NativeMethodOsPrint;
 import com.devbaltasarq.pooi.core.exceps.InterpretError;
 
 /**
@@ -22,5 +24,7 @@ public class ObjectOs extends SysObject {
         super( Name, absParent, container  );
 
         this.set( NativeMethodOsNow.EtqMthOsNow, new NativeMethodOsNow() );
+        this.set( NativeMethodOsPrint.EtqMthOsPrint, new NativeMethodOsPrint() );
+        this.set( NativeMethodOsInput.EtqMthOsInput, new NativeMethodOsInput() );
     }
 }

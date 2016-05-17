@@ -245,7 +245,7 @@ public class Parser {
                 }
 
                 if ( numParams > 0 ) {
-                    toret.setParams( params.toArray( new Evaluable[ params.size() ] ) );
+                    toret.setArguments( params.toArray( new Evaluable[ params.size() ] ) );
                 }
             }
         }

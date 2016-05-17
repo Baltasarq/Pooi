@@ -67,8 +67,8 @@ public class ObjectBag {
     public ObjectBag(String n, ObjectBag parent, ObjectBag container, boolean chk)
             throws InterpretError
     {
-        attributes = new Hashtable<>();
-        methods = new Hashtable<>();
+        attributes = new HashMap<>();
+        methods = new HashMap<>();
 
         // Prepare name
         n = n.trim();
@@ -554,7 +554,7 @@ public class ObjectBag {
 
     /** Adds a new method to the list of methods of this object
       * @param name The name of this new method
-      * @param obj The Method object itself
+      * @param mth The Method itself
       * @throws com.devbaltasarq.pooi.core.exceps.InterpretError if name is not valid
      */
     public void set(String name, Method mth) throws InterpretError
@@ -623,14 +623,37 @@ public class ObjectBag {
             this.renameMethod( oldName, newName );
         }
         else {
-            throw new InterpretError( "member " + oldName + " was not found" );
+            throw new InterpretError( "member '" + oldName + "' was not found" );
         }
 
         return;
     }
 
     public void renameMethod(String oldName, String newName) throws InterpretError {
+        final Method mth = this.localLookUpMethod( oldName );
 
+        if ( mth != null ) {
+            try {
+                this.chkIdentifier( newName );
+                mth.setName( newName );
+                this.methods.remove( oldName );
+                this.methods.put( newName, mth );
+            } catch(InterpretError exc) {
+                if ( mth != null
+                  && mth.getName().equals( newName ) )
+                {
+                    mth.setName( oldName );
+                    this.methods.remove( newName );
+                    this.methods.put( oldName, mth );
+                }
+
+                throw exc;
+            }
+        } else {
+            throw new InterpretError( "method '" + oldName + "' was not found" );
+        }
+
+        return;
     }
 
     public void renameAttribute(String oldName, String newName) throws InterpretError {
@@ -951,8 +974,8 @@ public class ObjectBag {
 
     private String name;
     private ObjectBag container;
-    private Hashtable<String, Attribute> attributes;
-    private Hashtable<String, Method> methods;
+    private HashMap<String, Attribute> attributes;
+    private HashMap<String, Method> methods;
     private int numUniqueId;
 
 }

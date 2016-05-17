@@ -121,11 +121,11 @@ public class Interpreter {
                 Command command = (Command) evaluable;
 
                 // Substitute __POP's in params
-                final int numCmdParams = command.getNumParams();
+                final int numCmdParams = command.getNumArguments();
                 Evaluable[] params = new Evaluable[ numCmdParams ];
 
                 if ( numCmdParams > 0 ) {
-                    final Evaluable[] cmdParams = command.getParams();
+                    final Evaluable[] cmdParams = command.getArguments();
 
                     for(int i = numCmdParams -1; i >= 0; --i) {
                         Evaluable param = cmdParams[ i ];

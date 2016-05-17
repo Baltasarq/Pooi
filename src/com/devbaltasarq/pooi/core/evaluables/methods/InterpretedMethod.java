@@ -9,6 +9,7 @@ import com.devbaltasarq.pooi.core.exceps.InterpretError;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Stack;
 
 /**
  * Method holding interpreted code.
@@ -153,6 +154,7 @@ public class InterpretedMethod extends Method {
 
     @Override
     public String getMethodBodyAsString() {
+        Stack<String> stack = new Stack<>();
         StringBuilder toret = new StringBuilder();
 
         toret.append( "{" );
@@ -167,7 +169,22 @@ public class InterpretedMethod extends Method {
 
         // Add commands
         for(Command cmd: this.getCmds()) {
-            toret.append( cmd.toString() );
+            String cmdAsStr = cmd.toString();
+
+            if ( cmdAsStr.indexOf( Parser.PopTask ) >= 0 ) {
+                // Process the reference
+                if ( cmd.getReference().toString().equals( Parser.PopTask ) ) {
+                    cmdAsStr = cmdAsStr.replaceFirst( Parser.PopTask, stack.pop() );
+                }
+            }
+
+            // Push command
+            stack.push( cmdAsStr );
+        }
+
+        // Dump the remaining
+        for(String strCmd: stack) {
+            toret.append( strCmd );
             toret.append( "; " );
         }
 

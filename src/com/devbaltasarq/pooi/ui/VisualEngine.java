@@ -109,13 +109,9 @@ public class VisualEngine extends JFrame {
         this.dlgFont.setMinimumSize( d );
         this.dlgFont.setPreferredSize( d );
         this.dlgFont.setSize( d );
+        this.dlgFont.setLocationRelativeTo( this );
 
-        // Center the dialog
-        Point p = new Point( this.getLocation() );
-        p.x += ( this.getWidth() - this.dlgFont.getWidth() ) / 2;
-        p.y += ( this.getHeight() - this.dlgFont.getHeight() ) / 2;
-        this.dlgFont.setLocation( p );
-
+        // Set the value of interest
         this.spFontSize.setValue( this.font.getSize() );
         return;
     }
@@ -323,11 +319,8 @@ public class VisualEngine extends JFrame {
 
     private void buildToolbar()
     {
-        JButton btReset = new JButton( this.iconReset );
-        JButton btNewObject = new JButton( this.iconNew);
-
-        btReset.setToolTipText( "reset" );
-        btNewObject.setToolTipText( "new object" );
+        JButton btReset = Util.createButton( this.iconReset, "Reset" );
+        JButton btNewObject = Util.createButton( this.iconNew, "New object" );
 
         this.tbIconBar = new JToolBar();
         this.tbIconBar.setFloatable( false );
@@ -340,7 +333,6 @@ public class VisualEngine extends JFrame {
 
         // Events
         btReset.addActionListener( e -> VisualEngine.this.onReset() );
-
         btNewObject.addActionListener( e -> VisualEngine.this.onNewObject( Runtime.EtqNameAnObject ) );
     }
 
@@ -361,7 +353,7 @@ public class VisualEngine extends JFrame {
 
         } catch(Exception exc)
         {
-            output.append( "[failed to retrieve icons from jar]\n\n" );
+            output.append( "Warning: failed to retrieve icons from jar\n\n" );
         }
     }
 
@@ -457,56 +449,26 @@ public class VisualEngine extends JFrame {
         this.popup.add( miErase );
     }
 
-    private void prepareDimensions()
-    {
-        Dimension realDimension = new Dimension( 640, 480 );
-
-        // Prepare window dimensions
-        Dimension scrDim = Toolkit.getDefaultToolkit().getScreenSize();
-
-        if ( scrDim.getWidth() > 1280 ) {
-            realDimension.height = 768;
-            realDimension.width = 1280;
-
-            if ( scrDim.getHeight() > 800 ) {
-                realDimension.height = 1024;
-            }
-        }
-        else
-        if ( scrDim.getHeight() > 768 ) {
-            realDimension.height = 768;
-            realDimension.width = 1024;
-        }
-        else
-        if ( scrDim.getHeight() > 600 ) {
-            realDimension.height = 600;
-            realDimension.width = 800;
-        }
-
-        this.setTitle( AppInfo.Name + " " + AppInfo.Version );
-        this.setMinimumSize( new Dimension( 640, 480 ) );
-        this.setPreferredSize( realDimension );
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      */
     private void build()
     {
+        Util.prepareDimensions( this );
+
         // Split view
-        this.prepareDimensions();
         this.spPanel = new JSplitPane();
         this.spPanel.setDividerLocation( 150 );
         this.spMain = new JSplitPane();
         this.spMain.setDividerLocation( (int) ( this.getHeight() - ( this.getHeight() * 0.15 ) ) );
 
         // Build components
-        this.buildIcons();
         this.buildMenuBar();
         this.buildPopup();
-        this.buildToolbar();
         this.buildInput();
         this.buildOutput();
+        this.buildIcons();
+        this.buildToolbar();
         this.buildTreeView();
 
         // The font
@@ -531,8 +493,9 @@ public class VisualEngine extends JFrame {
         });
 
         this.pack();
-        this.setIconImage( this.iconApp.getImage() );
-        this.prepareDimensions();
+        if ( this.iconApp != null ) {
+            this.setIconImage( this.iconApp.getImage() );
+        }
 
         // Prepare the diagrammer
         this.pnlCanvas = new Canvas( 2000, 2000 );
@@ -581,12 +544,8 @@ public class VisualEngine extends JFrame {
             }
         } );
 
-        // Center in screen
-        Dimension scrDim = Toolkit.getDefaultToolkit().getScreenSize();
-        this.setLocation(
-                ( scrDim.width  - this.getWidth() ) / 2,
-                ( scrDim.height - this.getHeight() ) / 2
-        );
+        // Center on screen
+        this.setLocationRelativeTo( null );
     }
 
     private void onLoadSession()
@@ -952,6 +911,12 @@ public class VisualEngine extends JFrame {
         this.pnlCanvas.setColor( Color.black );
         for(ObjectBox box: diagramBoxes.values()) {
             ObjectBox parentBox = diagramBoxes.get( box.getObj().getParentObject().getPath() );
+
+            // Maybe it is a literal
+            if ( parentBox == null ) {
+                parentBox = rootBox;
+            }
+
             Dimension dimChild = box.getMeasuredDimension();
             Dimension dimParent = parentBox.getMeasuredDimension();
 

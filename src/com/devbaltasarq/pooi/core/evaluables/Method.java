@@ -43,7 +43,7 @@ public abstract class Method extends Member {
     public static String getStringFrom(Evaluable e)
             throws InterpretError
     {
-        final com.devbaltasarq.pooi.core.Runtime rt = Runtime.getRuntime();
+        final Runtime rt = Runtime.getRuntime();
         String toret;
         ObjectBag idObj = null;
 

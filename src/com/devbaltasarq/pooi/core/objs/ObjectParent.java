@@ -66,6 +66,7 @@ public class ObjectParent extends ObjectBag {
             this.set( NativeMethodSetName.EtqMthSetName, new NativeMethodSetName() );
             this.set( NativeMethodSetName.EtqMthRename, new NativeMethodSetName() );
             this.set( NativeMethodIs.EtqMthIs, new NativeMethodIs() );
+            this.set( NativeMethodRenameMethod.EtqMthRenameMethod, new NativeMethodRenameMethod() );
         } catch(InterpretError ignored)
         {
         }

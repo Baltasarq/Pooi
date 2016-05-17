@@ -6,18 +6,13 @@ import com.devbaltasarq.pooi.core.Runtime;
 import com.devbaltasarq.pooi.core.evaluables.Attribute;
 import com.devbaltasarq.pooi.core.evaluables.Method;
 import com.devbaltasarq.pooi.core.evaluables.ParentAttribute;
-import com.devbaltasarq.pooi.core.evaluables.methods.nativemethods.NativeMethodList;
-import com.devbaltasarq.pooi.core.evaluables.methods.nativemethods.NativeMethodStr;
 import com.devbaltasarq.pooi.core.objs.ObjectParent;
-import com.devbaltasarq.pooi.core.objs.ObjectRoot;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.net.URL;
 import java.util.HashSet;
 
@@ -74,7 +69,7 @@ public class Inspector extends JDialog {
 
         } catch(Exception exc)
         {
-            this.visualEngine.makeOutput( "\n[WARNING: failed to retrieve icons from jar]\n\n" );
+            this.visualEngine.makeOutput( "Warning: failed to retrieve icons from jar\n\n" );
         }
     }
 
@@ -153,12 +148,9 @@ public class Inspector extends JDialog {
         JPanel pnlButtons = new JPanel();
         pnlButtons.setBorder( new EmptyBorder( 10, 10, 10, 10 ) );
         pnlButtons.setLayout( new BoxLayout( pnlButtons, BoxLayout.LINE_AXIS ) );
-        JButton btAddAttribute = new JButton( this.iconAddAttribute );
-        btAddAttribute.setToolTipText( "Add attribute" );
-        JButton btAddMethod = new JButton( this.iconAddMethod );
-        btAddMethod.setToolTipText( "Add method" );
-        JButton btCopy = new JButton( this.iconCopy );
-        btCopy.setToolTipText( "Copy this object" );
+        JButton btAddAttribute = Util.createButton( this.iconAddAttribute,  "Add attribute" );
+        JButton btAddMethod = Util.createButton( this.iconAddMethod, "Add method" );
+        JButton btCopy = Util.createButton( this.iconCopy, "Copy" );
         pnlButtons.add( btAddAttribute );
         pnlButtons.add( Box.createHorizontalGlue() );
         pnlButtons.add( btAddMethod );
@@ -201,8 +193,7 @@ public class Inspector extends JDialog {
         panel.setBorder(new EmptyBorder( 10, 10, 10, 10 ) );
         panel.setLayout( new BoxLayout( panel, BoxLayout.LINE_AXIS ) );
 
-        JButton btDelete = new JButton( this.iconDelete );
-        btDelete.setToolTipText( "Delete attribute" );
+        JButton btDelete = Util.createButton( this.iconDelete, "Delete" );
         JComboBox cbContents = new JComboBox( this.availableObjectsNames );
         ( (JLabel) cbContents.getRenderer() ).setHorizontalAlignment( JLabel.RIGHT );
         ( (JTextField) cbContents.getEditor().getEditorComponent() ).setHorizontalAlignment( JTextField.RIGHT  );
@@ -283,10 +274,8 @@ public class Inspector extends JDialog {
         panel.setBorder( new EmptyBorder( 10, 10, 10, 10 ) );
         panel.setLayout( new BoxLayout( panel, BoxLayout.LINE_AXIS ) );
 
-        JButton btDelete = new JButton( this.iconDelete );
-        btDelete.setToolTipText( "Delete method" );
-        JButton btExecute = new JButton( this.iconExecute );
-        btExecute.setToolTipText( "Execute method" );
+        JButton btDelete = Util.createButton( this.iconDelete, "Delete" );
+        JButton btExecute = Util.createButton( this.iconExecute, "Execute" );
         JTextField edName = new JTextField( mthName );
         JTextField edContents = new JTextField( mth.getMethodBodyAsString() );
         edContents.setHorizontalAlignment( JTextField.RIGHT );
@@ -304,7 +293,11 @@ public class Inspector extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if ( !Inspector.this.beingBuilt ) {
-                    //Inspector.this.visualEngine.execute( getObj().getPath() + "." + edName.getText() + " = "  );
+                    Inspector.this.visualEngine.execute(
+                            getObj().getPath()
+                            + " renameMethod \"" + mth.getName()
+                            + "\" \"" + edName.getText() + "\""  );
+                    edName.setText( mth.getName() );
                 }
             }
         } );
@@ -332,7 +325,7 @@ public class Inspector extends JDialog {
             public void actionPerformed(ActionEvent actionEvent) {
                 if ( !Inspector.this.beingBuilt ) {
                     visualEngine.execute( obj.getPath() + " erase \"" + mth.getName() + "\"" );
-                    pnlAttributes.remove( panel );
+                    pnlMethods.remove( panel );
                     Inspector.this.pack();
                 }
             }

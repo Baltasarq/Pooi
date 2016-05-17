@@ -14,22 +14,12 @@ import com.devbaltasarq.pooi.core.Evaluable;
  * @author baltasarq
  * - objNames are the attributes of the path to get to the object
  * - Message is the method.
- * - Params are the parameters involved.
+ * - Args are the arguments involved.
  */
 public class Command extends Evaluable {
 
     public Command()
     {
-    }
-
-    public Command(String id)
-    {
-        this.setReference( new Reference( new String[] { id } ) );
-    }
-
-    public Command(String[] atrs)
-    {
-        this.setReference( new Reference( atrs ) );
     }
 
     /**
@@ -55,11 +45,9 @@ public class Command extends Evaluable {
         }
     }
 
-    /**
-     * @return the params
-     */
-    public Evaluable[] getParams() {
-        return params;
+    public boolean isValid()
+    {
+        return ( this.getReference() != null  );
     }
 
     public boolean hasMessage()
@@ -68,28 +56,30 @@ public class Command extends Evaluable {
     }
 
     /**
-     * @param params the params to set
+     * @return the args
      */
-    public void setParams(Evaluable[] params)
-    {
-        this.params = params;
-    }
-
-    public boolean isValid()
-    {
-        return ( this.getReference() != null  );
+    public Evaluable[] getArguments() {
+        return args;
     }
 
     /**
-     * Returns all parameters
-     * @return All parameters, as a String.
+     * @param args the args to set
      */
-    public String getParamsAsString()
+    public void setArguments(Evaluable[] args)
     {
-        final Evaluable[] params = this.getParams();
+        this.args = args;
+    }
+
+    /**
+     * Returns all arguments
+     * @return All arguments, as a String.
+     */
+    public String getArgumentsAsString()
+    {
+        final Evaluable[] arguments = this.getArguments();
         StringBuilder toret = new StringBuilder();
 
-        for(Evaluable evaluable: params) {
+        for(Evaluable evaluable: arguments) {
             toret.append( evaluable.toString() );
             toret.append( ' ' );
         }
@@ -107,9 +97,9 @@ public class Command extends Evaluable {
         this.ref = ref;
     }
 
-    public int getNumParams()
+    public int getNumArguments()
     {
-        return this.params.length;
+        return this.args.length;
     }
 
     public String toString()
@@ -122,13 +112,13 @@ public class Command extends Evaluable {
         toret.append( ' ' );
         toret.append( this.getMessage() );
         toret.append( ' ' );
-        toret.append( this.getParamsAsString() );
+        toret.append( this.getArgumentsAsString() );
         toret.append( ')' );
 
         return toret.toString();
     }
 
     private String message = "";
-    private Evaluable[] params = new Evaluable[ 0 ];
+    private Evaluable[] args = new Evaluable[ 0 ];
     private Evaluable ref = null;
 }
