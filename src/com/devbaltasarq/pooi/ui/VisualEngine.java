@@ -9,7 +9,6 @@ import com.devbaltasarq.pooi.core.evaluables.Reference;
 import com.devbaltasarq.pooi.core.exceps.InterpretError;
 import com.devbaltasarq.pooi.core.objs.ObjectRoot;
 import com.devbaltasarq.pooi.core.objs.SysObject;
-import com.sun.deploy.config.Platform;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -45,7 +44,7 @@ public class VisualEngine extends JFrame {
     /** Creates new form VisualEngine */
     public VisualEngine()
     {
-        this.currentDir = new File( Platform.get().getUserHome() );
+        this.currentDir = new File( System.getProperty( "user.home" ) );
         this.build();
         this.input.requestFocusInWindow();
     }

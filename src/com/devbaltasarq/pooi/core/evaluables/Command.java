@@ -7,6 +7,7 @@
 package com.devbaltasarq.pooi.core.evaluables;
 
 import com.devbaltasarq.pooi.core.Evaluable;
+import com.devbaltasarq.pooi.core.evaluables.literals.StrLiteral;
 
 /**
  * The command built from absParent.mth( arg0, arg1, ...argN)
@@ -80,7 +81,18 @@ public class Command extends Evaluable {
         StringBuilder toret = new StringBuilder();
 
         for(Evaluable evaluable: arguments) {
+            boolean isStringLiteral = evaluable instanceof StrLiteral;
+
+            if ( isStringLiteral ) {
+                toret.append( '"' );
+            }
+
             toret.append( evaluable.toString() );
+
+            if ( isStringLiteral ) {
+                toret.append( '"' );
+            }
+
             toret.append( ' ' );
         }
 

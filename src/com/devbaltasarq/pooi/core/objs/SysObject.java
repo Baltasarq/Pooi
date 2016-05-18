@@ -37,7 +37,6 @@ public class SysObject extends ObjectBag {
     {
         final Attribute atr = new Attribute( name, obj );
 
-        this.setAttribute( name, atr );
         atr.getReference().setContainer( this );
         this.setAttribute( name, atr );
     }

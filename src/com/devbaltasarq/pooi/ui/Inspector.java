@@ -225,7 +225,10 @@ public class Inspector extends JDialog {
             @Override
             public void actionPerformed(ActionEvent evt) {
                 if ( !Inspector.this.beingBuilt ) {
-                    visualEngine.execute( obj.getPath() + "." + edName.getText() + " = " + cbContents.getModel().getSelectedItem() );
+                    if ( !( attr.getReference().getNameOrValueAsString().equals( cbContents.getSelectedItem() ) ) ) {
+                        visualEngine.execute( obj.getPath() + "." + edName.getText()
+                                + " = " + cbContents.getModel().getSelectedItem() );
+                    }
                 }
             }
         } );
@@ -428,14 +431,15 @@ public class Inspector extends JDialog {
                     null,
                     "0" );
 
-            if ( arguments != null ) {
+            if ( arguments == null ) {
+                arguments = "";
+            } else {
                 arguments = arguments.trim();
-                if ( arguments.length() > 0 ) {
-                    visualEngine.execute( obj.getPath() + " " + methodName + " " + arguments );
-                    this.setVisible( false );
-                }
             }
         }
+
+        visualEngine.execute( obj.getPath() + " " + methodName + " " + arguments );
+        this.setVisible( false );
     }
 
     private void copyObject()

@@ -1,9 +1,6 @@
 package com.devbaltasarq.pooi.core;
 
-import com.devbaltasarq.pooi.core.evaluables.Attribute;
-import com.devbaltasarq.pooi.core.evaluables.Method;
-import com.devbaltasarq.pooi.core.evaluables.ParentAttribute;
-import com.devbaltasarq.pooi.core.evaluables.Reference;
+import com.devbaltasarq.pooi.core.evaluables.*;
 import com.devbaltasarq.pooi.core.exceps.AttributeNotFound;
 import com.devbaltasarq.pooi.core.exceps.InterpretError;
 import com.devbaltasarq.pooi.core.objs.ObjectRoot;
@@ -528,25 +525,28 @@ public class ObjectBag {
     public void set(String name, ObjectBag obj) throws InterpretError
     {
         final Runtime rt = Runtime.getRuntime();
-        Attribute atr;
+        Attribute atr = localLookUpAttribute( name );
 
-        // Prepare attribute along with the name
-        this.chkIdentifier( name );
+        if ( atr == null ) {
+            // Prepare attribute along with the name
+            this.chkIdentifier( name );
 
-        if ( name.equals( ParentAttribute.ParentAttributeName ) ) {
-            this.chkCyclesInParent( obj );
-            atr = new ParentAttribute( obj );
+            if ( name.equals( ParentAttribute.ParentAttributeName ) ) {
+                this.chkCyclesInParent( obj );
+                atr = new ParentAttribute( obj );
+            } else {
+                atr = new Attribute( name, obj );
+            }
+
+            // Insert the attribute
+            this.setAttribute( name, atr );
         } else {
-            atr = new Attribute( name, obj );
+            atr.setReference( obj );
         }
-
-        // Insert the attribute
-        this.setAttribute( name, atr );
 
         // No longer a temporal object
         if ( obj.getContainer() == rt.getLiteralsContainer() ) {
             obj.setContainer( this );
-            obj.setName( name  );
         }
 
         return;
@@ -563,19 +563,30 @@ public class ObjectBag {
         this.setMethod( name, mth );
     }
 
-    protected final void setMethod(String name, Method mth) throws InterpretError
-    {
-        if ( this.localLookUpAttribute( name ) != null ) {
-            throw new InterpretError( "Already have an attribute named: " + name );
+    /**
+     * Returns a member, local to this object, given a name.
+     * @param id A String containing the name.
+     * @return The member corresponding to that id, or null.
+     */
+    public Member localLookUpMember(String id) {
+        Member toret = localLookUpAttribute( id );
+
+        if ( toret == null ) {
+            toret = localLookUpMethod( id );
         }
 
+        return toret;
+    }
+
+    protected final void setMethod(String name, Method mth) throws InterpretError
+    {
         this.methods.put( name, mth );
     }
 
     protected final void setAttribute(String name, Attribute atr) throws InterpretError
     {
-        if ( this.localLookUpMethod( name ) != null ) {
-            throw new InterpretError( "Already have a method named: " + name );
+        if ( this.localLookUpMember( name ) != null ) {
+            throw new InterpretError( "Already a member named: '" + name + "' in: " + this.getPath() );
         }
 
         this.attributes.put( name, atr );
@@ -635,6 +646,11 @@ public class ObjectBag {
         if ( mth != null ) {
             try {
                 this.chkIdentifier( newName );
+
+                if ( this.localLookUpMember( newName ) != null ) {
+                    throw new InterpretError( "there is already a member with that name: " + newName );
+                }
+
                 mth.setName( newName );
                 this.methods.remove( oldName );
                 this.methods.put( newName, mth );
@@ -845,7 +861,7 @@ public class ObjectBag {
 
     /**
      *  Removes all attributes.
-     *  @param completely Stes whether or not eliminate all attributes.
+     *  @param completely States whether or not eliminate all attributes.
      *  If set to false, the parent attribute is preserved.
      */
     public void clear(boolean completely)

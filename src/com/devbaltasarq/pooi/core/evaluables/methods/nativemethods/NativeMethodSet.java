@@ -41,13 +41,7 @@ public class NativeMethodSet extends NativeMethod {
             ref.set( id1, mth );
         } else {
             obj2 = rt.solveToObject( params[ 1 ] );
-            final boolean wasALit = ( obj2.getContainer() == rt.getLiteralsContainer() );
-
             ref.set( id1, obj2 );
-
-            if ( wasALit ) {
-                obj2.setName( id1 );
-            }
         }
 
         msg.append( '\'' );

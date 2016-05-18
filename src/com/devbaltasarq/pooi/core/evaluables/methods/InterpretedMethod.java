@@ -169,12 +169,31 @@ public class InterpretedMethod extends Method {
 
         // Add commands
         for(Command cmd: this.getCmds()) {
+            String replaceCmd = "";
             String cmdAsStr = cmd.toString();
+            int pos = cmdAsStr.indexOf( Parser.PopTask );
 
-            if ( cmdAsStr.indexOf( Parser.PopTask ) >= 0 ) {
+            if ( pos >= 0 ) {
                 // Process the reference
                 if ( cmd.getReference().toString().equals( Parser.PopTask ) ) {
-                    cmdAsStr = cmdAsStr.replaceFirst( Parser.PopTask, stack.pop() );
+                    replaceCmd = stack.pop();
+                    cmdAsStr = cmdAsStr.substring( 0, pos )
+                            + replaceCmd
+                            + cmdAsStr.substring( pos + Parser.PopTask.length(), cmdAsStr.length() );
+                }
+
+                // Process possible targets
+                pos += replaceCmd.length();
+                pos = cmdAsStr.indexOf( Parser.PopTask, pos );
+                while( pos >= 0 ) {
+                    replaceCmd = stack.pop();
+                    cmdAsStr = cmdAsStr.substring( 0, pos )
+                            + replaceCmd
+                            + cmdAsStr.substring( pos + Parser.PopTask.length(), cmdAsStr.length() );
+
+                    // Next?
+                    pos += replaceCmd.length();
+                    pos = cmdAsStr.indexOf( Parser.PopTask, pos );
                 }
             }
 

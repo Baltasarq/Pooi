@@ -2,6 +2,7 @@ package com.devbaltasarq.pooi.core.evaluables.methods.nativemethods;
 
 import com.devbaltasarq.pooi.core.Evaluable;
 import com.devbaltasarq.pooi.core.ObjectBag;
+import com.devbaltasarq.pooi.core.evaluables.Attribute;
 import com.devbaltasarq.pooi.core.evaluables.methods.NativeMethod;
 import com.devbaltasarq.pooi.core.exceps.InterpretError;
 
@@ -32,9 +33,11 @@ public class NativeMethodSetName extends NativeMethod {
             throws InterpretError
     {
         final ObjectBag container = ref.getContainer();
-        final String oldName = ref.getName();
+        String oldName = ref.getName();
 
         try {
+            final Attribute attr = container.localInverseLookUp( ref );
+            oldName = attr.getName();
             container.renameMember( oldName, id );
         }
         catch(InterpretError e)
