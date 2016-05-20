@@ -564,19 +564,23 @@ public class ObjectBag {
      */
     public void set(String name, ObjectBag obj) throws InterpretError
     {
+        boolean isParent = name.equals( ParentAttribute.ParentAttributeName );
         final Runtime rt = Runtime.getRuntime();
         Attribute atr = localLookUpAttribute( name );
 
         if ( atr == null ) {
             this.chkIdentifier( name );
 
-            if ( name.equals( ParentAttribute.ParentAttributeName ) ) {
-                this.setAttribute( name, new ParentAttribute( obj ) );
+            if ( isParent ) {
+                this.chkCyclesInParent( obj );
+                atr = new ParentAttribute( obj );
             } else {
-                this.setAttribute( name, new Attribute( name, obj ) );
+                atr = new Attribute( name, obj );
             }
+
+            this.setAttribute( name, atr );
         } else {
-            if ( atr instanceof ParentAttribute ) {
+            if ( isParent ) {
                 this.chkCyclesInParent( obj );
             }
 
