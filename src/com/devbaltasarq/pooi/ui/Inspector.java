@@ -13,6 +13,8 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.net.URL;
 import java.util.HashSet;
 
@@ -83,7 +85,7 @@ public class Inspector extends JDialog {
         {
             public void actionPerformed(ActionEvent e)
             {
-                Inspector.this.setVisible( false );
+                Inspector.this.finish();
             }
         });
         pnlClose.add( this.btClose );
@@ -103,14 +105,21 @@ public class Inspector extends JDialog {
         pnlName.add( edObjectName );
         this.pnlAction.add( pnlName );
         this.pnlAction.add( Box.createVerticalGlue() );
+
+        // Object's name events
+        this.edObjectName.addFocusListener( new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {}
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                Inspector.this.onEditObjectName();
+            }
+        } );
         this.edObjectName.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                if ( !Inspector.this.beingBuilt ) {
-                    Inspector.this.visualEngine.execute(
-                        Inspector.this.getObj().getPath() + " rename \"" + edObjectName.getText() + "\"" );
-                    Inspector.this.updateObjectBasicAttributes();
-                }
+                Inspector.this.onEditObjectName();
             }
         });
 
@@ -131,14 +140,21 @@ public class Inspector extends JDialog {
             pnlAttrParent.add( this.cbParent );
             this.pnlAction.add( pnlAttrParent );
             this.pnlAction.add( Box.createVerticalGlue() );
+
+            // Combobox's events for the parent attribute
+            this.cbParent.addFocusListener( new FocusListener() {
+                @Override
+                public void focusGained(FocusEvent e) {}
+
+                @Override
+                public void focusLost(FocusEvent e) {
+                    Inspector.this.onChangeParent();
+                }
+            } );
             this.cbParent.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent actionEvent) {
-                    if ( !Inspector.this.beingBuilt ) {
-                        Inspector.this.visualEngine.execute(
-                            Inspector.this.getObj().getPath() + ".parent = " + cbParent.getSelectedItem() );
-                        Inspector.this.updateObjectBasicAttributes();
-                    }
+                    Inspector.this.onChangeParent();
                 }
             });
         }
@@ -162,20 +178,14 @@ public class Inspector extends JDialog {
         btAddAttribute.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String attrName = "attr" + ( Inspector.this.getObj().getNumberOfAttributes()  + 1 );
-                Inspector.this.visualEngine.execute( getObj().getPath() + "." + attrName + " = 0" );
-                Inspector.this.addAttributePanel( getObj().lookUpAttribute( attrName ) );
-                Inspector.this.pack();
+                Inspector.this.onAddAttribute();
             }
         } );
 
         btAddMethod.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String mthName = "mth" + ( Inspector.this.getObj().getNumberOfMethods() + 1 );
-                Inspector.this.visualEngine.execute( getObj().getPath() + "." + mthName + " = {:}" );
-                Inspector.this.addMethodPanel( getObj().localLookUpMethod( mthName ) );
-                Inspector.this.pack();
+                Inspector.this.onAddMethod();
             }
         } );
 
@@ -210,37 +220,44 @@ public class Inspector extends JDialog {
         this.pnlAttributes.add( panel );
         this.pnlAttributes.add( Box.createVerticalGlue() );
 
+        // Events for the name of the attribute
+        edName.addFocusListener( new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {}
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                Inspector.this.onRenameAttribute( edName, attr );
+            }
+        } );
         edName.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if ( !Inspector.this.beingBuilt ) {
-                    Inspector.this.visualEngine.execute( getObj().getPath()
-                                    + "." + attr.getName() + " rename \"" + edName.getText() + "\"" );
-                    edName.setText( attr.getName() );
-                }
+                Inspector.this.onRenameAttribute( edName, attr );
             }
         } );
 
+        // Events for the contents of the attribute
+        cbContents.addFocusListener( new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {}
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                Inspector.this.onChangeContentsForAttribute( cbContents, attr );
+            }
+        } );
         cbContents.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
-                if ( !Inspector.this.beingBuilt ) {
-                    if ( !( attr.getReference().getNameOrValueAsString().equals( cbContents.getSelectedItem() ) ) ) {
-                        visualEngine.execute( obj.getPath() + "." + edName.getText()
-                                + " = " + cbContents.getModel().getSelectedItem() );
-                    }
-                }
+                Inspector.this.onChangeContentsForAttribute( cbContents, attr );
             }
         } );
 
         btDelete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                if ( !Inspector.this.beingBuilt ) {
-                    visualEngine.execute( obj.getPath() + " erase \"" + attr.getName() + "\"" );
-                    pnlAttributes.remove( panel );
-                    Inspector.this.pack();
-                }
+                Inspector.this.onDeleteAttribute( panel, attr );
             }
         });
     }
@@ -271,16 +288,16 @@ public class Inspector extends JDialog {
         }
     }
 
-    private void addMethodPanel(Method mth) {
-        String mthName = mth.getName();
-        JPanel panel = new JPanel();
+    private void addMethodPanel(ObjectBag.Slot slot) {
+        String mthName = slot.getMethod().getName();
+        final JPanel panel = new JPanel();
         panel.setBorder( new EmptyBorder( 10, 10, 10, 10 ) );
         panel.setLayout( new BoxLayout( panel, BoxLayout.LINE_AXIS ) );
 
         JButton btDelete = Util.createButton( this.iconDelete, "Delete" );
         JButton btExecute = Util.createButton( this.iconExecute, "Execute" );
         JTextField edName = new JTextField( mthName );
-        JTextField edContents = new JTextField( mth.getMethodBodyAsString() );
+        JTextField edContents = new JTextField( slot.getMethod().getMethodBodyAsString() );
         edContents.setHorizontalAlignment( JTextField.RIGHT );
         panel.add( btExecute );
         panel.add( Box.createRigidArea( new Dimension( 10, 0 ) ) );
@@ -292,33 +309,46 @@ public class Inspector extends JDialog {
         this.pnlMethods.add( panel );
         this.pnlMethods.add( Box.createVerticalGlue() );
 
+        // Events for the name of the method
+        edName.addFocusListener( new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {}
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                Inspector.this.onRenameMethod( slot, edName );
+            }
+        } );
         edName.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if ( !Inspector.this.beingBuilt ) {
-                    Inspector.this.visualEngine.execute(
-                            getObj().getPath()
-                            + " renameMethod \"" + mth.getName()
-                            + "\" \"" + edName.getText() + "\""  );
-                    edName.setText( mth.getName() );
-                }
+                Inspector.this.onRenameMethod( slot, edName );
             }
         } );
 
+        // Events for the body of the method
+        edContents.addFocusListener( new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {}
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                Inspector.this.onMethodBodyChanged( edContents, slot );
+            }
+        } );
         edContents.addActionListener( new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if ( !Inspector.this.beingBuilt ) {
-                    visualEngine.execute( getObj().getPath() + "." + edName.getText() + " = " + edContents.getText() );
-                }
+                Inspector.this.onMethodBodyChanged( edContents, slot );
             }
         } );
 
+        // Events for buttons
         btExecute.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 if ( !Inspector.this.beingBuilt ) {
-                    Inspector.this.launchMethodExecution( mth.getName() );
+                    Inspector.this.launchMethodExecution( slot.getMethod().getName() );
                 }
             }
         });
@@ -326,11 +356,7 @@ public class Inspector extends JDialog {
         btDelete.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                if ( !Inspector.this.beingBuilt ) {
-                    visualEngine.execute( obj.getPath() + " erase \"" + mth.getName() + "\"" );
-                    pnlMethods.remove( panel );
-                    Inspector.this.pack();
-                }
+                Inspector.this.onDeleteMethod( panel, slot );
             }
         });
     }
@@ -346,7 +372,7 @@ public class Inspector extends JDialog {
         ObjectBag obj = this.getObj();
         do {
             for (Method mth : obj.getLocalMethods()) {
-                String mthName = mth.getName();
+                final String mthName = mth.getName();
 
                 if ( mthIds.contains( mthName ) ) {
                     continue;
@@ -354,7 +380,7 @@ public class Inspector extends JDialog {
                     mthIds.add( mthName );
                 }
 
-                this.addMethodPanel( mth );
+                this.addMethodPanel( obj.lookUpSlot( mthName ) );
             }
 
             obj = obj.getParentObject();
@@ -438,8 +464,8 @@ public class Inspector extends JDialog {
             }
         }
 
-        visualEngine.execute( obj.getPath() + " " + methodName + " " + arguments );
-        this.setVisible( false );
+        this.visualEngine.execute( obj.getPath() + " " + methodName + " " + arguments );
+        this.finish();
     }
 
     private void copyObject()
@@ -451,13 +477,13 @@ public class Inspector extends JDialog {
                 JOptionPane.PLAIN_MESSAGE,
                 null,
                 null,
-                "obj" + ( visualEngine.getInterpreter().getRuntime().getRoot().getNumberOfAttributes() + 1 ) );
+                "obj" + ( this.visualEngine.getInterpreter().getRuntime().getRoot().getNumberOfAttributes() + 1 ) );
 
         if ( newName != null ) {
             newName = newName.trim();
             if ( newName.length() > 0 ) {
-                visualEngine.execute( "(" + obj.getPath() + " copy) rename \"" + newName + '\"' );
-                this.setVisible( false );
+                this.visualEngine.execute( "(" + obj.getPath() + " copy) rename \"" + newName + '\"' );
+                this.finish();
             }
         }
     }
@@ -527,6 +553,9 @@ public class Inspector extends JDialog {
         return;
     }
 
+    /** Compiles all the names in the Root object
+     * @return The names, as a String[]
+     */
     public String[] prepareAvailableObjectsNames() {
         final Attribute[] attrs = this.rt.getRoot().getAttributes();
         this.availableObjectsNames = new String[ attrs.length ];
@@ -535,6 +564,129 @@ public class Inspector extends JDialog {
         }
 
         return this.availableObjectsNames;
+    }
+
+    /** Point of finishing for the inspector */
+    protected void finish() {
+        this.setVisible( false );
+    }
+
+    /** Triggered when the user changes the name of the object */
+    protected void onEditObjectName() {
+        if ( !this.beingBuilt ) {
+            String newName = this.edObjectName.getText().trim();
+
+            if ( !( this.getObj().getName().equals( newName  ) ) ) {
+                this.visualEngine.execute( this.getObj().getPath() + " rename \"" + newName + "\"" );
+                this.updateObjectBasicAttributes();
+            }
+        }
+    }
+
+    /** Triggered when the user schanges the parent */
+    protected void onChangeParent() {
+        if ( !this.beingBuilt ) {
+            String newParentName = (String) this.cbParent.getSelectedItem();
+
+            if ( !( this.getObj().getParentObject().getName().equals( newParentName  ) ) ) {
+                this.visualEngine.execute( this.getObj().getPath() + ".parent = " + newParentName );
+                this.updateObjectBasicAttributes();
+            }
+        }
+    }
+
+    /** Triggered when the user adds a new attribute */
+    protected void onAddAttribute() {
+        String attrName = "attr" + ( this.getObj().getNumberOfAttributes()  + 1 );
+
+        this.visualEngine.execute( this.getObj().getPath() + "." + attrName + " = 0" );
+        final Attribute attr = this.getObj().lookUpAttribute( attrName );
+
+        if ( attr != null ) {
+            this.addAttributePanel( attr );
+            this.pack();
+        }
+    }
+
+    /** Triggered when the user adds a new method */
+    protected void onAddMethod() {
+        String mthName = "mth" + ( this.getObj().getNumberOfMethods() + 1 );
+
+        this.visualEngine.execute( this.getObj().getPath() + "." + mthName + " = {:}" );
+        final ObjectBag.Slot slot = this.getObj().lookUpSlot( mthName );
+        if ( slot != null ) {
+            this.addMethodPanel( slot );
+            this.pack();
+        }
+    }
+
+    /** Triggered when the user modifies the name of an attribute */
+    protected void onRenameAttribute(JTextField edName, Attribute attr) {
+        if ( !this.beingBuilt ) {
+            String newName = edName.getText();
+
+            if ( !( attr.getName().equals( newName ) ) ) {
+                this.visualEngine.execute( getObj().getPath() + "." + attr.getName() + " rename \"" + newName + "\"" );
+                edName.setText( attr.getName() );
+            }
+        }
+    }
+
+    protected void onChangeContentsForAttribute(JComboBox cbContents, Attribute attr) {
+        if ( !this.beingBuilt ) {
+            String newContents = (String) cbContents.getSelectedItem();
+
+            if ( !( attr.getReference().getNameOrValueAsString().equals( newContents ) ) ) {
+                this.visualEngine.execute( this.getObj().getPath() + "." + attr.getName() + " = " + newContents );
+            }
+        }
+    }
+
+    /** Triggered when the user deletes an attribute */
+    protected void onDeleteAttribute(JPanel panel, Attribute attr)
+    {
+        if ( !this.beingBuilt ) {
+            this.visualEngine.execute( this.getObj().getPath() + " erase \"" + attr.getName() + "\"" );
+            this.pnlAttributes.remove( panel );
+            Inspector.this.pack();
+        }
+    }
+
+    /** Triggered when the user changes the name of a method */
+    protected void onRenameMethod(ObjectBag.Slot slot, JTextField edName) {
+        if ( !this.beingBuilt ) {
+            final String oldName = slot.getMethod().getName();
+            final String newName = edName.getText();
+
+            if ( !( oldName.equals( newName ) ) ) {
+                this.visualEngine.execute(
+                        this.getObj().getPath() + " renameMethod \"" + oldName + "\" \"" + newName + "\""  );
+                edName.setText( slot.getMethod().getName() );
+            }
+        }
+    }
+
+    /** Triggered when the user changes the body of a method */
+    protected void onMethodBodyChanged(JTextField edContents, ObjectBag.Slot slot) {
+        if ( !this.beingBuilt ) {
+            final Method mth = slot.getMethod();
+            final String mthName = mth.getName();
+            final String newContents = edContents.getText().trim();
+
+            if ( !( mth.getMethodBodyAsString().equals( newContents ) ) ) {
+                this.visualEngine.execute( getObj().getPath() + "." + mthName + " = " + newContents );
+            }
+        }
+    }
+
+    /** Triggered when the user deletes a method */
+    protected void onDeleteMethod(JPanel panel, ObjectBag.Slot slot) {
+        if ( !this.beingBuilt ) {
+            final Method mth = slot.getMethod();
+            this.visualEngine.execute( this.getObj().getPath() + " erase \"" + mth.getName() + "\"" );
+            this.pnlMethods.remove( panel );
+            this.pack();
+        }
     }
 
     private ObjectBag obj;

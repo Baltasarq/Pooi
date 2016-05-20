@@ -21,6 +21,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -831,6 +833,8 @@ public class VisualEngine extends JFrame {
         final int HorizontalSeparation = 25;
         final int VerticalSeparation = 50;
         final Runtime rt = this.interpreter.getRuntime();
+        final ArrayList<Integer> levels = new ArrayList<>( 2 );
+        final ArrayList<Integer> xInLevel = new ArrayList<>( 2 );
 
         this.pnlCanvas.setFont( this.font );
 
@@ -846,10 +850,10 @@ public class VisualEngine extends JFrame {
         this.diagramBoxes = new HashMap<>();
 
         // Create boxes
-        int xUpLevel = 20;
-        int xDownLevel = 20;
-        final int UpRowLevel = 150;
-        final int DownRowLevel = 300;
+        xInLevel.add( 20 );
+        xInLevel.add( 20 );
+        levels.add( 150 );
+        levels.add( 300 );
 
         // Inheritance root
         ObjectBox rootBox = new ObjectBox( rt.getAbsoluteParent(), 20, 20 );
@@ -857,8 +861,8 @@ public class VisualEngine extends JFrame {
         diagramBoxes.put( rt.getAbsoluteParent().getPath(), rootBox );
 
         // anObject
-        ObjectBox anObjectBox = new ObjectBox( rt.getAnObject(), xUpLevel, UpRowLevel );
-        xUpLevel += anObjectBox.prepareDrawing( pnlCanvas ).width + HorizontalSeparation;
+        ObjectBox anObjectBox = new ObjectBox( rt.getAnObject(), xInLevel.get( 0 ), levels.get( 0 ) );
+        xInLevel.set( 0, xInLevel.get( 0 ) + anObjectBox.prepareDrawing( pnlCanvas ).width + HorizontalSeparation );
         diagramBoxes.put( rt.getAnObject().getPath(), anObjectBox );
 
         for(Attribute atr: rt.getRoot().getAttributes()) {
@@ -867,41 +871,51 @@ public class VisualEngine extends JFrame {
             if ( !( obj instanceof SysObject )
                 && !doNotAdd.contains( obj ) )
             {
-                int pos = xUpLevel;
-                int level = UpRowLevel;
+                final int objLevel = obj.getInheritanceLevel();
 
-                if ( obj.getParentObject() != rt.getAbsoluteParent() ) {
-                    level = DownRowLevel;
-                    pos = xDownLevel;
+                // Make the arrays grow, if needed
+                if ( levels.size() <= objLevel ) {
+                    final int oldSize = levels.size();
+                    final int neededSize = ( objLevel - oldSize ) + 1;
+
+                    levels.addAll( Arrays.asList( new Integer[ neededSize ] ) );
+                    xInLevel.addAll( Arrays.asList( new Integer[ neededSize ] ) );
+
+                    for(int i = oldSize; i < levels.size(); ++i) {
+                        levels.set( i, levels.get( i - 1 ) + 150 );
+                        xInLevel.set( i, 20 );
+                    }
                 }
 
-                ObjectBox box = new ObjectBox( obj, pos, level );
+                final int level = levels.get( objLevel );
+                final ObjectBox box = new ObjectBox( obj, xInLevel.get( objLevel ), level );
+
                 diagramBoxes.put( obj.getPath(), box );
-
                 Dimension dimension = box.prepareDrawing( pnlCanvas );
-                if ( obj.getParentObject() == rt.getAbsoluteParent() ) {
-                    xUpLevel += dimension.width + HorizontalSeparation;
-                } else {
-                    xDownLevel += dimension.width + HorizontalSeparation;
-                }
+                xInLevel.set( objLevel, xInLevel.get( objLevel ) + dimension.width + HorizontalSeparation );
             }
         }
 
-        // Calculate max height for first level
-        int maxHeight = 0;
-        for (ObjectBox box: diagramBoxes.values()) {
-            if ( box.getY() == UpRowLevel ) {
-                maxHeight = Math.max( maxHeight, box.getMeasuredDimension().height );
-            }
-        }
-
-        // Recalculate vertical position, if needed
-        if ( ( UpRowLevel + maxHeight ) >= DownRowLevel ) {
-            final int newLevel = UpRowLevel + maxHeight + VerticalSeparation;
+        // Recalculate the vertical position for each level
+        for(int i = 0; i < ( levels.size() - 1 ); ++i) {
+            int maxHeight = 0;
             for (ObjectBox box: diagramBoxes.values()) {
-                if ( box.getY() == DownRowLevel ) {
-                    box.setY( newLevel );
+                if ( box.getY() == levels.get( i ) ) {
+                    maxHeight = Math.max( maxHeight, box.getMeasuredDimension().height );
                 }
+            }
+
+            // Modify vertical position, if needed
+            if ( ( levels.get( i ) + maxHeight ) >= levels.get( i + 1 ) ) {
+                final int newVerticalPosition = levels.get( i ) + maxHeight + VerticalSeparation;
+
+                for (ObjectBox box: diagramBoxes.values()) {
+                    if ( box.getY() == levels.get( i + 1 ) ) {
+                        box.setY( newVerticalPosition );
+                    }
+                }
+
+                levels.set( i + 1, newVerticalPosition );
             }
         }
 

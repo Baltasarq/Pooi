@@ -99,7 +99,7 @@ public class InterpretedMethod extends Method {
             }
         }
 
-        // Check ':' and remove it
+        // Check ':' and removeMember it
         if ( lex.getCurrentChar() != ':' ) {
             throw new InterpretError( "missing expected parameter separator: ':'" );
         }

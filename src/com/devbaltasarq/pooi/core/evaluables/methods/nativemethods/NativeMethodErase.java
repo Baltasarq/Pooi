@@ -25,7 +25,7 @@ public class NativeMethodErase extends NativeMethod {
 
         final String id1 = getStringFrom( params[ 0 ] );
 
-        ref.remove( id1 );
+        ref.removeMember( id1 );
 
         msg.append( "'" );
         msg.append( id1 );

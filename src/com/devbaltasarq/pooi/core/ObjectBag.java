@@ -3,6 +3,7 @@ package com.devbaltasarq.pooi.core;
 import com.devbaltasarq.pooi.core.evaluables.*;
 import com.devbaltasarq.pooi.core.exceps.AttributeNotFound;
 import com.devbaltasarq.pooi.core.exceps.InterpretError;
+import com.devbaltasarq.pooi.core.objs.ObjectParent;
 import com.devbaltasarq.pooi.core.objs.ObjectRoot;
 import com.devbaltasarq.pooi.core.objs.ValueObject;
 
@@ -14,6 +15,29 @@ import java.util.*;
  */
 public class ObjectBag {
 
+    /** This is needed because of the GUI.
+     *  Methods can be native or interpreted, and the object representing it
+     *  can be changed for another one at any time, while the user needs to be
+     *  able to modify something stable.
+     *  Its objective is to wrap a method in the list of available methods in this object.
+     */
+    public static class Slot {
+        public Slot(Method mth) {
+            this.mth = mth;
+        }
+
+        public Method getMethod() {
+            return mth;
+        }
+
+        public void setMethod(Method mth) {
+            this.mth = mth;
+        }
+
+        private Method mth;
+    }
+
+    /** Needed in order to make a deep copy */
     public static class ContainerAttributePair {
         public ContainerAttributePair(ObjectBag c, Attribute atr)
         {
@@ -73,7 +97,7 @@ public class ObjectBag {
             n = this.createNewName();
         } else {
             if ( chk ) {
-                this.chkIdentifierForObjectName( n );
+                this.chkIdentifierForMemberName( n );
             }
         }
 
@@ -99,13 +123,28 @@ public class ObjectBag {
     }
 
     /**
-     * Returns the collection of methods, as a native vector
-     *
-     * @return The collection of methods, as a native vector
+     * Returns the collection of methods
+     * @return The collection of methods, as a native vector Method[]
      */
     public Method[] getLocalMethods()
     {
-        return this.methods.values().toArray( new Method[ this.methods.size() ] );
+        final Slot[] slots = this.getSlots();
+        final Method[] toret = new Method[ slots.length ];
+
+        for (int i = 0; i < slots.length; ++i) {
+            toret[ i ] = slots[ i ].getMethod();
+        }
+
+        return toret;
+    }
+
+    /**
+     * Returns the collection of slots. Remember Slot's are permanent.
+     * @return The collection of slots, as a native vector Slot[]
+     */
+    public Slot[] getSlots()
+    {
+        return this.methods.values().toArray( new Slot[ this.methods.size() ] );
     }
 
     /**
@@ -129,7 +168,7 @@ public class ObjectBag {
 
         id = id.trim();
 
-        this.chkIdentifierForObjectName( id );
+        this.chkIdentifierForMemberName( id );
 
         if ( containerObj != null ) {
             final Attribute atrInParent = containerObj.localInverseLookUp( this  );
@@ -271,13 +310,14 @@ public class ObjectBag {
         return this.methods.size();
     }
 
-    /** @return the number of objects between this object and root, plus itself */
+    /** @return the number of objects between this object and root */
     public int getInheritanceLevel() {
-        int toret = 1;
+        int toret = 0;
         ObjectBag obj = this.getParentObject();
 
-        while ( !( obj instanceof ObjectRoot ) ) {
+        while ( !( obj instanceof ObjectParent ) ) {
             ++toret;
+            obj = obj.getParentObject();
         }
 
         return toret;
@@ -443,9 +483,9 @@ public class ObjectBag {
         toret.append( getParentObject().getName() );
         toret.append( " = {\n" );
 
-        for (Method mth : this.methods.values()) {
+        for (Slot slot : this.methods.values()) {
             toret.append( "\t" );
-            toret.append( mth.toString() );
+            toret.append( slot.getMethod().toString() );
             toret.append( "\n" );
         }
 
@@ -528,19 +568,18 @@ public class ObjectBag {
         Attribute atr = localLookUpAttribute( name );
 
         if ( atr == null ) {
-            // Prepare attribute along with the name
             this.chkIdentifier( name );
 
             if ( name.equals( ParentAttribute.ParentAttributeName ) ) {
-                this.chkCyclesInParent( obj );
-                atr = new ParentAttribute( obj );
+                this.setAttribute( name, new ParentAttribute( obj ) );
             } else {
-                atr = new Attribute( name, obj );
+                this.setAttribute( name, new Attribute( name, obj ) );
+            }
+        } else {
+            if ( atr instanceof ParentAttribute ) {
+                this.chkCyclesInParent( obj );
             }
 
-            // Insert the attribute
-            this.setAttribute( name, atr );
-        } else {
             atr.setReference( obj );
         }
 
@@ -559,7 +598,7 @@ public class ObjectBag {
      */
     public void set(String name, Method mth) throws InterpretError
     {
-        this.chkIdentifier( name );
+        this.chkIdentifierForMemberName( name );
         this.setMethod( name, mth );
     }
 
@@ -580,7 +619,16 @@ public class ObjectBag {
 
     protected final void setMethod(String name, Method mth) throws InterpretError
     {
-        this.methods.put( name, mth );
+        final Slot slot = this.lookUpSlot( name );
+
+        if ( slot == null ) {
+            mth.setName( name );
+            this.methods.put( name, new Slot( mth ) );
+        } else {
+            slot.setMethod( mth );
+        }
+
+        return;
     }
 
     protected final void setAttribute(String name, Attribute atr) throws InterpretError
@@ -641,26 +689,23 @@ public class ObjectBag {
     }
 
     public void renameMethod(String oldName, String newName) throws InterpretError {
-        final Method mth = this.localLookUpMethod( oldName );
+        final Slot slot = this.lookUpSlot( oldName );
 
-        if ( mth != null ) {
+        if ( slot != null ) {
+            final Method mth = slot.getMethod();
+
             try {
-                this.chkIdentifier( newName );
-
-                if ( this.localLookUpMember( newName ) != null ) {
-                    throw new InterpretError( "there is already a member with that name: " + newName );
-                }
-
+                this.chkIdentifierForMemberName( newName );
                 mth.setName( newName );
                 this.methods.remove( oldName );
-                this.methods.put( newName, mth );
+                this.methods.put( newName, slot );
             } catch(InterpretError exc) {
                 if ( mth != null
                   && mth.getName().equals( newName ) )
                 {
                     mth.setName( oldName );
                     this.methods.remove( newName );
-                    this.methods.put( oldName, mth );
+                    this.methods.put( oldName, slot );
                 }
 
                 throw exc;
@@ -755,6 +800,20 @@ public class ObjectBag {
      */
     public Method localLookUpMethod(String mthName)
     {
+        final Slot slot = this.lookUpSlot( mthName );
+
+        if ( slot != null ) {
+            return slot.getMethod();
+        } else {
+            return null;
+        }
+    }
+
+    /** Returns a given slot for a given method, if exists, or null if it does not.
+     * @param mthName The name of the method.
+     * @return A Slot object pointing to the method, null otherwise.
+     */
+    public Slot lookUpSlot(String mthName) {
         return this.methods.get( mthName );
     }
 
@@ -794,7 +853,7 @@ public class ObjectBag {
 
             // Create the new object
             ObjectBag objDest = new ObjectBag( destName, objOrg.getParentObject(), container );
-            objDest.chkIdentifierForObjectName( destName );
+            objDest.chkIdentifierForMemberName( destName );
             container.set( destName, objDest );
 
             if ( toret == null ) {
@@ -802,7 +861,9 @@ public class ObjectBag {
             }
 
             // Copy all methods
-            for (Method mth : objOrg.methods.values()) {
+            for (Slot slot : objOrg.methods.values()) {
+                final Method mth = slot.getMethod();
+
                 objDest.set( mth.getName(), mth.copy() );
             }
 
@@ -850,7 +911,7 @@ public class ObjectBag {
             name = this.createNewName();
         }
 
-        this.chkIdentifierForObjectName( name );
+        this.chkIdentifierForMemberName( name );
 
         // Create the new object
         ObjectBag toret = new ObjectBag( name, this, container );
@@ -886,10 +947,10 @@ public class ObjectBag {
 
     /**
      * Removes an attribute from the attribute list
-     * @param name The name of the attribute to remove
+     * @param name The name of the attribute to removeMember
      * @throws com.devbaltasarq.pooi.core.exceps.InterpretError
      */
-    public void remove(String name) throws InterpretError
+    public void removeMember(String name) throws InterpretError
     {
         if ( this.attributes.containsKey(name) ) {
 
@@ -902,7 +963,7 @@ public class ObjectBag {
             this.attributes.remove( name );
         }
         else
-        if ( this.methods.containsKey(name) ) {
+        if ( this.methods.containsKey( name ) ) {
             this.methods.remove( name );
         }
         else {
@@ -964,7 +1025,7 @@ public class ObjectBag {
      * @param id The identifier to check
      * @throws com.devbaltasarq.pooi.core.exceps.InterpretError if it is reserved or already exists.
      */
-    public void chkIdentifierForObjectName(String id) throws InterpretError
+    public void chkIdentifierForMemberName(String id) throws InterpretError
     {
         id = id.trim();
 
@@ -974,7 +1035,7 @@ public class ObjectBag {
             throw new InterpretError( "'" + id + "' is a reserved id" );
         }
 
-        if ( this.localLookUpAttribute(id) != null ) {
+        if ( this.localLookUpAttribute( id ) != null ) {
             throw new InterpretError( "'" + id + "' already exists in " + getName() );
         }
 
@@ -991,7 +1052,7 @@ public class ObjectBag {
     private String name;
     private ObjectBag container;
     private HashMap<String, Attribute> attributes;
-    private HashMap<String, Method> methods;
+    private HashMap<String, Slot> methods;
     private int numUniqueId;
 
 }

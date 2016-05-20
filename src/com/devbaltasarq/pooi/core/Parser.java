@@ -58,7 +58,7 @@ public class Parser {
         // empty
         if  ( !order.isEmpty() ) {
 
-            // remove last ';'
+            // removeMember last ';'
             if ( order.charAt( order.length() -1 ) == ';') {
                 order = order.substring( 0, order.length() -1 ).trim();
             }
