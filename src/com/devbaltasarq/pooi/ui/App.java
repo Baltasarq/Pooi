@@ -26,7 +26,8 @@ public class App {
             java.awt.EventQueue.invokeLater( new Runnable() {
                 @Override
                 public void run() {
-                    g.setVisible( true );  g.reset();
+                    g.setVisible( true );
+                    g.reset();
                 }
             } );
         } catch(Exception e)

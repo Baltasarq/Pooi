@@ -1,12 +1,13 @@
 package com.devbaltasarq.pooi.core;
 
+import com.devbaltasarq.pooi.core.evaluables.Attribute;
 import com.devbaltasarq.pooi.core.evaluables.Command;
 import com.devbaltasarq.pooi.core.evaluables.Method;
 import com.devbaltasarq.pooi.core.evaluables.Reference;
 import com.devbaltasarq.pooi.core.evaluables.methods.InterpretedMethod;
 import com.devbaltasarq.pooi.core.evaluables.methods.NativeMethod;
 import com.devbaltasarq.pooi.core.exceps.InterpretError;
-import com.devbaltasarq.pooi.core.objs.ObjectStr;
+import com.devbaltasarq.pooi.core.objs.ObjectBool;
 
 import java.io.*;
 
@@ -15,41 +16,50 @@ import java.io.*;
  * @author baltasarq
  */
 public class Interpreter {
+    public static final String EtqInfoObject = "info";
+    public static final String EtqInfoObjAttrName = "name";
+    public static final String EtqInfoObjAttrVersion = "version";
+    public static final String EtqInfoObjAttrEmail = "email";
+    public static final String EtqInfoObjAttrAuthor = "author";
+    public static final String EtqInfoObjAttrHelp = "help";
+    public static final String EtqInfoObjAttrLicense = "license";
+    public static final String EtqInfoObjAttrVerbose = "verbose";
+    public static final String EtqInfoObjAttrUsesGui = "gui";
 
-    /** Creates a new instance of the interpreter */
+    /** Creates a fresh new interpreter, setting certain configuration options */
+    public Interpreter(boolean verbose, boolean usesGui) throws InterpretError
+    {
+        this();
+        this.hasGui = usesGui;
+        this.objInfo.set( EtqInfoObjAttrVerbose, rt.createBool( verbose ) );
+        this.objInfo.set( EtqInfoObjAttrUsesGui, rt.createBool( usesGui ) );
+    }
+
+    /** Creates a fresh new interpreter */
     public Interpreter() throws InterpretError
     {
         this.error = false;
         this.rt = Runtime.getRuntime();
-        this.createAuxiliaryObjects();
+        this.createInfoObject();
     }
 
-    private final void createAuxiliaryObjects() throws InterpretError
+    private final void createInfoObject() throws InterpretError
     {
         final Runtime rt = this.getRuntime();
 
-        // Author object
-        ObjectStr name = rt.createString( "name", AppInfo.Author );
-        ObjectStr email =  rt.createString( "email", AppInfo.Email );
-        this.objAuthor =  rt.createObject( "author" );
-        this.objAuthor.set( name.getName(), name );
-        this.objAuthor.set( email.getName(), email );
-
-        // objAbout object
-        ObjectStr appName =  rt.createString( "appName", AppInfo.Name );
-        ObjectStr version =  rt.createString( "appVersion", AppInfo.Version );
-        this.objAbout =  rt.createObject( "about" );
-        this.objAbout.set( appName.getName(), appName );
-        this.objAbout.set( version.getName(), version );
-
-        // objHelp object
-        ObjectStr use = rt.createString( "use",
+        // Info object
+        this.objInfo = rt.createObject( EtqInfoObject );
+        this.objInfo.set( EtqInfoObjAttrName, rt.createString(EtqInfoObjAttrName, AppInfo.Name ) );
+        this.objInfo.set( EtqInfoObjAttrVersion, rt.createString(EtqInfoObjAttrVersion, AppInfo.Version ) );
+        this.objInfo.set( EtqInfoObjAttrEmail, rt.createString(EtqInfoObjAttrEmail, AppInfo.Email ) );
+        this.objInfo.set( EtqInfoObjAttrAuthor, rt.createString(EtqInfoObjAttrAuthor, AppInfo.Author ) );
+        this.objInfo.set( EtqInfoObjAttrLicense, rt.createString(EtqInfoObjAttrLicense, AppInfo.License ) );
+        this.objInfo.set( EtqInfoObjAttrVerbose, rt.createBool( true ) );
+        this.objInfo.set( EtqInfoObjAttrUsesGui, rt.createBool( true ) );
+        this.objInfo.set( EtqInfoObjAttrHelp, rt.createString(EtqInfoObjAttrHelp,
                                       "copy objects in order to create new ones\n"
-                                              + " insert orders in the form ( <object> <msg> <args> )\n\n"
-        );
-
-        ObjectStr msgs = rt.createString( "available_messages",
-                                                 "\n\nobject rename <string>\n"
+                                               + " insert orders in the form ( <object> <msg> <args> )\n\n"
+                                               +   "\n\nobject rename <string>\n"
                                                + "object name\n"
                                                + "object copy\n"
                                                + "object createChild\n"
@@ -67,11 +77,9 @@ public class Interpreter {
                                                + "\n'object.attribute' is the same as 'object.attribute str'"
                                                + "\n'obj.x.y.z = <reference>' is the same as 'obj.x.y set \"z\" <reference>'"
                                                + "\n\n"
-        );
+        ) );
 
-        this.objHelp = rt.createObject( "help" );
-        objHelp.set( use.getName(), use );
-        objHelp.set( msgs.getName(), msgs );
+        return;
     }
 
     public String interpret(String cmds)
@@ -290,16 +298,47 @@ public class Interpreter {
         return toret.toString();
     }
 
-    public ObjectBag getAuthorObject() {
-        return this.objAuthor;
+    public boolean isVerbose() throws InterpretError
+    {
+        Attribute attrVerbose = null;
+        ObjectBag info = this.getObjInfo();
+
+        // Create the object, if it does not exist
+        if ( info == null ) {
+            this.createInfoObject();
+            info = this.getObjInfo();
+        }
+
+        // Create the attribute about verbose, if needed
+        attrVerbose = info.localLookUpAttribute( EtqInfoObjAttrVerbose );
+
+        if ( attrVerbose == null ) {
+            this.objInfo.set( EtqInfoObjAttrVerbose, rt.createBool( true ) );
+        }
+
+        return ( (ObjectBool) attrVerbose.getReference() ).getValue();
     }
 
-    public ObjectBag getAboutObject() {
-        return this.objAbout;
+    public boolean isGui() throws InterpretError
+    {
+        ObjectBag info = this.getObjInfo();
+
+        // Create the info object, if needed
+        if ( info == null ) {
+            this.createInfoObject();
+        }
+
+        // Create the attribute with the fixed value
+        this.getObjInfo().set( EtqInfoObjAttrUsesGui, rt.createBool( this.hasGui ) );
+        return this.hasGui;
     }
 
-    public ObjectBag getHelpObject() {
-        return this.objHelp;
+    public ObjectBag getObjInfo() {
+        return this.objInfo;
+    }
+
+    public boolean hasGui() {
+        return this.hasGui;
     }
 
     public Runtime getRuntime()
@@ -307,11 +346,9 @@ public class Interpreter {
         return this.rt;
     }
 
-
     protected boolean error;
     protected final Runtime rt;
-    private ObjectBag objAuthor;
-    private ObjectBag objAbout;
-    private ObjectBag objHelp;
+    private ObjectBag objInfo;
     protected BufferedWriter transcript = null;
+    private boolean hasGui;
 }

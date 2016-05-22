@@ -7,8 +7,10 @@ import com.devbaltasarq.pooi.core.Runtime;
 import com.devbaltasarq.pooi.core.evaluables.Attribute;
 import com.devbaltasarq.pooi.core.evaluables.Reference;
 import com.devbaltasarq.pooi.core.exceps.InterpretError;
+import com.devbaltasarq.pooi.core.objs.ObjectOs;
 import com.devbaltasarq.pooi.core.objs.ObjectRoot;
 import com.devbaltasarq.pooi.core.objs.SysObject;
+import org.w3c.dom.Attr;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -839,14 +841,12 @@ public class VisualEngine extends JFrame {
         this.pnlCanvas.setFont( this.font );
 
         // Created unwanted objects to be shown
-        HashSet<ObjectBag> doNotAdd = new HashSet<>();
-        doNotAdd.add( this.interpreter.getAboutObject() );
-        doNotAdd.add( this.interpreter.getAuthorObject() );
-        doNotAdd.add( this.interpreter.getHelpObject() );
+        final HashSet<ObjectBag> doNotAdd = new HashSet<>();
+        doNotAdd.add( this.interpreter.getObjInfo() );
         doNotAdd.add( rt.getAbsoluteParent() );
         doNotAdd.add( rt.getAnObject() );
 
-        // Registers
+        // Register boxes
         this.diagramBoxes = new HashMap<>();
 
         // Create boxes
@@ -865,35 +865,39 @@ public class VisualEngine extends JFrame {
         xInLevel.set( 0, xInLevel.get( 0 ) + anObjectBox.prepareDrawing( pnlCanvas ).width + HorizontalSeparation );
         diagramBoxes.put( rt.getAnObject().getPath(), anObjectBox );
 
+        // For all objects under root
         for(Attribute atr: rt.getRoot().getAttributes()) {
-            ObjectBag obj = atr.getReference();
+            final ObjectBag obj = atr.getReference();
+            final int objLevel = obj.getInheritanceLevel();
 
-            if ( !( obj instanceof SysObject )
-                && !doNotAdd.contains( obj ) )
+            // Don't introduce certain objects in the diagram
+            if ( rt.isSpecialObject( obj )
+              || rt.isTypeObject( obj )
+              || doNotAdd.contains( obj ) )
             {
-                final int objLevel = obj.getInheritanceLevel();
-
-                // Make the arrays grow, if needed
-                if ( levels.size() <= objLevel ) {
-                    final int oldSize = levels.size();
-                    final int neededSize = ( objLevel - oldSize ) + 1;
-
-                    levels.addAll( Arrays.asList( new Integer[ neededSize ] ) );
-                    xInLevel.addAll( Arrays.asList( new Integer[ neededSize ] ) );
-
-                    for(int i = oldSize; i < levels.size(); ++i) {
-                        levels.set( i, levels.get( i - 1 ) + 150 );
-                        xInLevel.set( i, 20 );
-                    }
-                }
-
-                final int level = levels.get( objLevel );
-                final ObjectBox box = new ObjectBox( obj, xInLevel.get( objLevel ), level );
-
-                diagramBoxes.put( obj.getPath(), box );
-                Dimension dimension = box.prepareDrawing( pnlCanvas );
-                xInLevel.set( objLevel, xInLevel.get( objLevel ) + dimension.width + HorizontalSeparation );
+                continue;
             }
+
+            // Make the vertical position arrays grow, if needed
+            if ( levels.size() <= objLevel ) {
+                final int oldSize = levels.size();
+                final int neededSize = ( objLevel - oldSize ) + 1;
+
+                levels.addAll( Arrays.asList( new Integer[ neededSize ] ) );
+                xInLevel.addAll( Arrays.asList( new Integer[ neededSize ] ) );
+
+                for(int i = oldSize; i < levels.size(); ++i) {
+                    levels.set( i, levels.get( i - 1 ) + 150 );
+                    xInLevel.set( i, 20 );
+                }
+            }
+
+            final int level = levels.get( objLevel );
+            final ObjectBox box = new ObjectBox( obj, xInLevel.get( objLevel ), level );
+
+            diagramBoxes.put( obj.getPath(), box );
+            Dimension dimension = box.prepareDrawing( pnlCanvas );
+            xInLevel.set( objLevel, xInLevel.get( objLevel ) + dimension.width + HorizontalSeparation );
         }
 
         // Recalculate the vertical position for each level
@@ -967,17 +971,32 @@ public class VisualEngine extends JFrame {
 
     private void updateTree()
     {
-        final ObjectRoot root = this.interpreter.getRuntime().getRoot();
-        trObjectsTree.setVisible( false );
-        HashSet<ObjectBag> shownObjects = new HashSet<ObjectBag>();
+        final Runtime rt = this.getInterpreter().getRuntime();
+        final ObjectRoot root = rt.getRoot();
+        final HashSet<ObjectBag> shownObjects = new HashSet<>();
 
         // Get root
-        DefaultMutableTreeNode treeRoot = new DefaultMutableTreeNode( root.getName() );
+        final DefaultMutableTreeNode treeRoot = new DefaultMutableTreeNode( root.getName() );
+        trObjectsTree.setVisible( false );
         trObjectsTree.setModel( new DefaultTreeModel( treeRoot ) );
         treeRoot.setUserObject( root.getName() );
         shownObjects.add( root );
 
-        // Run all over objects in Root
+        // Insert basic objects
+        String[] firstObjects = new String[]{ ObjectOs.Name, Interpreter.EtqInfoObject, Runtime.EtqNameAnObject };
+        for(String objName: firstObjects) {
+            final Attribute attr = root.localLookUpAttribute( objName );
+            final DefaultMutableTreeNode newNode = new DefaultMutableTreeNode( attr.getName() );
+            newNode.setUserObject( attr.getName() );
+            treeRoot.add( newNode );
+            shownObjects.add( attr.getReference() );
+
+            if ( objName.equals( Interpreter.EtqInfoObject ) ) {
+                addNodes( newNode, attr.getReference(), shownObjects  );
+            }
+        }
+
+        // Run all over other objects in Root
         addNodes( treeRoot, root, shownObjects  );
 
         trObjectsTree.expandRow( 0 );
@@ -990,22 +1009,18 @@ public class VisualEngine extends JFrame {
         final Runtime rt = this.interpreter.getRuntime();
         
         for( Attribute attr: obj.getAttributes() ) {
-            if ( attr.getReference() == rt.getAnObject()
-             || ( !rt.isSpecialObject( attr.getReference() )
-               && !rt.isTypeObject(  attr.getReference() ) ) )
+            final ObjectBag subObj = attr.getReference();
+
+            if ( subObj != null
+              && !shown.contains( subObj )
+              && !rt.isSpecialObject( subObj )
+              && !rt.isTypeObject( subObj ) )
             {
                  newNode = new DefaultMutableTreeNode( attr.getName() );
                  newNode.setUserObject( attr.getName() );
                  node.add( newNode );
-             
-                 ObjectBag subObj = attr.getReference();
-
-                 if ( subObj != null
-                   && !shown.contains( subObj ) )
-                 {
-                     shown.add( obj );
-                     addNodes( newNode, subObj, shown );
-                 }
+                 shown.add( obj );
+                 addNodes( newNode, subObj, shown );
             }
         }
     }

@@ -267,6 +267,7 @@ public final class Runtime {
               || obj == this.real
               || obj == this.anObject
               || obj == this.bool
+              || obj == this.dateTime
         );
     }
 
@@ -275,12 +276,17 @@ public final class Runtime {
         return ( obj == this.getAbsoluteParent()
               || obj == this.getRoot()
               || obj == this.getLiteralsContainer()
+              || obj == this.getOs()
         );
     }
 
     public ObjectRoot getRoot()
     {
         return this.root;
+    }
+
+    public ObjectOs getOs() {
+        return this.os;
     }
 
     public ObjectParent getAbsoluteParent()
