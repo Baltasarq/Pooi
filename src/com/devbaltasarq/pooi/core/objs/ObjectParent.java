@@ -25,9 +25,9 @@ public class ObjectParent extends ObjectBag {
      * Creates a new instance of ObjectParent
      * @param n         The name of the object
      */
-    public ObjectParent(String n) throws InterpretError
+    public ObjectParent(com.devbaltasarq.pooi.core.Runtime rt, String n) throws InterpretError
     {
-        super( n, null, null, ObjectBag.DontCheck );
+        super( rt, n, null, null, ObjectBag.DontCheck );
         this.registerCommonMethods();
     }
 

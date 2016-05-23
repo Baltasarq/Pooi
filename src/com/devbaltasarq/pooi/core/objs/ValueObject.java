@@ -8,9 +8,10 @@ import com.devbaltasarq.pooi.core.exceps.InterpretError;
  * @author baltasarq
  */
 public abstract class ValueObject extends ObjectBag {
-    public ValueObject(String n, ObjectBag parent, ObjectBag container) throws InterpretError
+    public ValueObject(com.devbaltasarq.pooi.core.Runtime rt, String n, ObjectBag parent, ObjectBag container)
+            throws InterpretError
     {
-        super( n, parent, container );
+        super( rt, n, parent, container );
     }
 
     @Override

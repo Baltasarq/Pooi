@@ -17,11 +17,14 @@ public class ObjectOs extends SysObject {
      * Creates the object representing the system
      * When an empty name is passed, an automatic name is created.
      *
+     * @param rt        The runtime for this object.
      * @param absParent The parent object in which to register it.
      * @param container The object this is contained into.
      */
-    public ObjectOs(ObjectParent absParent, SysObject container) throws InterpretError {
-        super( Name, absParent, container  );
+    public ObjectOs(com.devbaltasarq.pooi.core.Runtime rt, ObjectParent absParent, SysObject container)
+            throws InterpretError
+    {
+        super( rt, Name, absParent, container  );
 
         this.set( NativeMethodOsNow.EtqMthOsNow, new NativeMethodOsNow() );
         this.set( NativeMethodOsPrint.EtqMthOsPrint, new NativeMethodOsPrint() );

@@ -9,8 +9,6 @@ import com.devbaltasarq.pooi.core.evaluables.Reference;
 import com.devbaltasarq.pooi.core.exceps.InterpretError;
 import com.devbaltasarq.pooi.core.objs.ObjectOs;
 import com.devbaltasarq.pooi.core.objs.ObjectRoot;
-import com.devbaltasarq.pooi.core.objs.SysObject;
-import org.w3c.dom.Attr;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -46,8 +44,9 @@ public class VisualEngine extends JFrame {
     public static final String EtqIconNew = "com/devbaltasarq/pooi/res/new.png";
     
     /** Creates new form VisualEngine */
-    public VisualEngine()
+    public VisualEngine(Interpreter interpreter)
     {
+        this.interpreter = interpreter;
         this.currentDir = new File( System.getProperty( "user.home" ) );
         this.build();
         this.input.requestFocusInWindow();
@@ -814,20 +813,14 @@ public class VisualEngine extends JFrame {
 
     public void reset()
     {
-        try {
-            this.interpreter = new Interpreter();
-            this.output.setText( "" );
-            this.updateTree();
-            this.updateDiagram();
+        this.output.setText( "" );
+        this.updateTree();
+        this.updateDiagram();
 
-            this.output.append( "Pooi [Prototype-based, object-oriented interpreter]\n"
-                    + "\ntype in your message\n"
-                    + "try \"Root list\", \"help\" or \"about\" to start\n\n\n"
-            );
-        } catch(InterpretError e) {
-            this.output.append( "\n\n*** Error in bootstrap:\n" + e.getLocalizedMessage() + "\n" );
-            this.deactivateGui();
-        }
+        this.output.append( "Pooi [Prototype-based, object-oriented interpreter]\n"
+                + "\ntype in your message\n"
+                + "try \"Root list\", \"help\" or \"about\" to start\n\n\n"
+        );
     }
 
     public void updateDiagram()
@@ -986,13 +979,15 @@ public class VisualEngine extends JFrame {
         String[] firstObjects = new String[]{ ObjectOs.Name, Interpreter.EtqInfoObject, Runtime.EtqNameAnObject };
         for(String objName: firstObjects) {
             final Attribute attr = root.localLookUpAttribute( objName );
-            final DefaultMutableTreeNode newNode = new DefaultMutableTreeNode( attr.getName() );
-            newNode.setUserObject( attr.getName() );
-            treeRoot.add( newNode );
-            shownObjects.add( attr.getReference() );
+            if ( attr != null ) {
+                final DefaultMutableTreeNode newNode = new DefaultMutableTreeNode( attr.getName() );
+                newNode.setUserObject( attr.getName() );
+                treeRoot.add( newNode );
+                shownObjects.add( attr.getReference() );
 
-            if ( objName.equals( Interpreter.EtqInfoObject ) ) {
-                addNodes( newNode, attr.getReference(), shownObjects  );
+                if ( objName.equals( Interpreter.EtqInfoObject ) ) {
+                    addNodes( newNode, attr.getReference(), shownObjects );
+                }
             }
         }
 

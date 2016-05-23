@@ -10,9 +10,10 @@ import com.devbaltasarq.pooi.core.exceps.InterpretError;
 public class ObjectStr extends ValueObject {
 
     /** Creates a new instance of ObjectStr */
-    public ObjectStr(String n, ObjectBag obj, ObjectBag container) throws InterpretError
+    public ObjectStr(com.devbaltasarq.pooi.core.Runtime rt, String n, ObjectBag obj, ObjectBag container)
+            throws InterpretError
     {
-        super( n, obj, container );
+        super( rt, n, obj, container );
         value = "";
     }
 
@@ -41,7 +42,7 @@ public class ObjectStr extends ValueObject {
     {
         // Copy
         ObjectStr toret = new ObjectStr(
-                name, getParentObject(), container
+                this.getRuntime(), name, getParentObject(), container
         );
 
         toret.assign( getValue() );
@@ -63,7 +64,7 @@ public class ObjectStr extends ValueObject {
             throws InterpretError
     {
         // Create the new object
-        ObjectStr toret = new ObjectStr( name, this, container );
+        ObjectStr toret = new ObjectStr( this.getRuntime(), name, this, container );
         container.set( name, toret );
 
         return toret;

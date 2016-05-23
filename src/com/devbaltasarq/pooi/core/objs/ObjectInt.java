@@ -22,9 +22,10 @@ public class ObjectInt extends ValueObject {
      * @param parent the parent of the new object
      * @param container the object this new object will live in.
      */
-    public ObjectInt(String n, ObjectBag parent, ObjectBag container) throws InterpretError
+    public ObjectInt(com.devbaltasarq.pooi.core.Runtime rt, String n, ObjectBag parent, ObjectBag container)
+            throws InterpretError
     {
-        super( n, parent, container );
+        super( rt, n, parent, container );
     }
     
     @Override
@@ -52,7 +53,7 @@ public class ObjectInt extends ValueObject {
             throws InterpretError
     {
         // Copy
-        ObjectInt toret = new ObjectInt( name, this.getParentObject(), container );
+        ObjectInt toret = new ObjectInt( this.getRuntime(), name, this.getParentObject(), container );
         toret.assign( getValue() );
         container.set( name, toret );
 
@@ -72,7 +73,7 @@ public class ObjectInt extends ValueObject {
             throws InterpretError
     {
         // Create the new object
-        ObjectInt toret = new ObjectInt( name, this, container );
+        ObjectInt toret = new ObjectInt( this.getRuntime(), name, this, container );
         container.set( name, toret );
 
         return toret;

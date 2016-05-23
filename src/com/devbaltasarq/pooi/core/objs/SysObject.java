@@ -18,14 +18,15 @@ public class SysObject extends ObjectBag {
      * Creates a new instance of ObjectBag
      * When an empty name is passed, an automatic name is created.
      *
+     * @param rt        The runtime for this object
      * @param n         The name of the object.
      * @param parent    The parent object in which to register it.
      * @param container The object this is contained into.
      */
-    public SysObject(String n, ObjectBag parent, ObjectBag container)
+    public SysObject(com.devbaltasarq.pooi.core.Runtime rt, String n, ObjectBag parent, ObjectBag container)
             throws InterpretError
     {
-        super( n, parent, container, ObjectBag.DontCheck );
+        super( rt, n, parent, container, ObjectBag.DontCheck );
     }
 
     public void set(String name, Method mth) throws InterpretError

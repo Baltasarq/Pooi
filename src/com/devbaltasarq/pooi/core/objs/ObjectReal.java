@@ -12,9 +12,10 @@ import com.devbaltasarq.pooi.core.exceps.InterpretError;
   */
 public class ObjectReal extends ValueObject {
     /** Creates a new instance of ObjectReal */
-    public ObjectReal(String n, ObjectBag obj, ObjectBag container) throws InterpretError
+    public ObjectReal(com.devbaltasarq.pooi.core.Runtime rt, String n, ObjectBag obj, ObjectBag container)
+            throws InterpretError
     {
-        super( n, obj, container );
+        super( rt, n, obj, container );
     }
 
     @Override
@@ -43,7 +44,9 @@ public class ObjectReal extends ValueObject {
     {
         // Copy
         ObjectReal toret =
-                new ObjectReal( name,
+                new ObjectReal(
+                        this.getRuntime(),
+                        name,
                         this.getParentObject(),
                         container )
                 ;
@@ -67,7 +70,7 @@ public class ObjectReal extends ValueObject {
             throws InterpretError
     {
         // Create the new object
-        ObjectReal toret = new ObjectReal( name, this, container );
+        ObjectReal toret = new ObjectReal( this.getRuntime(), name, this, container );
         container.set( name, toret );
 
         return toret;

@@ -36,36 +36,36 @@ public final class Runtime {
     private Runtime() throws InterpretError
     {
         // The inheritance root and the main container
-        this.absParent = new ObjectParent( EtqTopParentObject );
-        this.root = new ObjectRoot( EtqNameRoot, absParent );
+        this.absParent = new ObjectParent( this, EtqTopParentObject );
+        this.root = new ObjectRoot( this, EtqNameRoot, absParent );
         this.root.set( EtqTopParentObject, this.absParent );
 
         // Main "type" objects
-        this.str = new SysObject( EtqNameStr, absParent, root );
+        this.str = new SysObject( this, EtqNameStr, absParent, root );
         this.root.set( EtqNameStr, this.str );
 
-        this.integer = new SysObject( EtqNameInt, absParent, root );
+        this.integer = new SysObject( this, EtqNameInt, absParent, root );
         this.root.set( EtqNameInt, this.integer );
 
-        this.real = new SysObject( EtqNameReal, absParent, root );
+        this.real = new SysObject( this, EtqNameReal, absParent, root );
         this.root.set( EtqNameReal, this.real );
 
-        this.bool = new SysObject( EtqNameBool, absParent, root );
+        this.bool = new SysObject( this, EtqNameBool, absParent, root );
         this.root.set( EtqNameBool, this.bool );
 
-        this.dateTime = new SysObject( EtqNameDateTime, absParent, root );
+        this.dateTime = new SysObject( this, EtqNameDateTime, absParent, root );
         this.root.set( EtqNameDateTime, this.dateTime );
 
         // The first prototype
-        this.anObject = new ObjectBag( EtqNameAnObject, absParent, root );
+        this.anObject = new ObjectBag( this, EtqNameAnObject, absParent, root );
         this.root.set( EtqNameAnObject, this.anObject );
 
         // An object to hold literals
-        this.literals = new SysObject( EtqNameLiterals, absParent, root );
+        this.literals = new SysObject( this, EtqNameLiterals, absParent, root );
         this.root.set( EtqNameLiterals, this.literals );
 
         // The operating system rep
-        this.os = new ObjectOs( absParent, root );
+        this.os = new ObjectOs( this, absParent, root );
         this.root.set( ObjectOs.Name, this.os );
 
         this.addMethodsToRuntimeObjects();
@@ -153,7 +153,7 @@ public final class Runtime {
     public ObjectStr createString(String id, String value) throws InterpretError
     {
         ObjectStr toret = new ObjectStr(
-                id, this.str, this.getLiteralsContainer()
+                this, id, this.str, this.getLiteralsContainer()
         );
 
         this.getLiteralsContainer().set( toret.getName(), toret );
@@ -165,6 +165,7 @@ public final class Runtime {
             throws InterpretError
     {
         final ObjectDateTime toret = new ObjectDateTime(
+                this,
                 this.createNewLiteralName(),
                 this.dateTime,
                 this.getLiteralsContainer() );
@@ -191,7 +192,7 @@ public final class Runtime {
     public ObjectInt createInt(String id, long num) throws InterpretError
     {
         ObjectInt toret = new ObjectInt(
-                id, this.integer, this.getLiteralsContainer()
+                this, id, this.integer, this.getLiteralsContainer()
         );
 
         this.getLiteralsContainer().set( toret.getName(), toret );
@@ -208,7 +209,7 @@ public final class Runtime {
     public ObjectReal createReal(String id, double num) throws InterpretError
     {
         ObjectReal toret = new ObjectReal(
-                id, this.real, this.getLiteralsContainer()
+                this, id, this.real, this.getLiteralsContainer()
         );
 
         this.getLiteralsContainer().set( toret.getName(), toret );
@@ -225,7 +226,7 @@ public final class Runtime {
     public ObjectBool createBool(String id, boolean value) throws InterpretError
     {
         ObjectBool toret = new ObjectBool(
-                id, this.bool, this.getLiteralsContainer()
+                this, id, this.bool, this.getLiteralsContainer()
         );
 
         this.getLiteralsContainer().set( toret.getName(), toret );
@@ -237,7 +238,7 @@ public final class Runtime {
             throws InterpretError
     {
         final ObjectBag container = this.anObject.getContainer();
-        final ObjectBag toret = new ObjectBag( name, this.anObject.getParentObject(), container );
+        final ObjectBag toret = new ObjectBag( this, name, this.anObject.getParentObject(), container );
         container.set( name, toret );
         return toret;
     }

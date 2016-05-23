@@ -1,5 +1,8 @@
 package com.devbaltasarq.pooi.ui;
 
+import com.devbaltasarq.pooi.core.Interpreter;
+import com.devbaltasarq.pooi.core.exceps.InterpretError;
+
 import javax.swing.*;
 
 /**
@@ -10,6 +13,15 @@ public class App {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        Interpreter interpreter = null;
+
+        // Prepare the interpreter (the world of objects)
+        try {
+            interpreter = new Interpreter( false, false );
+        } catch(InterpretError exc) {
+            System.err.println( "PANIC (error bootstrapping): " + exc.getMessage() );
+            System.exit( -1 );
+        }
 
         try {
             UIManager.setLookAndFeel(
@@ -19,7 +31,7 @@ public class App {
         }
 
         // Prepare VisualEngine
-        final VisualEngine g = new VisualEngine();
+        final VisualEngine g = new VisualEngine( interpreter );
 
         try {
             // Prepare interpreter & run

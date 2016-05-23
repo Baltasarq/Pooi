@@ -16,9 +16,10 @@ import com.devbaltasarq.pooi.core.exceps.InterpretError;
 public class ObjectBool extends ValueObject {
 
     /** Creates a new instance of ObjectBool */
-    public ObjectBool(String n, ObjectBag obj, ObjectBag container) throws InterpretError
+    public ObjectBool(com.devbaltasarq.pooi.core.Runtime rt, String n, ObjectBag obj, ObjectBag container)
+            throws InterpretError
     {
-        super( n, obj, container );
+        super( rt, n, obj, container );
     }
     
     @Override
@@ -45,7 +46,7 @@ public class ObjectBool extends ValueObject {
     public ObjectBool copy(String name, ObjectBag litsContainer) throws InterpretError
     {
         // Copy
-        ObjectBool toret = new ObjectBool( name, this.getParentObject(), litsContainer  );
+        ObjectBool toret = new ObjectBool( this.getRuntime(), name, this.getParentObject(), litsContainer  );
         toret.assign( getValue() );
         litsContainer.set( name, toret );
 
@@ -65,7 +66,7 @@ public class ObjectBool extends ValueObject {
             throws InterpretError
     {
         // Create the new object
-        ObjectBool toret = new ObjectBool( name, this, container );
+        ObjectBool toret = new ObjectBool( this.getRuntime(), name, this, container );
         container.set( name, toret );
 
         return toret;

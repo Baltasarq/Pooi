@@ -18,8 +18,10 @@ public class ObjectDateTime extends ValueObject {
     public static final String EtqTimeAsStr = "timeAsStr";
     public static final String EtqStr = "str";
 
-    public ObjectDateTime(String n, ObjectBag parent, ObjectBag container) throws InterpretError {
-        super( n, parent, container );
+    public ObjectDateTime(com.devbaltasarq.pooi.core.Runtime rt, String n, ObjectBag parent, ObjectBag container)
+            throws InterpretError
+    {
+        super( rt, n, parent, container );
     }
 
     @Override

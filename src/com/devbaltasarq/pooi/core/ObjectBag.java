@@ -66,30 +66,33 @@ public class ObjectBag {
      * Creates a new instance of ObjectBag
      * When an empty name is passed, an automatic name is created.
      *
+     * @param rt            The runtime in which this object is operating.
      * @param n             The name of the object.
      * @param parent        The parent object in which to register it.
      * @param container     The object this is contained into.
      */
-    public ObjectBag(String n, ObjectBag parent, ObjectBag container)
+    public ObjectBag(Runtime rt, String n, ObjectBag parent, ObjectBag container)
             throws InterpretError
     {
-        this( n, parent, container, Check );
+        this( rt, n, parent, container, Check );
     }
 
     /**
      * Creates a new instance of ObjectBag
      * When an empty name is passed, an automatic name is created.
      *
+     * @param rt            The runtime in which this object is operating.
      * @param n             The name of the object.
      * @param parent        The parent object in which to register it.
      * @param container     The object this is contained into.
      * @param chk           defines whether the objects' name should be checked or not.
      */
-    public ObjectBag(String n, ObjectBag parent, ObjectBag container, boolean chk)
+    public ObjectBag(Runtime rt, String n, ObjectBag parent, ObjectBag container, boolean chk)
             throws InterpretError
     {
-        attributes = new HashMap<>();
-        methods = new HashMap<>();
+        this.runtime = rt;
+        this.attributes = new HashMap<>();
+        this.methods = new HashMap<>();
 
         // Prepare name
         n = n.trim();
@@ -110,6 +113,11 @@ public class ObjectBag {
             // Use strictly the low-level method, since init will make recursion
             this.setAttribute( ParentAttribute.ParentAttributeName, new ParentAttribute( parent ) );
         }
+    }
+
+    /** @return The Runtime this object is living in. */
+    public Runtime getRuntime() {
+        return this.runtime;
     }
 
     /**
@@ -215,24 +223,18 @@ public class ObjectBag {
    {
        Vector<Attribute> toret = new Vector<>();
 
-       try {
-           final ObjectRoot root = Runtime.getRuntime().getRoot();
-           ObjectBag currentObj = this;
-           ObjectBag containerObj = currentObj.getContainer();
+       final ObjectRoot root = this.getRuntime().getRoot();
+       ObjectBag currentObj = this;
+       ObjectBag containerObj = currentObj.getContainer();
 
-           while( currentObj != root ) {
-               toret.insertElementAt( containerObj.localInverseLookUp( currentObj ), 0 );
+       while( currentObj != root ) {
+           toret.insertElementAt( containerObj.localInverseLookUp( currentObj ), 0 );
 
-               currentObj = containerObj;
-               containerObj = containerObj.getContainer();
-           }
-
-           toret.insertElementAt( new Attribute( root.getName(), root ), 0 );
-       }
-       catch (InterpretError ignored)
-       {
+           currentObj = containerObj;
+           containerObj = containerObj.getContainer();
        }
 
+       toret.insertElementAt( new Attribute( root.getName(), root ), 0 );
        return toret.toArray( new Attribute[ toret.size() ] );
    }
 
@@ -351,7 +353,7 @@ public class ObjectBag {
 
         // Now, show them
         try {
-            final ObjectBag absParent = Runtime.getRuntime().getAbsoluteParent();
+            final ObjectBag absParent = this.getRuntime().getAbsoluteParent();
 
             while( !attributesToList.isEmpty() ) {
                 // Get attribute data
@@ -390,7 +392,7 @@ public class ObjectBag {
                 }
             }
         }
-        catch(InterpretError | StackOverflowError | OutOfMemoryError exc)
+        catch(StackOverflowError | OutOfMemoryError exc)
         {
             toret.delete( toret.length() -100, toret.length() -1 );
             toret.append( "... " );
@@ -856,7 +858,7 @@ public class ObjectBag {
             }
 
             // Create the new object
-            ObjectBag objDest = new ObjectBag( destName, objOrg.getParentObject(), container );
+            ObjectBag objDest = new ObjectBag( this.getRuntime(), destName, objOrg.getParentObject(), container );
             objDest.chkIdentifierForMemberName( destName );
             container.set( destName, objDest );
 
@@ -918,7 +920,7 @@ public class ObjectBag {
         this.chkIdentifierForMemberName( name );
 
         // Create the new object
-        ObjectBag toret = new ObjectBag( name, this, container );
+        ObjectBag toret = new ObjectBag( this.getRuntime(), name, this, container );
         container.set( name, toret );
 
         return toret;
@@ -933,16 +935,15 @@ public class ObjectBag {
     {
         ObjectBag parentObject = this.getParentObject();
 
-        attributes.clear();
+        this.attributes.clear();
 
         if ( !completely ) {
-
             try {
-                Attribute parentAttribute = new ParentAttribute( parentObject  );
-                this.setAttribute( Reserved.ParentAttribute, parentAttribute );
+                this.setAttribute( Reserved.ParentAttribute, new ParentAttribute( parentObject ) );
             }
             catch (InterpretError ignored)
             {
+                // ignored
             }
         }
 
@@ -956,18 +957,28 @@ public class ObjectBag {
      */
     public void removeMember(String name) throws InterpretError
     {
-        if ( this.attributes.containsKey(name) ) {
+        final Attribute attr = this.localLookUpAttribute( name  );
+        final Method mth = this.localLookUpMethod( name  );
 
-            if ( name.equals( ParentAttribute.ParentAttributeName ) ) {
+        if ( attr != null ) {
+            if ( attr instanceof ParentAttribute ) {
                 throw new InterpretError( "It is not allowed to erase the parent attribute '"
                         + ParentAttribute.ParentAttributeName
                         + "'"  );
             }
 
+            final ObjectBag obj = attr.getReference();
+
+            if ( this.getRuntime().isTypeObject( obj )
+              || this.getRuntime().isSpecialObject( obj ) )
+            {
+                throw new InterpretError( "the removal of '" + obj.getName() + "' is not allowed" );
+            }
+
             this.attributes.remove( name );
         }
         else
-        if ( this.methods.containsKey( name ) ) {
+        if ( mth != null ) {
             this.methods.remove( name );
         }
         else {
@@ -1054,6 +1065,7 @@ public class ObjectBag {
     }
 
     private String name;
+    private Runtime runtime;
     private ObjectBag container;
     private HashMap<String, Attribute> attributes;
     private HashMap<String, Slot> methods;

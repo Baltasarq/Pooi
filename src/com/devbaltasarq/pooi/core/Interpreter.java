@@ -24,7 +24,7 @@ public class Interpreter {
     public static final String EtqInfoObjAttrHelp = "help";
     public static final String EtqInfoObjAttrLicense = "license";
     public static final String EtqInfoObjAttrVerbose = "verbose";
-    public static final String EtqInfoObjAttrUsesGui = "gui";
+    public static final String EtqInfoObjAttrHasGui = "gui";
 
     /** Creates a fresh new interpreter, setting certain configuration options */
     public Interpreter(boolean verbose, boolean usesGui) throws InterpretError
@@ -32,11 +32,11 @@ public class Interpreter {
         this();
         this.hasGui = usesGui;
         this.objInfo.set( EtqInfoObjAttrVerbose, rt.createBool( verbose ) );
-        this.objInfo.set( EtqInfoObjAttrUsesGui, rt.createBool( usesGui ) );
+        this.objInfo.set(EtqInfoObjAttrHasGui, rt.createBool( usesGui ) );
     }
 
     /** Creates a fresh new interpreter */
-    public Interpreter() throws InterpretError
+    protected Interpreter() throws InterpretError
     {
         this.error = false;
         this.rt = Runtime.getRuntime();
@@ -45,17 +45,15 @@ public class Interpreter {
 
     private final void createInfoObject() throws InterpretError
     {
-        final Runtime rt = this.getRuntime();
-
         // Info object
-        this.objInfo = rt.createObject( EtqInfoObject );
+        this.objInfo = this.getRuntime().createObject( EtqInfoObject );
         this.objInfo.set( EtqInfoObjAttrName, rt.createString(EtqInfoObjAttrName, AppInfo.Name ) );
         this.objInfo.set( EtqInfoObjAttrVersion, rt.createString(EtqInfoObjAttrVersion, AppInfo.Version ) );
         this.objInfo.set( EtqInfoObjAttrEmail, rt.createString(EtqInfoObjAttrEmail, AppInfo.Email ) );
         this.objInfo.set( EtqInfoObjAttrAuthor, rt.createString(EtqInfoObjAttrAuthor, AppInfo.Author ) );
         this.objInfo.set( EtqInfoObjAttrLicense, rt.createString(EtqInfoObjAttrLicense, AppInfo.License ) );
-        this.objInfo.set( EtqInfoObjAttrVerbose, rt.createBool( true ) );
-        this.objInfo.set( EtqInfoObjAttrUsesGui, rt.createBool( true ) );
+        this.objInfo.set( EtqInfoObjAttrVerbose, rt.createBool( this.isVerbose ) );
+        this.objInfo.set(EtqInfoObjAttrHasGui, rt.createBool( this.hasGui ) );
         this.objInfo.set( EtqInfoObjAttrHelp, rt.createString(EtqInfoObjAttrHelp,
                                       "copy objects in order to create new ones\n"
                                                + " insert orders in the form ( <object> <msg> <args> )\n\n"
@@ -112,12 +110,46 @@ public class Interpreter {
         return msg.toString();
     }
 
+    protected void chkInfoObject(StringBuilder msg) throws InterpretError
+    {
+        final Runtime rt = this.getRuntime();
+
+        // Chk the object is missing
+        if ( rt.getRoot().localLookUpAttribute( EtqInfoObject ) == null ) {
+            this.createInfoObject();
+            msg.append( '\n' );
+            msg.append( EtqInfoObject );
+            msg.append( " object re-created (cannot be removed)." );
+        }
+
+        final ObjectBag objInfo = this.getObjInfo();
+
+        // Chk the verbose option
+        if ( objInfo.localLookUpAttribute( EtqInfoObjAttrVerbose ) == null ) {
+            objInfo.set( EtqInfoObjAttrVerbose, rt.createBool( this.isVerbose ) );
+            msg.append( '\n' );
+            msg.append( EtqInfoObjAttrVerbose );
+            msg.append( " re-created in " );
+            msg.append( EtqInfoObject );
+            msg.append( " (cannot be removed)." );
+        }
+
+        // Chk the gui option
+        if ( objInfo.localLookUpAttribute(EtqInfoObjAttrHasGui) == null ) {
+            objInfo.set(EtqInfoObjAttrHasGui, rt.createBool( this.hasGui ) );
+            msg.append( '\n' );
+            msg.append(EtqInfoObjAttrHasGui);
+            msg.append( "  re-created in " );
+            msg.append( EtqInfoObject );
+            msg.append( " (cannot be removed)." );
+        }
+    }
+
     protected ObjectBag execute(InterpretedMethod method, ObjectBag self, Evaluable[] args, StringBuilder msg)
     {
         Evaluable ref;
         ObjectBag toret = null;
-        error = false;
-        final Runtime rt = this.getRuntime();
+        this.error = false;
         ExecutionStack stack = new ExecutionStack();
 
         try {
@@ -197,6 +229,9 @@ public class Interpreter {
                 } else {
                     break;
                 }
+
+                // Rebuilds the info object, if needed
+                this.chkInfoObject( msg );
             }
         } catch(InterpretError e) {
             error = true;
@@ -313,24 +348,11 @@ public class Interpreter {
         attrVerbose = info.localLookUpAttribute( EtqInfoObjAttrVerbose );
 
         if ( attrVerbose == null ) {
-            this.objInfo.set( EtqInfoObjAttrVerbose, rt.createBool( true ) );
+            this.getObjInfo().set( EtqInfoObjAttrVerbose, this.getRuntime().createBool( this.isVerbose ) );
         }
 
-        return ( (ObjectBool) attrVerbose.getReference() ).getValue();
-    }
-
-    public boolean isGui() throws InterpretError
-    {
-        ObjectBag info = this.getObjInfo();
-
-        // Create the info object, if needed
-        if ( info == null ) {
-            this.createInfoObject();
-        }
-
-        // Create the attribute with the fixed value
-        this.getObjInfo().set( EtqInfoObjAttrUsesGui, rt.createBool( this.hasGui ) );
-        return this.hasGui;
+        this.isVerbose = ( (ObjectBool) attrVerbose.getReference() ).getValue();
+        return this.isVerbose;
     }
 
     public ObjectBag getObjInfo() {
@@ -351,4 +373,5 @@ public class Interpreter {
     private ObjectBag objInfo;
     protected BufferedWriter transcript = null;
     private boolean hasGui;
+    private boolean isVerbose;
 }

@@ -3,6 +3,7 @@
 package com.devbaltasarq.pooi.core.objs;
 
 import com.devbaltasarq.pooi.core.ObjectBag;
+import com.devbaltasarq.pooi.core.Runtime;
 import com.devbaltasarq.pooi.core.exceps.InterpretError;
 
 /**
@@ -11,10 +12,10 @@ import com.devbaltasarq.pooi.core.exceps.InterpretError;
  */
 public final class ObjectRoot extends SysObject {
 
-    public ObjectRoot(String EtqNameRoot, ObjectBag parent)
+    public ObjectRoot(Runtime rt, String EtqNameRoot, ObjectBag parent)
             throws InterpretError
     {
-        super( EtqNameRoot, parent, null );
+        super( rt, EtqNameRoot, parent, null );
     }
 
     @Override
