@@ -1,10 +1,9 @@
 package com.devbaltasarq.pooi.ui;
 
-import com.devbaltasarq.pooi.core.Runtime;
+import com.devbaltasarq.pooi.core.AppInfo;
 import com.devbaltasarq.pooi.core.Interpreter;
 import com.devbaltasarq.pooi.core.ObjectBag;
-import com.devbaltasarq.pooi.core.AppInfo;
-import com.devbaltasarq.pooi.core.InterpreterCfg;
+import com.devbaltasarq.pooi.core.Runtime;
 import com.devbaltasarq.pooi.core.evaluables.Attribute;
 import com.devbaltasarq.pooi.core.evaluables.Reference;
 import com.devbaltasarq.pooi.core.exceps.InterpretError;
@@ -44,9 +43,8 @@ public class VisualEngine extends JFrame {
     public static final String EtqIconNew = "com/devbaltasarq/pooi/res/new.png";
     
     /** Creates new form VisualEngine */
-    public VisualEngine(Interpreter interpreter, InterpreterCfg cfg)
+    public VisualEngine(Interpreter interpreter)
     {
-        this.cfg = cfg;
         this.interpreter = interpreter;
         this.currentDir = new File( System.getProperty( "user.home" ) );
         this.build();
@@ -1067,7 +1065,6 @@ public class VisualEngine extends JFrame {
     private HashMap<String, ObjectBox> diagramBoxes;
 
     private Interpreter interpreter;
-    private InterpreterCfg cfg;
 
     private static boolean rebuildingTree = false;
     private File currentDir;

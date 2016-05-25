@@ -72,6 +72,17 @@ public class Interpreter {
         return;
     }
 
+    public static String removeQuotes(String s) {
+        if ( s.startsWith( "\"" ) ) {
+            s = s.substring( 1 );
+            if ( s.endsWith( "\""  ) ) {
+                s = s.substring( 0, s.length() - 2 );
+            }
+        }
+
+        return s;
+    }
+
     public String interpret(String cmds)
     {
         StringBuilder msg = new StringBuilder();
@@ -98,17 +109,17 @@ public class Interpreter {
                 }
 
                 this.saveToTranscript( msg.toString() );
-                this.saveToTranscript( result.toString() );
+                this.saveToTranscript( removeQuotes( result.toString() ) );
             } catch(InterpretError e) {
                 error = true;
-                msg.append( "Error: " + e.getMessage() );
+                result.append( "Error: " + e.getMessage() );
             } catch (IOException e) {
                 error = true;
-                msg.append( "Error: I/O: " + e.getMessage() );
+                result.append( "Error: I/O: " + e.getMessage() );
             }
         }
 
-        msg.append( result.toString() );
+        msg.append( removeQuotes( result.toString() ) );
         return msg.toString();
     }
 
@@ -364,6 +375,21 @@ public class Interpreter {
 
         cfg.setVerbose( ( (ObjectBool) attrVerbose.getReference() ).getValue() );
         return cfg.isVerbose();
+    }
+
+    public void setVerbose(boolean flag) throws InterpretError {
+        Attribute attrVerbose = null;
+        ObjectBag info = this.getObjInfo();
+
+        // Create the object, if it does not exist
+        if ( info == null ) {
+            this.createInfoObject();
+            info = this.getObjInfo();
+        }
+
+        // Create the attribute about verbose, if needed
+        this.getObjInfo().set( EtqInfoObjAttrVerbose, this.getRuntime().createBool( flag ) );
+        this.getConfiguration().setVerbose( flag );
     }
 
     public InterpreterCfg getConfiguration() {

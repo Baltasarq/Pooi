@@ -23,10 +23,6 @@ import java.util.ArrayList;
 public class Parser {
     public static final String PopTask = "__POP";
 
-    public Parser(Runtime rt) {
-        this.rt = rt;
-    }
-
     private static void clean(ArrayList<Command> toret)
     {
         for(int i = 0; i < toret.size(); ++i)
@@ -389,10 +385,4 @@ public class Parser {
 
         return toret;
     }
-
-    public Runtime getRuntime() {
-        return this.rt;
-    }
-
-    private Runtime rt;
 }

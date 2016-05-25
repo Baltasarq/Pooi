@@ -74,13 +74,13 @@ public class App {
         }
 
         if ( terpCfg.hasGui() ) {
-            guiApp( interpreter, terpCfg );
+            guiApp( interpreter );
         } else {
-            consoleApp( interpreter, terpCfg );
+            consoleApp( interpreter );
         }
     }
 
-    public static void guiApp(Interpreter interpreter, InterpreterCfg cfg)
+    public static void guiApp(Interpreter interpreter)
     {
         // Prepare look & feel, if possible
         try {
@@ -91,7 +91,7 @@ public class App {
         }
 
         // Prepare VisualEngine
-        final VisualEngine g = new VisualEngine( interpreter, cfg );
+        final VisualEngine g = new VisualEngine( interpreter );
 
         try {
             // Run Gui interpreter
@@ -109,15 +109,22 @@ public class App {
 
     }
 
-    public static void consoleApp(Interpreter interpreter, InterpreterCfg cfg) {
+    public static void consoleApp(Interpreter terp) {
         String input = null;
         Scanner scan = new Scanner( System.in );
 
-        System.out.println( "\n\nWelcome to " + AppInfo.Name + " (\"os exit\" to exit)" );
-        do {
-            System.out.print( "\n> " );
-            input = scan.nextLine();
-            System.out.print( interpreter.interpret( input  ) );
-        } while( true );
+        try {
+            terp.setVerbose( false );
+            System.out.println( "\n\nWelcome to " + AppInfo.Name + " (\"os exit\" to exit)" );
+            do {
+                System.out.print( "\n> " );
+                input = scan.nextLine();
+                System.out.print( Interpreter.removeQuotes( terp.interpret( input ) ) );
+            } while( true );
+        } catch(InterpretError exc) {
+            System.err.println( "FATAL interpreter error: " + exc.getMessage() );
+        } catch(Exception exc) {
+            System.err.println( "FATAL unexpected error: " + exc.getMessage() );
+        }
     }
 }
