@@ -17,9 +17,9 @@ public class NativeMethodRealIsGreaterThan extends NativeMethod {
 
     public static final String EtqMthRealIsGreaterThan = ">";
 
-    public NativeMethodRealIsGreaterThan()
+    public NativeMethodRealIsGreaterThan(Runtime rt)
     {
-        super( EtqMthRealIsGreaterThan );
+        super( rt, EtqMthRealIsGreaterThan );
     }
 
     @Override
@@ -27,7 +27,7 @@ public class NativeMethodRealIsGreaterThan extends NativeMethod {
             throws InterpretError
     {
         boolean result;
-        final Runtime rt = Runtime.getRuntime();
+        final Runtime rt = this.getRuntime();
         final ObjectReal self;
 
         chkParametersNumber( 1, params );

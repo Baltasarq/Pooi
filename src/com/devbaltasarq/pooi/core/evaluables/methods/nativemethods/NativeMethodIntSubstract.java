@@ -17,9 +17,9 @@ public class NativeMethodIntSubstract extends NativeMethod {
 
     public static final String EtqMthIntSub = "-";
 
-    public NativeMethodIntSubstract()
+    public NativeMethodIntSubstract(Runtime rt)
     {
-        super( EtqMthIntSub );
+        super( rt, EtqMthIntSub );
     }
 
     @Override
@@ -27,7 +27,7 @@ public class NativeMethodIntSubstract extends NativeMethod {
             throws InterpretError
     {
         long result;
-        final Runtime rt = Runtime.getRuntime();
+        final Runtime rt = this.getRuntime();
         final ObjectInt self;
         final ObjectInt toret;
 

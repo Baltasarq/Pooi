@@ -3,33 +3,26 @@ package com.devbaltasarq.pooi.core.evaluables.methods.nativemethods;
 import com.devbaltasarq.pooi.core.Evaluable;
 import com.devbaltasarq.pooi.core.ObjectBag;
 import com.devbaltasarq.pooi.core.Runtime;
-import com.devbaltasarq.pooi.core.evaluables.literals.StrLiteral;
 import com.devbaltasarq.pooi.core.evaluables.methods.NativeMethod;
 import com.devbaltasarq.pooi.core.exceps.InterpretError;
 
 /**
- *
- * @author baltasarq
+ * A method that extracts the time and stores it in a DateTime object.
+ * Created by Baltasar on 30/01/2016.
  */
-public class NativeMethodStr extends NativeMethod {
-    public static final String EtqMthToString = "str";
+public class NativeMethodOsExit extends NativeMethod {
+    public static final String EtqMthOsExit = "exit";
 
-    public NativeMethodStr(Runtime rt)
-    {
-        super( rt, EtqMthToString );
+    public NativeMethodOsExit(Runtime rt) {
+        super( rt, EtqMthOsExit );
     }
 
     @Override
     public ObjectBag doIt(ObjectBag ref, Evaluable[] params, StringBuilder msg)
             throws InterpretError
     {
-        final Runtime rt = this.getRuntime();
-
-        chkParametersNumber( 0, params );
-
-        final String toret = ref.toString();
-        msg.append( toret );
-        return rt.createLiteral( new StrLiteral( toret ) );
+        System.exit( 0 );
+        return null;
     }
 
     public int getNumParams() {

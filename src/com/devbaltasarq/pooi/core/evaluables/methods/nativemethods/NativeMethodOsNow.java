@@ -16,8 +16,8 @@ import java.util.Calendar;
 public class NativeMethodOsNow extends NativeMethod {
     public static final String EtqMthOsNow = "now";
 
-    public NativeMethodOsNow() {
-        super( EtqMthOsNow );
+    public NativeMethodOsNow(Runtime rt) {
+        super( rt, EtqMthOsNow );
     }
 
     @Override
@@ -25,7 +25,7 @@ public class NativeMethodOsNow extends NativeMethod {
             throws InterpretError
     {
         final Calendar now = Calendar.getInstance();
-        final Runtime rt = Runtime.getRuntime();
+        final Runtime rt = this.getRuntime();
 
         chkParametersNumber( 0, params );
 

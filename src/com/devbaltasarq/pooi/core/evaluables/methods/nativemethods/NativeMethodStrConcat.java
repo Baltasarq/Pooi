@@ -16,9 +16,9 @@ public class NativeMethodStrConcat extends NativeMethod {
 
     public static final String EtqMthStrConcat = "+";
 
-    public NativeMethodStrConcat()
+    public NativeMethodStrConcat(Runtime rt)
     {
-        super( EtqMthStrConcat );
+        super( rt, EtqMthStrConcat );
     }
 
     @Override
@@ -26,7 +26,7 @@ public class NativeMethodStrConcat extends NativeMethod {
             throws InterpretError
     {
         String result;
-        final Runtime rt = Runtime.getRuntime();
+        final Runtime rt = this.getRuntime();
         final ObjectStr self;
         final ObjectStr toret;
 

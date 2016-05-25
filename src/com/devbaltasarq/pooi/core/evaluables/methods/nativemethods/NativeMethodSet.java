@@ -16,16 +16,16 @@ public class NativeMethodSet extends NativeMethod {
 
     public static final String EtqMthSet = "set";
 
-    public NativeMethodSet()
+    public NativeMethodSet(Runtime rt)
     {
-        super( EtqMthSet );
+        super( rt, EtqMthSet );
     }
 
     @Override
     public ObjectBag doIt(ObjectBag ref, Evaluable[] params, StringBuilder msg)
             throws InterpretError
     {
-        final Runtime rt = Runtime.getRuntime();
+        final Runtime rt = this.getRuntime();
 
         this.chkParametersNumber( 2, params );
 

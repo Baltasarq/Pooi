@@ -17,9 +17,9 @@ public class NativeMethodRealIsLessThan extends NativeMethod {
 
     public static final String EtqMthRealIsLessThan = "<";
 
-    public NativeMethodRealIsLessThan()
+    public NativeMethodRealIsLessThan(Runtime rt)
     {
-        super( EtqMthRealIsLessThan );
+        super( rt, EtqMthRealIsLessThan );
     }
 
     @Override
@@ -27,7 +27,7 @@ public class NativeMethodRealIsLessThan extends NativeMethod {
             throws InterpretError
     {
         boolean result;
-        final Runtime rt = Runtime.getRuntime();
+        final Runtime rt = this.getRuntime();
         final ObjectReal self;
 
         chkParametersNumber( 1, params );

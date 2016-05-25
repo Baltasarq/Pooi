@@ -1,6 +1,7 @@
 package com.devbaltasarq.pooi.core.evaluables.methods;
 
 import com.devbaltasarq.pooi.core.*;
+import com.devbaltasarq.pooi.core.Runtime;
 import com.devbaltasarq.pooi.core.evaluables.Command;
 import com.devbaltasarq.pooi.core.evaluables.Method;
 import com.devbaltasarq.pooi.core.evaluables.Reference;
@@ -17,20 +18,19 @@ import java.util.Stack;
  * Date: 11/19/12
  */
 public class InterpretedMethod extends Method {
-
     public static final String DefaultMethodId = "__mth_";
 
-    public InterpretedMethod(String name)
+    public InterpretedMethod(Runtime rt, String name)
     {
-        super( name );
+        super( rt, name );
         this.stackCmds = new ArrayList<>();
         this.params = new HashMap<>();
-        this.formalParams = new String[0];
+        this.formalParams = new String[ 0 ];
     }
 
-    public InterpretedMethod(String name, String cmds) throws InterpretError
+    public InterpretedMethod(Runtime rt, String name, String cmds) throws InterpretError
     {
-        this( name );
+        this( rt, name );
         this.setCmds( cmds );
     }
 
@@ -43,7 +43,7 @@ public class InterpretedMethod extends Method {
         cmds = this.extractParams( cmds );
 
         this.stackCmds.clear();
-        this.stackCmds.addAll( Arrays.asList( Parser.parseOrder( cmds ) ) );
+        this.stackCmds.addAll( Arrays.asList( Parser.parseOrder( this.getRuntime(), cmds ) ) );
     }
 
     public void setRealParams(ObjectBag self, Evaluable[] args) throws InterpretError
@@ -110,12 +110,12 @@ public class InterpretedMethod extends Method {
 
     public void addCmds(String cmd) throws InterpretError
     {
-        this.stackCmds.addAll( Arrays.asList( Parser.parseOrder( cmd ) ) );
+        this.stackCmds.addAll( Arrays.asList( Parser.parseOrder( this.getRuntime(), cmd ) ) );
     }
 
     public InterpretedMethod copy()
     {
-        InterpretedMethod toret = new InterpretedMethod( this.getName() );
+        InterpretedMethod toret = new InterpretedMethod( this.getRuntime(), this.getName() );
 
         // Commands
         toret.stackCmds.addAll( Arrays.asList( this.getCmds() ) );
@@ -209,15 +209,6 @@ public class InterpretedMethod extends Method {
 
         toret.append( "}" );
         return toret.toString();
-    }
-
-    public String toString()
-    {
-        StringBuilder toret = new StringBuilder();
-
-        toret.append( this.getName() );
-        toret.append( " = " );
-        return toret.append( this.getMethodBodyAsString() ).toString();
     }
 
     public static String createNewMethodId()

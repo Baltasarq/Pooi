@@ -17,9 +17,9 @@ public class NativeMethodIntIsEqualTo extends NativeMethod {
 
     public static final String EtqMthIntIsEqualTo = "==";
 
-    public NativeMethodIntIsEqualTo()
+    public NativeMethodIntIsEqualTo(Runtime rt)
     {
-        super( EtqMthIntIsEqualTo );
+        super( rt, EtqMthIntIsEqualTo );
     }
 
     @Override
@@ -27,7 +27,7 @@ public class NativeMethodIntIsEqualTo extends NativeMethod {
             throws InterpretError
     {
         boolean result;
-        final Runtime rt = Runtime.getRuntime();
+        final Runtime rt = this.getRuntime();
         final ObjectInt self;
 
         chkParametersNumber( 1, params );

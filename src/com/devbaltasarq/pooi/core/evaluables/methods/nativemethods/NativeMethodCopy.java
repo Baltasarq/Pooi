@@ -12,9 +12,9 @@ import com.devbaltasarq.pooi.core.exceps.InterpretError;
 public class NativeMethodCopy extends NativeMethod {
     public static final String EtqMthCopy = "copy";
 
-    public NativeMethodCopy()
+    public NativeMethodCopy(com.devbaltasarq.pooi.core.Runtime rt)
     {
-        super( EtqMthCopy );
+        super( rt, EtqMthCopy );
     }
 
     @Override

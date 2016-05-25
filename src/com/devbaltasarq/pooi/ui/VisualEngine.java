@@ -1,9 +1,10 @@
 package com.devbaltasarq.pooi.ui;
 
-import com.devbaltasarq.pooi.core.AppInfo;
+import com.devbaltasarq.pooi.core.Runtime;
 import com.devbaltasarq.pooi.core.Interpreter;
 import com.devbaltasarq.pooi.core.ObjectBag;
-import com.devbaltasarq.pooi.core.Runtime;
+import com.devbaltasarq.pooi.core.AppInfo;
+import com.devbaltasarq.pooi.core.InterpreterCfg;
 import com.devbaltasarq.pooi.core.evaluables.Attribute;
 import com.devbaltasarq.pooi.core.evaluables.Reference;
 import com.devbaltasarq.pooi.core.exceps.InterpretError;
@@ -25,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-
 /*
  * VisualEngine.java
  *
@@ -44,12 +44,26 @@ public class VisualEngine extends JFrame {
     public static final String EtqIconNew = "com/devbaltasarq/pooi/res/new.png";
     
     /** Creates new form VisualEngine */
-    public VisualEngine(Interpreter interpreter)
+    public VisualEngine(Interpreter interpreter, InterpreterCfg cfg)
     {
+        this.cfg = cfg;
         this.interpreter = interpreter;
         this.currentDir = new File( System.getProperty( "user.home" ) );
         this.build();
+        this.reset();
         this.input.requestFocusInWindow();
+    }
+
+    private void reset()
+    {
+        this.output.setText( "" );
+        this.output.append( "Pooi [Prototype-based, object-oriented interpreter]\n"
+                + "\ntype in your message\n"
+                + "try \"Root list\", \"help\" or \"about\" to start\n\n\n"
+        );
+
+        this.updateTree();
+        this.updateDiagram();
     }
 
     private void buildFontDialog()
@@ -811,18 +825,6 @@ public class VisualEngine extends JFrame {
         }
     }
 
-    public void reset()
-    {
-        this.output.setText( "" );
-        this.updateTree();
-        this.updateDiagram();
-
-        this.output.append( "Pooi [Prototype-based, object-oriented interpreter]\n"
-                + "\ntype in your message\n"
-                + "try \"Root list\", \"help\" or \"about\" to start\n\n\n"
-        );
-    }
-
     public void updateDiagram()
     {
         final int HorizontalSeparation = 25;
@@ -1064,7 +1066,8 @@ public class VisualEngine extends JFrame {
 
     private HashMap<String, ObjectBox> diagramBoxes;
 
-    private Interpreter interpreter = null;
+    private Interpreter interpreter;
+    private InterpreterCfg cfg;
 
     private static boolean rebuildingTree = false;
     private File currentDir;

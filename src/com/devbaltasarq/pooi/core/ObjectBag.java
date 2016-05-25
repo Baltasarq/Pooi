@@ -539,7 +539,7 @@ public class ObjectBag {
       */
     private void chkCyclesInParent(ObjectBag parent) throws InterpretError
     {
-        final ObjectBag absParent = Runtime.getRuntime().getAbsoluteParent();
+        final ObjectBag absParent = this.getRuntime().getAbsoluteParent();
         HashSet<ObjectBag> visited = new HashSet<>();
 
         visited.add( this );
@@ -567,7 +567,7 @@ public class ObjectBag {
     public void set(String name, ObjectBag obj) throws InterpretError
     {
         boolean isParent = name.equals( ParentAttribute.ParentAttributeName );
-        final Runtime rt = Runtime.getRuntime();
+        final Runtime rt = this.getRuntime();
         Attribute atr = localLookUpAttribute( name );
 
         if ( atr == null ) {
@@ -658,7 +658,7 @@ public class ObjectBag {
         Attribute toret = this.localLookUpAttribute( atrName );
 
         try {
-            final ObjectBag absParent = Runtime.getRuntime().getAbsoluteParent();
+            final ObjectBag absParent = this.getRuntime().getAbsoluteParent();
 
             while( toret == null
                 && oldParent != absParent )
@@ -782,7 +782,7 @@ public class ObjectBag {
         Method toret = this.localLookUpMethod( mthName );
 
         try {
-            final ObjectBag absParent = Runtime.getRuntime().getAbsoluteParent();
+            final ObjectBag absParent = this.getRuntime().getAbsoluteParent();
 
             // Follow the inheritance chain
             while( oldParent != absParent

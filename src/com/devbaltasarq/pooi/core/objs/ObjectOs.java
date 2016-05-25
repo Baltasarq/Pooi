@@ -1,5 +1,6 @@
 package com.devbaltasarq.pooi.core.objs;
 
+import com.devbaltasarq.pooi.core.evaluables.methods.nativemethods.NativeMethodOsExit;
 import com.devbaltasarq.pooi.core.evaluables.methods.nativemethods.NativeMethodOsInput;
 import com.devbaltasarq.pooi.core.evaluables.methods.nativemethods.NativeMethodOsNow;
 import com.devbaltasarq.pooi.core.evaluables.methods.nativemethods.NativeMethodOsPrint;
@@ -26,8 +27,9 @@ public class ObjectOs extends SysObject {
     {
         super( rt, Name, absParent, container  );
 
-        this.set( NativeMethodOsNow.EtqMthOsNow, new NativeMethodOsNow() );
-        this.set( NativeMethodOsPrint.EtqMthOsPrint, new NativeMethodOsPrint() );
-        this.set( NativeMethodOsInput.EtqMthOsInput, new NativeMethodOsInput() );
+        this.set( NativeMethodOsNow.EtqMthOsNow, new NativeMethodOsNow( rt ) );
+        this.set( NativeMethodOsPrint.EtqMthOsPrint, new NativeMethodOsPrint( rt ) );
+        this.set( NativeMethodOsInput.EtqMthOsInput, new NativeMethodOsInput( rt ) );
+        this.set( NativeMethodOsExit.EtqMthOsExit, new NativeMethodOsExit( rt ) );
     }
 }

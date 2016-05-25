@@ -15,9 +15,9 @@ public class NativeMethodIs extends NativeMethod {
 
     public static final String EtqMthIs = "is?";
 
-    public NativeMethodIs()
+    public NativeMethodIs(Runtime rt)
     {
-        super( EtqMthIs );
+        super( rt, EtqMthIs );
     }
 
     @Override
@@ -25,11 +25,11 @@ public class NativeMethodIs extends NativeMethod {
             throws InterpretError
     {
         boolean result;
-        final Runtime rt = Runtime.getRuntime();
+        final Runtime rt = this.getRuntime();
 
         chkParametersNumber( 1, params );
         final ObjectBag arg = rt.solveToObject( params[ 0 ] );
-        final ObjectBag absParent = Runtime.getRuntime().getAbsoluteParent();
+        final ObjectBag absParent = rt.getAbsoluteParent();
         ObjectBag obj = ref;
 
         while( obj != absParent )

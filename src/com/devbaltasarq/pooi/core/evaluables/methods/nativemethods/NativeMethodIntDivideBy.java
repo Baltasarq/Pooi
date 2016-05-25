@@ -17,9 +17,9 @@ public class NativeMethodIntDivideBy extends NativeMethod {
 
     public static final String EtqMthIntDiv = "/";
 
-    public NativeMethodIntDivideBy()
+    public NativeMethodIntDivideBy(Runtime rt)
     {
-        super( EtqMthIntDiv );
+        super( rt, EtqMthIntDiv );
     }
 
     @Override
@@ -27,7 +27,7 @@ public class NativeMethodIntDivideBy extends NativeMethod {
             throws InterpretError
     {
         long result = 0;
-        final Runtime rt = Runtime.getRuntime();
+        final Runtime rt = this.getRuntime();
         final ObjectInt self;
         final ObjectInt toret;
 

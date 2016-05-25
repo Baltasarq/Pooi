@@ -16,9 +16,9 @@ public class NativeMethodStrIsLessThan extends NativeMethod {
 
     public static final String EtqMthStrIsLessThan = "<";
 
-    public NativeMethodStrIsLessThan()
+    public NativeMethodStrIsLessThan(Runtime rt)
     {
-        super( EtqMthStrIsLessThan );
+        super( rt, EtqMthStrIsLessThan );
     }
 
     @Override
@@ -26,7 +26,7 @@ public class NativeMethodStrIsLessThan extends NativeMethod {
             throws InterpretError
     {
         boolean result;
-        final Runtime rt = Runtime.getRuntime();
+        final Runtime rt = this.getRuntime();
         final ObjectStr self;
 
         chkParametersNumber( 1, params );

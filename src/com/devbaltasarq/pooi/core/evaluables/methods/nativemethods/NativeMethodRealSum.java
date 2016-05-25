@@ -17,9 +17,9 @@ public class NativeMethodRealSum extends NativeMethod {
 
     public static final String EtqMthRealSum = "+";
 
-    public NativeMethodRealSum()
+    public NativeMethodRealSum(Runtime rt)
     {
-        super( EtqMthRealSum );
+        super( rt, EtqMthRealSum );
     }
 
     @Override
@@ -27,7 +27,7 @@ public class NativeMethodRealSum extends NativeMethod {
             throws InterpretError
     {
         double result;
-        final Runtime rt = Runtime.getRuntime();
+        final Runtime rt = this.getRuntime();
         final ObjectReal self;
         final ObjectReal toret;
 

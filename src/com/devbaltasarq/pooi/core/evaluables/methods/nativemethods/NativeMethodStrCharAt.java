@@ -16,9 +16,9 @@ import com.devbaltasarq.pooi.core.objs.ObjectStr;
 public class NativeMethodStrCharAt extends NativeMethod {
     public static final String EtqMthStrCharAt = "at";
 
-    public NativeMethodStrCharAt()
+    public NativeMethodStrCharAt(Runtime rt)
     {
-        super( EtqMthStrCharAt );
+        super( rt, EtqMthStrCharAt );
     }
 
     @Override
@@ -26,7 +26,7 @@ public class NativeMethodStrCharAt extends NativeMethod {
             throws InterpretError
     {
         final long num;
-        final Runtime rt = Runtime.getRuntime();
+        final Runtime rt = this.getRuntime();
         final String selfValue;
         final String result;
 

@@ -75,57 +75,57 @@ public final class Runtime {
     public void addMethodsToRuntimeObjects() throws InterpretError
     {
         // Int
-        this.integer.set( NativeMethodIntSum.EtqMthIntSum, new NativeMethodIntSum() );
-        this.integer.set( NativeMethodIntSubstract.EtqMthIntSub, new NativeMethodIntSubstract() );
-        this.integer.set( NativeMethodIntMultiplyBy.EtqMthIntMul, new NativeMethodIntMultiplyBy() );
-        this.integer.set( NativeMethodIntDivideBy.EtqMthIntDiv, new NativeMethodIntDivideBy() );
-        this.integer.set( NativeMethodIntIsNegative.EtqMthIntIsNegative, new NativeMethodIntIsNegative() );
-        this.integer.set( NativeMethodIntAbs.EtqMthIntAbs, new NativeMethodIntAbs() );
-        this.integer.set( NativeMethodIntIsEqualTo.EtqMthIntIsEqualTo, new NativeMethodIntIsEqualTo() );
-        this.integer.set( NativeMethodIntIsGreaterThan.EtqMthIntIsGreaterThan, new NativeMethodIntIsGreaterThan() );
-        this.integer.set( NativeMethodIntIsLessThan.EtqMthIntIsLessThan, new NativeMethodIntIsLessThan() );
+        this.integer.set( NativeMethodIntSum.EtqMthIntSum, new NativeMethodIntSum( this ) );
+        this.integer.set( NativeMethodIntSubstract.EtqMthIntSub, new NativeMethodIntSubstract( this ) );
+        this.integer.set( NativeMethodIntMultiplyBy.EtqMthIntMul, new NativeMethodIntMultiplyBy( this ) );
+        this.integer.set( NativeMethodIntDivideBy.EtqMthIntDiv, new NativeMethodIntDivideBy( this ) );
+        this.integer.set( NativeMethodIntIsNegative.EtqMthIntIsNegative, new NativeMethodIntIsNegative( this ) );
+        this.integer.set( NativeMethodIntAbs.EtqMthIntAbs, new NativeMethodIntAbs( this ) );
+        this.integer.set( NativeMethodIntIsEqualTo.EtqMthIntIsEqualTo, new NativeMethodIntIsEqualTo( this ) );
+        this.integer.set( NativeMethodIntIsGreaterThan.EtqMthIntIsGreaterThan, new NativeMethodIntIsGreaterThan( this) );
+        this.integer.set( NativeMethodIntIsLessThan.EtqMthIntIsLessThan, new NativeMethodIntIsLessThan( this ) );
 
         // Real
-        this.real.set( NativeMethodRealSum.EtqMthRealSum, new NativeMethodRealSum() );
-        this.real.set( NativeMethodRealSubstract.EtqMthRealSub, new NativeMethodRealSubstract() );
-        this.real.set( NativeMethodRealMultiplyBy.EtqMthRealMul, new NativeMethodRealMultiplyBy() );
-        this.real.set( NativeMethodRealDivideBy.EtqMthRealDiv, new NativeMethodRealDivideBy() );
-        this.real.set( NativeMethodRealIsNegative.EtqMthRealIsNegative, new NativeMethodRealIsNegative() );
-        this.real.set( NativeMethodRealAbs.EtqMthRealAbs, new NativeMethodRealAbs() );
-        this.real.set( NativeMethodRealIsEqualTo.EtqMthRealIsEqualTo, new NativeMethodRealIsEqualTo() );
-        this.real.set( NativeMethodRealIsGreaterThan.EtqMthRealIsGreaterThan, new NativeMethodRealIsGreaterThan() );
-        this.real.set( NativeMethodRealIsLessThan.EtqMthRealIsLessThan, new NativeMethodRealIsLessThan() );
+        this.real.set( NativeMethodRealSum.EtqMthRealSum, new NativeMethodRealSum( this ) );
+        this.real.set( NativeMethodRealSubstract.EtqMthRealSub, new NativeMethodRealSubstract( this ) );
+        this.real.set( NativeMethodRealMultiplyBy.EtqMthRealMul, new NativeMethodRealMultiplyBy( this ) );
+        this.real.set( NativeMethodRealDivideBy.EtqMthRealDiv, new NativeMethodRealDivideBy( this ) );
+        this.real.set( NativeMethodRealIsNegative.EtqMthRealIsNegative, new NativeMethodRealIsNegative( this ) );
+        this.real.set( NativeMethodRealAbs.EtqMthRealAbs, new NativeMethodRealAbs( this ) );
+        this.real.set( NativeMethodRealIsEqualTo.EtqMthRealIsEqualTo, new NativeMethodRealIsEqualTo( this ) );
+        this.real.set( NativeMethodRealIsGreaterThan.EtqMthRealIsGreaterThan, new NativeMethodRealIsGreaterThan( this ) );
+        this.real.set( NativeMethodRealIsLessThan.EtqMthRealIsLessThan, new NativeMethodRealIsLessThan( this ) );
 
         // Str
-        this.str.set( NativeMethodStrConcat.EtqMthStrConcat, new NativeMethodStrConcat() );
-        this.str.set( NativeMethodStrMays.EtqMthStrMays, new NativeMethodStrMays() );
-        this.str.set( NativeMethodStrMins.EtqMthStrMins, new NativeMethodStrMins() );
-        this.str.set( NativeMethodStrTrim.EtqMthStrTrim, new NativeMethodStrTrim() );
-        this.str.set( NativeMethodStrToInt.EtqMthStrToInt, new NativeMethodStrToInt() );
-        this.str.set( NativeMethodStrToReal.EtqMthStrToReal, new NativeMethodStrToReal() );
-        this.str.set( NativeMethodStrIsNumber.EtqMthStrIsNumber, new NativeMethodStrIsNumber() );
-        this.str.set( NativeMethodStrIsEqualTo.EtqMthStrIsEqualTo, new NativeMethodStrIsEqualTo() );
-        this.str.set( NativeMethodStrIsLessThan.EtqMthStrIsLessThan, new NativeMethodStrIsLessThan() );
-        this.str.set( NativeMethodStrIsGreaterThan.EtqMthStrIsGreaterThan, new NativeMethodStrIsGreaterThan() );
-        this.str.set( NativeMethodStrIsEmpty.EtqMthStrIsEmpty, new NativeMethodStrIsEmpty() );
-        this.str.set( NativeMethodStrCharAt.EtqMthStrCharAt, new NativeMethodStrCharAt() );
-        this.str.set( NativeMethodStrLength.EtqMthStrLength, new NativeMethodStrLength() );
-        this.str.set( NativeMethodStrSub.EtqMthStrSub, new NativeMethodStrSub() );
-        this.str.set( NativeMethodStrLeft.EtqMthStrLeft, new NativeMethodStrLeft() );
-        this.str.set( NativeMethodStrRight.EtqMthStrRight, new NativeMethodStrRight() );
+        this.str.set( NativeMethodStrConcat.EtqMthStrConcat, new NativeMethodStrConcat( this ) );
+        this.str.set( NativeMethodStrMays.EtqMthStrMays, new NativeMethodStrMays( this ) );
+        this.str.set( NativeMethodStrMins.EtqMthStrMins, new NativeMethodStrMins( this ) );
+        this.str.set( NativeMethodStrTrim.EtqMthStrTrim, new NativeMethodStrTrim( this ) );
+        this.str.set( NativeMethodStrToInt.EtqMthStrToInt, new NativeMethodStrToInt( this ) );
+        this.str.set( NativeMethodStrToReal.EtqMthStrToReal, new NativeMethodStrToReal( this ) );
+        this.str.set( NativeMethodStrIsNumber.EtqMthStrIsNumber, new NativeMethodStrIsNumber( this ) );
+        this.str.set( NativeMethodStrIsEqualTo.EtqMthStrIsEqualTo, new NativeMethodStrIsEqualTo( this ) );
+        this.str.set( NativeMethodStrIsLessThan.EtqMthStrIsLessThan, new NativeMethodStrIsLessThan( this ) );
+        this.str.set( NativeMethodStrIsGreaterThan.EtqMthStrIsGreaterThan, new NativeMethodStrIsGreaterThan( this ) );
+        this.str.set( NativeMethodStrIsEmpty.EtqMthStrIsEmpty, new NativeMethodStrIsEmpty( this ) );
+        this.str.set( NativeMethodStrCharAt.EtqMthStrCharAt, new NativeMethodStrCharAt( this ) );
+        this.str.set( NativeMethodStrLength.EtqMthStrLength, new NativeMethodStrLength( this ) );
+        this.str.set( NativeMethodStrSub.EtqMthStrSub, new NativeMethodStrSub( this ) );
+        this.str.set( NativeMethodStrLeft.EtqMthStrLeft, new NativeMethodStrLeft( this ) );
+        this.str.set( NativeMethodStrRight.EtqMthStrRight, new NativeMethodStrRight( this ) );
 
         // DateTime
-        this.dateTime.set( ObjectDateTime.EtqDateAsStr, new InterpretedMethod( ObjectDateTime.EtqDateAsStr,
+        this.dateTime.set( ObjectDateTime.EtqDateAsStr, new InterpretedMethod( this, ObjectDateTime.EtqDateAsStr,
                 "( ( ( ( self." + ObjectDateTime.EtqDay + " str ) + \"-\" ) + ( self."
                         + ObjectDateTime.EtqMonth + " str ) ) + \"-\" ) + ( self."
                         + ObjectDateTime.EtqYear + " str )" ) );
 
-        this.dateTime.set( ObjectDateTime.EtqTimeAsStr, new InterpretedMethod( ObjectDateTime.EtqTimeAsStr,
+        this.dateTime.set( ObjectDateTime.EtqTimeAsStr, new InterpretedMethod( this, ObjectDateTime.EtqTimeAsStr,
                 "( ( ( ( self." + ObjectDateTime.EtqHour + " str ) + \":\" ) + ( self."
                         + ObjectDateTime.EtqMinute + " str ) ) + \":\" ) + ( self."
                         + ObjectDateTime.EtqSecond + " str )" ) );
 
-        this.dateTime.set( ObjectDateTime.EtqStr, new InterpretedMethod( ObjectDateTime.EtqStr,
+        this.dateTime.set( ObjectDateTime.EtqStr, new InterpretedMethod( this, ObjectDateTime.EtqStr,
                 "( ( self dateAsStr ) + \" \" ) + ( self timeAsStr )" ) );
     }
 

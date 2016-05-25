@@ -27,19 +27,11 @@ public class Interpreter {
     public static final String EtqInfoObjAttrHasGui = "gui";
 
     /** Creates a fresh new interpreter, setting certain configuration options */
-    public Interpreter(boolean verbose, boolean usesGui) throws InterpretError
+    public Interpreter(Runtime rt, InterpreterCfg cfg) throws InterpretError
     {
-        this();
-        this.hasGui = usesGui;
-        this.objInfo.set( EtqInfoObjAttrVerbose, rt.createBool( verbose ) );
-        this.objInfo.set(EtqInfoObjAttrHasGui, rt.createBool( usesGui ) );
-    }
-
-    /** Creates a fresh new interpreter */
-    protected Interpreter() throws InterpretError
-    {
+        this.rt = rt;
+        this.cfg = cfg;
         this.error = false;
-        this.rt = Runtime.getRuntime();
         this.createInfoObject();
     }
 
@@ -47,14 +39,14 @@ public class Interpreter {
     {
         // Info object
         this.objInfo = this.getRuntime().createObject( EtqInfoObject );
-        this.objInfo.set( EtqInfoObjAttrName, rt.createString(EtqInfoObjAttrName, AppInfo.Name ) );
-        this.objInfo.set( EtqInfoObjAttrVersion, rt.createString(EtqInfoObjAttrVersion, AppInfo.Version ) );
-        this.objInfo.set( EtqInfoObjAttrEmail, rt.createString(EtqInfoObjAttrEmail, AppInfo.Email ) );
-        this.objInfo.set( EtqInfoObjAttrAuthor, rt.createString(EtqInfoObjAttrAuthor, AppInfo.Author ) );
-        this.objInfo.set( EtqInfoObjAttrLicense, rt.createString(EtqInfoObjAttrLicense, AppInfo.License ) );
-        this.objInfo.set( EtqInfoObjAttrVerbose, rt.createBool( this.isVerbose ) );
-        this.objInfo.set(EtqInfoObjAttrHasGui, rt.createBool( this.hasGui ) );
-        this.objInfo.set( EtqInfoObjAttrHelp, rt.createString(EtqInfoObjAttrHelp,
+        this.objInfo.set( EtqInfoObjAttrName, this.rt.createString(EtqInfoObjAttrName, AppInfo.Name ) );
+        this.objInfo.set( EtqInfoObjAttrVersion, this.rt.createString(EtqInfoObjAttrVersion, AppInfo.Version ) );
+        this.objInfo.set( EtqInfoObjAttrEmail, this.rt.createString(EtqInfoObjAttrEmail, AppInfo.Email ) );
+        this.objInfo.set( EtqInfoObjAttrAuthor, this.rt.createString(EtqInfoObjAttrAuthor, AppInfo.Author ) );
+        this.objInfo.set( EtqInfoObjAttrLicense, this.rt.createString(EtqInfoObjAttrLicense, AppInfo.License ) );
+        this.objInfo.set( EtqInfoObjAttrVerbose, this.rt.createBool( this.cfg.isVerbose() ) );
+        this.objInfo.set( EtqInfoObjAttrHasGui, this.rt.createBool( this.cfg.hasGui() ) );
+        this.objInfo.set( EtqInfoObjAttrHelp, this.rt.createString(EtqInfoObjAttrHelp,
                                       "copy objects in order to create new ones\n"
                                                + " insert orders in the form ( <object> <msg> <args> )\n\n"
                                                +   "\n\nobject rename <string>\n"
@@ -83,8 +75,10 @@ public class Interpreter {
     public String interpret(String cmds)
     {
         StringBuilder msg = new StringBuilder();
+        StringBuilder result = new StringBuilder();
         InterpretedMethod method = null;
-        final ObjectBag objRoot = this.getRuntime().getRoot();
+        final Runtime rt = this.getRuntime();
+        final ObjectBag objRoot = rt.getRoot();
 
         // Eliminate spurious literal objects
         this.getRuntime().getLiteralsContainer().clear( false );
@@ -94,10 +88,17 @@ public class Interpreter {
             msg.append( "terminated." );
         } else {
             try {
-                this.saveToTranscript( "> " + cmds.toString() );
-                method = new InterpretedMethod( "REL_TopLevel", cmds );
-                this.execute( method, objRoot, method.getRealParams(), msg );
+                this.saveToTranscript( "> " + cmds );
+                method = new InterpretedMethod( rt, "REL_TopLevel", cmds );
+                this.execute( method, objRoot, method.getRealParams(), msg, result );
+
+                // Si no es verboso...
+                if ( !( this.isVerbose() ) ) {
+                    msg.delete( 0, msg.length() );
+                }
+
                 this.saveToTranscript( msg.toString() );
+                this.saveToTranscript( result.toString() );
             } catch(InterpretError e) {
                 error = true;
                 msg.append( "Error: " + e.getMessage() );
@@ -107,6 +108,7 @@ public class Interpreter {
             }
         }
 
+        msg.append( result.toString() );
         return msg.toString();
     }
 
@@ -126,7 +128,7 @@ public class Interpreter {
 
         // Chk the verbose option
         if ( objInfo.localLookUpAttribute( EtqInfoObjAttrVerbose ) == null ) {
-            objInfo.set( EtqInfoObjAttrVerbose, rt.createBool( this.isVerbose ) );
+            objInfo.set( EtqInfoObjAttrVerbose, rt.createBool( this.getConfiguration().hasGui() ) );
             msg.append( '\n' );
             msg.append( EtqInfoObjAttrVerbose );
             msg.append( " re-created in " );
@@ -136,7 +138,7 @@ public class Interpreter {
 
         // Chk the gui option
         if ( objInfo.localLookUpAttribute(EtqInfoObjAttrHasGui) == null ) {
-            objInfo.set(EtqInfoObjAttrHasGui, rt.createBool( this.hasGui ) );
+            objInfo.set(EtqInfoObjAttrHasGui, rt.createBool( this.getConfiguration().hasGui() ) );
             msg.append( '\n' );
             msg.append(EtqInfoObjAttrHasGui);
             msg.append( "  re-created in " );
@@ -145,7 +147,8 @@ public class Interpreter {
         }
     }
 
-    protected ObjectBag execute(InterpretedMethod method, ObjectBag self, Evaluable[] args, StringBuilder msg)
+    protected ObjectBag execute(InterpretedMethod method, ObjectBag self, Evaluable[] args,
+                                StringBuilder msg, StringBuilder result)
     {
         Evaluable ref;
         ObjectBag toret = null;
@@ -219,7 +222,7 @@ public class Interpreter {
                         NativeMethod nativeMth = (NativeMethod) mth;
                         toret = nativeMth.doIt( obj, params, msg );
                     } else {
-                        toret = this.execute( (InterpretedMethod) mth, obj, params, msg );
+                        toret = this.execute( (InterpretedMethod) mth, obj, params, msg, result );
                     }
                 }
 
@@ -236,6 +239,13 @@ public class Interpreter {
         } catch(InterpretError e) {
             error = true;
             msg.append( "Error: " + e.getMessage() );
+        }
+
+        // Gather the results
+        result.delete( 0, result.length() );
+
+        if ( toret != null ) {
+            result.append( toret.getNameOrValueAsString() );
         }
 
         return toret;
@@ -335,6 +345,7 @@ public class Interpreter {
 
     public boolean isVerbose() throws InterpretError
     {
+        final InterpreterCfg cfg = this.getConfiguration();
         Attribute attrVerbose = null;
         ObjectBag info = this.getObjInfo();
 
@@ -348,11 +359,15 @@ public class Interpreter {
         attrVerbose = info.localLookUpAttribute( EtqInfoObjAttrVerbose );
 
         if ( attrVerbose == null ) {
-            this.getObjInfo().set( EtqInfoObjAttrVerbose, this.getRuntime().createBool( this.isVerbose ) );
+            this.getObjInfo().set( EtqInfoObjAttrVerbose, this.getRuntime().createBool( cfg.isVerbose() ) );
         }
 
-        this.isVerbose = ( (ObjectBool) attrVerbose.getReference() ).getValue();
-        return this.isVerbose;
+        cfg.setVerbose( ( (ObjectBool) attrVerbose.getReference() ).getValue() );
+        return cfg.isVerbose();
+    }
+
+    public InterpreterCfg getConfiguration() {
+        return this.cfg;
     }
 
     public ObjectBag getObjInfo() {
@@ -360,7 +375,7 @@ public class Interpreter {
     }
 
     public boolean hasGui() {
-        return this.hasGui;
+        return this.getConfiguration().hasGui();
     }
 
     public Runtime getRuntime()
@@ -372,6 +387,5 @@ public class Interpreter {
     protected final Runtime rt;
     private ObjectBag objInfo;
     protected BufferedWriter transcript = null;
-    private boolean hasGui;
-    private boolean isVerbose;
+    private InterpreterCfg cfg;
 }

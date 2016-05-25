@@ -17,16 +17,16 @@ import javax.swing.*;
 public class NativeMethodOsInput extends NativeMethod {
     public static final String EtqMthOsInput = "input";
 
-    public NativeMethodOsInput()
+    public NativeMethodOsInput(Runtime rt)
     {
-        super( EtqMthOsInput );
+        super( rt, EtqMthOsInput );
     }
 
     @Override
     public ObjectBag doIt(ObjectBag ref, Evaluable[] params, StringBuilder msg)
             throws InterpretError
     {
-        final Runtime rt = Runtime.getRuntime();
+        final Runtime rt = this.getRuntime();
         chkParametersNumber( 1, params  );
         final String inputMessage = getStringFrom( params[ 0 ] );
 

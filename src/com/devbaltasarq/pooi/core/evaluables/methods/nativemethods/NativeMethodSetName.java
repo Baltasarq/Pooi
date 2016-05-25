@@ -15,9 +15,9 @@ public class NativeMethodSetName extends NativeMethod {
     public static final String EtqMthSetName = "setName";
     public static final String EtqMthRename = "rename";
 
-    public NativeMethodSetName()
+    public NativeMethodSetName(com.devbaltasarq.pooi.core.Runtime rt)
     {
-        super( EtqMthSetName );
+        super( rt, EtqMthSetName );
     }
 
     @Override

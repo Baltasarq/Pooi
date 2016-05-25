@@ -14,16 +14,16 @@ import com.devbaltasarq.pooi.core.objs.ObjectReal;
 public class NativeMethodRealAbs extends NativeMethod {
     public static final String EtqMthRealAbs = "abs";
 
-    public NativeMethodRealAbs()
+    public NativeMethodRealAbs(Runtime rt)
     {
-        super( EtqMthRealAbs );
+        super( rt, EtqMthRealAbs );
     }
 
     @Override
     public ObjectBag doIt(ObjectBag ref, Evaluable[] params, StringBuilder msg)
             throws InterpretError
     {
-        final Runtime rt = Runtime.getRuntime();
+        final Runtime rt = this.getRuntime();
 
         chkParametersNumber( 0, params );
 

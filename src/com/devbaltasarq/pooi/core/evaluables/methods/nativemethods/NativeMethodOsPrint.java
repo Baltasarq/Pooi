@@ -1,13 +1,10 @@
 package com.devbaltasarq.pooi.core.evaluables.methods.nativemethods;
 
-import com.devbaltasarq.pooi.core.*;
+import com.devbaltasarq.pooi.core.Evaluable;
+import com.devbaltasarq.pooi.core.ObjectBag;
 import com.devbaltasarq.pooi.core.Runtime;
-import com.devbaltasarq.pooi.core.evaluables.Method;
-import com.devbaltasarq.pooi.core.evaluables.literals.StrLiteral;
 import com.devbaltasarq.pooi.core.evaluables.methods.NativeMethod;
 import com.devbaltasarq.pooi.core.exceps.InterpretError;
-import com.devbaltasarq.pooi.core.objs.ObjectStr;
-import com.devbaltasarq.pooi.core.objs.ValueObject;
 
 /**
  * This method prints a text on the standard output
@@ -16,9 +13,9 @@ import com.devbaltasarq.pooi.core.objs.ValueObject;
 public class NativeMethodOsPrint extends NativeMethod {
     public static final String EtqMthOsPrint = "print";
 
-    public NativeMethodOsPrint()
+    public NativeMethodOsPrint(Runtime rt)
     {
-        super( EtqMthOsPrint );
+        super( rt, EtqMthOsPrint );
     }
 
     @Override

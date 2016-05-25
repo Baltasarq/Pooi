@@ -16,9 +16,9 @@ public class NativeMethodStrIsEmpty extends NativeMethod {
 
     public static final String EtqMthStrIsEmpty = "empty?";
 
-    public NativeMethodStrIsEmpty()
+    public NativeMethodStrIsEmpty(Runtime rt)
     {
-        super( EtqMthStrIsEmpty );
+        super( rt, EtqMthStrIsEmpty );
     }
 
     @Override
@@ -26,7 +26,7 @@ public class NativeMethodStrIsEmpty extends NativeMethod {
             throws InterpretError
     {
         boolean result;
-        final Runtime rt = Runtime.getRuntime();
+        final Runtime rt = this.getRuntime();
         final ObjectStr self;
 
         chkParametersNumber( 0, params );

@@ -17,9 +17,9 @@ public class NativeMethodRealMultiplyBy extends NativeMethod {
 
     public static final String EtqMthRealMul = "*";
 
-    public NativeMethodRealMultiplyBy()
+    public NativeMethodRealMultiplyBy(Runtime rt)
     {
-        super( EtqMthRealMul );
+        super( rt, EtqMthRealMul );
     }
 
     @Override
@@ -27,7 +27,7 @@ public class NativeMethodRealMultiplyBy extends NativeMethod {
             throws InterpretError
     {
         double result;
-        final Runtime rt = Runtime.getRuntime();
+        final Runtime rt = this.getRuntime();
         final ObjectReal self;
         final ObjectReal toret;
 

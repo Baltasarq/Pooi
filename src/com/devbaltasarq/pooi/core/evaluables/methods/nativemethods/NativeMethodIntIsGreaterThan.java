@@ -17,9 +17,9 @@ public class NativeMethodIntIsGreaterThan extends NativeMethod {
 
     public static final String EtqMthIntIsGreaterThan = ">";
 
-    public NativeMethodIntIsGreaterThan()
+    public NativeMethodIntIsGreaterThan(Runtime rt)
     {
-        super( EtqMthIntIsGreaterThan );
+        super( rt, EtqMthIntIsGreaterThan );
     }
 
     @Override
@@ -27,7 +27,7 @@ public class NativeMethodIntIsGreaterThan extends NativeMethod {
             throws InterpretError
     {
         boolean result;
-        final Runtime rt = Runtime.getRuntime();
+        final Runtime rt = this.getRuntime();
         final ObjectInt self;
 
         chkParametersNumber( 1, params );

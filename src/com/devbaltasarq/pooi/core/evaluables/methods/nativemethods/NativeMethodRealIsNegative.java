@@ -14,16 +14,16 @@ import com.devbaltasarq.pooi.core.objs.ObjectReal;
 public class NativeMethodRealIsNegative extends NativeMethod {
     public static final String EtqMthRealIsNegative = "neg?";
 
-    public NativeMethodRealIsNegative()
+    public NativeMethodRealIsNegative(Runtime rt)
     {
-        super( EtqMthRealIsNegative );
+        super( rt, EtqMthRealIsNegative );
     }
 
     @Override
     public ObjectBag doIt(ObjectBag ref, Evaluable[] params, StringBuilder msg)
             throws InterpretError
     {
-        final Runtime rt = Runtime.getRuntime();
+        final Runtime rt = this.getRuntime();
 
         chkParametersNumber( 0, params );
 

@@ -15,9 +15,9 @@ import java.lang.reflect.InvocationTargetException;
 public abstract class NativeMethod extends Method {
 
 
-    public NativeMethod(String name)
+    public NativeMethod(com.devbaltasarq.pooi.core.Runtime rt, String name)
     {
-        super( name );
+        super( rt, name );
     }
 
     /**
@@ -51,11 +51,5 @@ public abstract class NativeMethod extends Method {
     @Override
     public String getMethodBodyAsString() {
         return "{: }";
-    }
-
-    @Override
-    public String toString()
-    {
-        return ( this.getName() + " = " + this.getMethodBodyAsString() );
     }
 }

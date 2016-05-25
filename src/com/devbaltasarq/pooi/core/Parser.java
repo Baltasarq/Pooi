@@ -23,6 +23,10 @@ import java.util.ArrayList;
 public class Parser {
     public static final String PopTask = "__POP";
 
+    public Parser(Runtime rt) {
+        this.rt = rt;
+    }
+
     private static void clean(ArrayList<Command> toret)
     {
         for(int i = 0; i < toret.size(); ++i)
@@ -51,7 +55,7 @@ public class Parser {
      * @return A vector of Command object representing user's intentions
      * @throws com.devbaltasarq.pooi.core.exceps.InterpretError
      */
-    public static Command[] parseOrder(String order) throws InterpretError {
+    public static Command[] parseOrder(Runtime rt, String order) throws InterpretError {
         ArrayList<Command> toret = new ArrayList<Command>();
         order = order.trim();
 
@@ -66,7 +70,7 @@ public class Parser {
             // parse it
             Lexer lex = new Lexer( order );
             lex.skipSpaces();
-            Command cmd = parseCommand( lex, toret );
+            Command cmd = parseCommand( rt, lex, toret );
 
             while ( cmd != null ) {
                 toret.add( cmd );
@@ -78,7 +82,7 @@ public class Parser {
                     lex.skipSpaces();
                 }
 
-                cmd = parseCommand( lex, toret );
+                cmd = parseCommand( rt, lex, toret );
             }
         }
 
@@ -95,7 +99,7 @@ public class Parser {
      * @return A command object that represents user's intentions
      * @throws com.devbaltasarq.pooi.core.exceps.InterpretError when parsing is not possible
      */
-    public static Command parseCommand(Lexer lex, ArrayList<Command> cmds) throws InterpretError
+    public static Command parseCommand(Runtime rt, Lexer lex, ArrayList<Command> cmds) throws InterpretError
     {
         Command toret = null;
 
@@ -107,12 +111,12 @@ public class Parser {
             if ( lex.getCurrentChar() == '(' ) {
                 toret.setReference( new Reference( new String[]{ PopTask } ) );
                 lex.advance();
-                cmds.add( parseCommand( lex, cmds ) );
+                cmds.add( parseCommand( rt, lex, cmds ) );
             } else {
                 toret.setReference( parseParam( lex ) );
             }
 
-            parsePartialCommand( toret, lex, cmds );
+            parsePartialCommand( rt, toret, lex, cmds );
         }
 
         if ( toret != null
@@ -205,7 +209,7 @@ public class Parser {
         toret.setMessage( messageId  );
     }
 
-    private  static Command parsePartialCommand(Command toret, Lexer lex, ArrayList<Command> cmds)
+    private  static Command parsePartialCommand(Runtime rt, Command toret, Lexer lex, ArrayList<Command> cmds)
             throws InterpretError
     {
         lex.skipSpaces();
@@ -231,11 +235,11 @@ public class Parser {
                     if ( lex.getCurrentChar() == '(' ) {
                         lex.advance();
                         params.add( new Reference( PopTask ) );
-                        cmds.add( parseCommand( lex, cmds ) );
+                        cmds.add( parseCommand( rt, lex, cmds ) );
                     }
                     else
                     if ( lex.getCurrentChar() == '{' ) {
-                        params.add( parseMethod( lex ) );
+                        params.add( parseMethod( rt, lex ) );
                     }
                     else {
                         params.add( parseParam( lex ) );
@@ -339,7 +343,7 @@ public class Parser {
         return toret.toArray( new String[ toret.size() ] );
     }
 
-    public static InterpretedMethod parseMethod(Lexer lex) throws InterpretError
+    public static InterpretedMethod parseMethod(Runtime rt, Lexer lex) throws InterpretError
     {
         int braceCount = 0;
         InterpretedMethod toret = null;
@@ -378,10 +382,17 @@ public class Parser {
 
         // Create method
         toret = new InterpretedMethod(
+                rt,
                 InterpretedMethod.createNewMethodId(),
                 strMth.toString()
         );
 
         return toret;
     }
+
+    public Runtime getRuntime() {
+        return this.rt;
+    }
+
+    private Runtime rt;
 }

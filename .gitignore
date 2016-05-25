@@ -1,5 +1,10 @@
+# Local config for IDEA
+.idea/workspace.xml
+
+# Executables
 *.class
 out/
+
 # Backup files
 *~
 *.bak

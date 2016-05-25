@@ -13,9 +13,9 @@ import com.devbaltasarq.pooi.core.objs.ObjectStr;
  */
 public abstract class Method extends Member {
 
-    public Method(String name)
+    public Method(Runtime rt, String name)
     {
-        super( name );
+        super( name ); this.rt = rt;
     }
 
     public abstract int getNumParams();
@@ -40,10 +40,9 @@ public abstract class Method extends Member {
         return;
     }
 
-    public static String getStringFrom(Evaluable e)
-            throws InterpretError
+    public String getStringFrom(Evaluable e) throws InterpretError
     {
-        final Runtime rt = Runtime.getRuntime();
+        final Runtime rt = this.getRuntime();
         String toret;
         ObjectBag idObj = null;
 
@@ -76,7 +75,7 @@ public abstract class Method extends Member {
         StringBuilder toret = new StringBuilder();
 
         for(String param: this.getFormalParameters()) {
-            toret.append( toret );
+            toret.append( param );
             toret.append( ' ' );
         }
 
@@ -92,4 +91,23 @@ public abstract class Method extends Member {
      */
     public abstract Method copy();
 
+    public Runtime getRuntime() {
+        return this.rt;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder toret = new StringBuilder();
+
+        toret.append( this.getName() );
+        toret.append( '(' );
+        toret.append( this.getFormalParametersAsString() );
+        toret.append( ')' );
+        toret.append( " = " );
+        toret.append( this.getMethodBodyAsString() );
+
+        return toret.toString();
+    }
+
+    private Runtime rt;
 }

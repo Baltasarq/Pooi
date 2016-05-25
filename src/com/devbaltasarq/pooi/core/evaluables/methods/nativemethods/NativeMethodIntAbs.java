@@ -14,16 +14,16 @@ import com.devbaltasarq.pooi.core.objs.ObjectInt;
 public class NativeMethodIntAbs extends NativeMethod {
     public static final String EtqMthIntAbs = "abs";
 
-    public NativeMethodIntAbs()
+    public NativeMethodIntAbs(Runtime rt)
     {
-        super( EtqMthIntAbs );
+        super( rt, EtqMthIntAbs );
     }
 
     @Override
     public ObjectBag doIt(ObjectBag ref, Evaluable[] params, StringBuilder msg)
             throws InterpretError
     {
-        final Runtime rt = Runtime.getRuntime();
+        final Runtime rt = this.getRuntime();
 
         chkParametersNumber( 0, params );
 

@@ -16,16 +16,16 @@ import com.devbaltasarq.pooi.core.objs.ObjectStr;
 public class NativeMethodStrLeft extends NativeMethod {
     public static final String EtqMthStrLeft = "left";
 
-    public NativeMethodStrLeft()
+    public NativeMethodStrLeft(Runtime rt)
     {
-        super( EtqMthStrLeft );
+        super( rt, EtqMthStrLeft );
     }
 
     @Override
     public ObjectBag doIt(ObjectBag ref, Evaluable[] params, StringBuilder msg)
             throws InterpretError
     {
-        final Runtime rt = Runtime.getRuntime();
+        final Runtime rt = this.getRuntime();
         final ObjectInt arg1;
         final String selfValue;
         int arg1Value;

@@ -12,9 +12,9 @@ import com.devbaltasarq.pooi.core.exceps.InterpretError;
 public class NativeMethodCreateChild extends NativeMethod {
     public static final String EtqMthCreateChild = "createChild";
 
-    public NativeMethodCreateChild()
+    public NativeMethodCreateChild(com.devbaltasarq.pooi.core.Runtime rt)
     {
-        super( EtqMthCreateChild );
+        super( rt, EtqMthCreateChild );
     }
 
     @Override

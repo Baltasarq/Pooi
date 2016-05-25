@@ -30,16 +30,9 @@ public class Inspector extends JDialog {
 
     public Inspector(VisualEngine parent, ObjectBag obj) {
         this.beingBuilt = true;
-        try {
-            this.rt = Runtime.getRuntime();
-            this.objRoot = rt.getAbsoluteParent();
-        }
-        catch(Exception exc) {
-            this.setVisible( false );
-            JOptionPane.showMessageDialog( this, "Unexpected ERROR retrieving root object" );
-        }
-
         this.visualEngine = parent;
+        this.rt = parent.getInterpreter().getRuntime();
+        this.objRoot = rt.getAbsoluteParent();
         this.obj = obj;
         this.setIconImage( parent.getIconImage() );
         this.setFont( this.visualEngine.getFont() );

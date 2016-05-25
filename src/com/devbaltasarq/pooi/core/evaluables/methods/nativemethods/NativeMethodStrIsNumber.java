@@ -14,16 +14,16 @@ import com.devbaltasarq.pooi.core.objs.ObjectStr;
 public class NativeMethodStrIsNumber extends NativeMethod {
     public static final String EtqMthStrIsNumber = "num?";
 
-    public NativeMethodStrIsNumber()
+    public NativeMethodStrIsNumber(Runtime rt)
     {
-        super( EtqMthStrIsNumber );
+        super( rt, EtqMthStrIsNumber );
     }
 
     @Override
     public ObjectBag doIt(ObjectBag ref, Evaluable[] params, StringBuilder msg)
             throws InterpretError
     {
-        final Runtime rt = Runtime.getRuntime();
+        final Runtime rt = this.getRuntime();
         boolean result = true;
 
         chkParametersNumber( 0, params );

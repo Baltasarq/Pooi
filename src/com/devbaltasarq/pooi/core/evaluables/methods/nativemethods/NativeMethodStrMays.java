@@ -15,16 +15,16 @@ import com.devbaltasarq.pooi.core.objs.ObjectStr;
 public class NativeMethodStrMays extends NativeMethod {
     public static final String EtqMthStrMays = "upper";
 
-    public NativeMethodStrMays()
+    public NativeMethodStrMays(Runtime rt)
     {
-        super( EtqMthStrMays );
+        super( rt, EtqMthStrMays );
     }
 
     @Override
     public ObjectBag doIt(ObjectBag ref, Evaluable[] params, StringBuilder msg)
             throws InterpretError
     {
-        final Runtime rt = Runtime.getRuntime();
+        final Runtime rt = this.getRuntime();
 
         chkParametersNumber( 0, params );
 

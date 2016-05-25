@@ -3,8 +3,6 @@ package com.devbaltasarq.pooi.core.evaluables.methods.nativemethods;
 import com.devbaltasarq.pooi.core.Evaluable;
 import com.devbaltasarq.pooi.core.ObjectBag;
 import com.devbaltasarq.pooi.core.Runtime;
-import com.devbaltasarq.pooi.core.evaluables.Method;
-import com.devbaltasarq.pooi.core.evaluables.methods.InterpretedMethod;
 import com.devbaltasarq.pooi.core.evaluables.methods.NativeMethod;
 import com.devbaltasarq.pooi.core.exceps.InterpretError;
 
@@ -17,16 +15,16 @@ public class NativeMethodRenameMethod extends NativeMethod {
 
     public static final String EtqMthRenameMethod = "renameMethod";
 
-    public NativeMethodRenameMethod()
+    public NativeMethodRenameMethod(Runtime rt)
     {
-        super( EtqMthRenameMethod );
+        super( rt, EtqMthRenameMethod );
     }
 
     @Override
     public ObjectBag doIt(ObjectBag ref, Evaluable[] params, StringBuilder msg)
             throws InterpretError
     {
-        final Runtime rt = Runtime.getRuntime();
+        final Runtime rt = this.getRuntime();
         this.chkParametersNumber( 2, params );
 
         final String id1 = getStringFrom( params[ 0 ] );

@@ -17,9 +17,9 @@ public class NativeMethodRealIsEqualTo extends NativeMethod {
 
     public static final String EtqMthRealIsEqualTo = "==";
 
-    public NativeMethodRealIsEqualTo()
+    public NativeMethodRealIsEqualTo(Runtime rt)
     {
-        super( EtqMthRealIsEqualTo );
+        super( rt, EtqMthRealIsEqualTo );
     }
 
     @Override
@@ -27,7 +27,7 @@ public class NativeMethodRealIsEqualTo extends NativeMethod {
             throws InterpretError
     {
         boolean result;
-        final Runtime rt = Runtime.getRuntime();
+        final Runtime rt = this.getRuntime();
         final ObjectReal self;
 
         chkParametersNumber( 1, params );

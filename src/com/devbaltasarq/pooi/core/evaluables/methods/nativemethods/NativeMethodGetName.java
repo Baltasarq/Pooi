@@ -13,16 +13,16 @@ import com.devbaltasarq.pooi.core.exceps.InterpretError;
 public class NativeMethodGetName extends NativeMethod {
     public static final String EtqMthGetName = "name";
 
-    public NativeMethodGetName()
+    public NativeMethodGetName(Runtime rt)
     {
-        super( EtqMthGetName );
+        super( rt, EtqMthGetName );
     }
 
     @Override
     public ObjectBag doIt(ObjectBag ref, Evaluable[] params, StringBuilder msg)
             throws InterpretError
     {
-        final Runtime rt = Runtime.getRuntime();
+        final Runtime rt = this.getRuntime();
 
         chkParametersNumber( 0, params );
 

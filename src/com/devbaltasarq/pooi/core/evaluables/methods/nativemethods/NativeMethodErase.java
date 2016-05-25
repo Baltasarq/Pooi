@@ -12,9 +12,9 @@ import com.devbaltasarq.pooi.core.exceps.InterpretError;
 public class NativeMethodErase extends NativeMethod {
     public static final String EtqMthErase = "erase";
 
-    public NativeMethodErase()
+    public NativeMethodErase(com.devbaltasarq.pooi.core.Runtime rt)
     {
-        super( EtqMthErase );
+        super( rt, EtqMthErase );
     }
 
     @Override

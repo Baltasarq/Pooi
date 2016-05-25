@@ -17,9 +17,9 @@ public class NativeMethodIntMultiplyBy extends NativeMethod {
 
     public static final String EtqMthIntMul = "*";
 
-    public NativeMethodIntMultiplyBy()
+    public NativeMethodIntMultiplyBy(Runtime rt)
     {
-        super( EtqMthIntMul );
+        super( rt, EtqMthIntMul );
     }
 
     @Override
@@ -27,7 +27,7 @@ public class NativeMethodIntMultiplyBy extends NativeMethod {
             throws InterpretError
     {
         long result;
-        final Runtime rt = Runtime.getRuntime();
+        final Runtime rt = this.getRuntime();
         final ObjectInt self;
         final ObjectInt toret;
 

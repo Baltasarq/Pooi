@@ -15,16 +15,16 @@ import com.devbaltasarq.pooi.core.objs.ObjectStr;
 public class NativeMethodStrTrim extends NativeMethod {
     public static final String EtqMthStrTrim = "trim";
 
-    public NativeMethodStrTrim()
+    public NativeMethodStrTrim(Runtime rt)
     {
-        super( EtqMthStrTrim );
+        super( rt, EtqMthStrTrim );
     }
 
     @Override
     public ObjectBag doIt(ObjectBag ref, Evaluable[] params, StringBuilder msg)
             throws InterpretError
     {
-        final Runtime rt = Runtime.getRuntime();
+        final Runtime rt = this.getRuntime();
 
         chkParametersNumber( 0, params );
 
