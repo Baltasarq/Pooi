@@ -364,6 +364,13 @@ public final class Runtime {
                 toret = self = this.getRoot();
                 ++numArg;
             }
+            else {
+                final Attribute attr = toret.lookUpAttribute( ref.getAttrs()[ 0 ].trim() );
+
+                if ( attr == null ) {
+                    toret = self = this.getRoot();
+                }
+            }
         }
 
         // Look for destination object

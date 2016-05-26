@@ -197,7 +197,7 @@ public class Interpreter {
                         else
                         if ( param instanceof Reference )
                         {
-                            param = this.findCorrectReference(
+                            param = this.findCorrectReferenceInParam(
                                         rt,
                                         self,
                                         method,
@@ -216,7 +216,7 @@ public class Interpreter {
                     stack.pop();
                 }
 
-                ref = this.findCorrectReference( rt, self, method, ref );
+                ref = this.findCorrectReferenceInParam( rt, self, method, ref );
                 ObjectBag obj = rt.solveToObject( ref );
 
                 // Is it a valid order?
@@ -269,7 +269,7 @@ public class Interpreter {
         return toret;
     }
 
-    protected Evaluable findCorrectReference(Runtime rt, ObjectBag self, InterpretedMethod method, Evaluable ref)
+    protected Evaluable findCorrectReferenceInParam(Runtime rt, ObjectBag self, InterpretedMethod method, Evaluable ref)
             throws InterpretError
     {
         Evaluable toret = null;
