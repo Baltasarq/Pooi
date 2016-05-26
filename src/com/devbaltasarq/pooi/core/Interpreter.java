@@ -76,7 +76,7 @@ public class Interpreter {
         if ( s.startsWith( "\"" ) ) {
             s = s.substring( 1 );
             if ( s.endsWith( "\""  ) ) {
-                s = s.substring( 0, s.length() - 2 );
+                s = s.substring( 0, s.length() - 1 );
             }
         }
 
@@ -85,6 +85,7 @@ public class Interpreter {
 
     public String interpret(String cmds)
     {
+        String response = null;
         StringBuilder msg = new StringBuilder();
         StringBuilder result = new StringBuilder();
         InterpretedMethod method = null;
@@ -103,13 +104,17 @@ public class Interpreter {
                 method = new InterpretedMethod( rt, "REL_TopLevel", cmds );
                 this.execute( method, objRoot, method.getRealParams(), msg, result );
 
-                // Si no es verboso...
-                if ( !( this.isVerbose() ) ) {
+                response = removeQuotes( result.toString().trim() );
+
+                // If not verbose...
+                if ( !( this.isVerbose() )
+                  || msg.toString().trim().equals( response ) )
+                {
                     msg.delete( 0, msg.length() );
                 }
 
                 this.saveToTranscript( msg.toString() );
-                this.saveToTranscript( removeQuotes( result.toString() ) );
+                this.saveToTranscript( response );
             } catch(InterpretError e) {
                 error = true;
                 result.append( "Error: " + e.getMessage() );
@@ -119,7 +124,7 @@ public class Interpreter {
             }
         }
 
-        msg.append( removeQuotes( result.toString() ) );
+        msg.append( response );
         return msg.toString();
     }
 
@@ -196,7 +201,7 @@ public class Interpreter {
                                         rt,
                                         self,
                                         method,
-                                        (Reference) param
+                                        param
                             );
                         }
 
@@ -247,16 +252,18 @@ public class Interpreter {
                 // Rebuilds the info object, if needed
                 this.chkInfoObject( msg );
             }
+
+            // Gather the results
+            result.delete( 0, result.length() );
+
+            if ( toret != null ) {
+                result.append( toret.getNameOrValueAsString() + '\n' );
+            }
         } catch(InterpretError e) {
-            error = true;
-            msg.append( "Error: " + e.getMessage() );
-        }
-
-        // Gather the results
-        result.delete( 0, result.length() );
-
-        if ( toret != null ) {
-            result.append( toret.getNameOrValueAsString() );
+            this.error = true;
+            final String errorMessage = "Error: " + e.getMessage();
+            msg.append( errorMessage );
+            result.append( errorMessage );
         }
 
         return toret;

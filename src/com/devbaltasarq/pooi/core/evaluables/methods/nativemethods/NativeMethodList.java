@@ -26,8 +26,9 @@ public class NativeMethodList extends NativeMethod {
 
         chkParametersNumber( 0, params );
 
-        msg.append( ref.list() );
-        return rt.createString( ref.list() );
+        final String list = ref.list();
+        msg.append( list );
+        return rt.createString( list );
     }
 
     public int getNumParams() {

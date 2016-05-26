@@ -48,8 +48,37 @@ public class VisualEngine extends JFrame {
         this.interpreter = interpreter;
         this.currentDir = new File( System.getProperty( "user.home" ) );
         this.build();
-        this.reset();
-        this.input.requestFocusInWindow();
+
+        this.addWindowListener(new WindowListener() {
+            @Override
+            public void windowOpened(WindowEvent windowEvent) {
+                VisualEngine.this.reset();
+                VisualEngine.this.input.requestFocusInWindow();
+
+                final File file = VisualEngine.this.getInterpreter().getConfiguration().getScript();
+                if ( file != null ) {
+                    VisualEngine.this.load( file.getAbsolutePath() );
+                }
+            }
+
+            @Override
+            public void windowClosing(WindowEvent windowEvent) {}
+
+            @Override
+            public void windowClosed(WindowEvent windowEvent) {}
+
+            @Override
+            public void windowIconified(WindowEvent windowEvent) {}
+
+            @Override
+            public void windowDeiconified(WindowEvent windowEvent) {}
+
+            @Override
+            public void windowActivated(WindowEvent windowEvent) {}
+
+            @Override
+            public void windowDeactivated(WindowEvent windowEvent) {}
+        });
     }
 
     private void reset()
@@ -578,20 +607,17 @@ public class VisualEngine extends JFrame {
         fileSelector.setCurrentDirectory( this.currentDir );
 
         // Show
-        if ( fileSelector.showOpenDialog(this) == JFileChooser.APPROVE_OPTION )
-        {
+        if ( fileSelector.showOpenDialog(this) == JFileChooser.APPROVE_OPTION ) {
             this.currentDir = fileSelector.getCurrentDirectory();
-
-            // Load
-            output.append( "\n" +
-                    interpreter.loadSession( fileSelector.getSelectedFile().getAbsolutePath() )
-                    + "\n\n"
-            );
-            output.setCaretPosition( output.getText().length() );
-
-            this.updateTree();
-            this.updateDiagram();
+            this.load( fileSelector.getSelectedFile().getAbsolutePath() );
         }
+    }
+
+    private void load(String fn) {
+        this.output.append( "\n" + this.interpreter.loadSession( fn ) + "\n\n" );
+        this.output.setCaretPosition( this.output.getText().length() );
+        this.updateTree();
+        this.updateDiagram();
     }
 
     private void onSaveTranscript()

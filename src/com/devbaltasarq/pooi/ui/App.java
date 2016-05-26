@@ -116,6 +116,13 @@ public class App {
         try {
             terp.setVerbose( false );
             System.out.println( "\n\nWelcome to " + AppInfo.Name + " (\"os exit\" to exit)" );
+
+            // Load script, if needed
+            final File file = terp.getConfiguration().getScript();
+            if ( file != null ) {
+                System.out.println( "\n" + terp.loadSession(file.getAbsolutePath()) );
+            }
+
             do {
                 System.out.print( "\n> " );
                 input = scan.nextLine();
