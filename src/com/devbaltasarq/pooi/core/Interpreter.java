@@ -35,6 +35,12 @@ public class Interpreter {
         this.createInfoObject();
     }
 
+    public void reset(Runtime rt) throws InterpretError {
+        this.rt = rt;
+        this.error = false;
+        this.createInfoObject();
+    }
+
     private final void createInfoObject() throws InterpretError
     {
         // Info object
@@ -417,8 +423,8 @@ public class Interpreter {
     }
 
     protected boolean error;
-    protected final Runtime rt;
+    protected Runtime rt;
     private ObjectBag objInfo;
     protected BufferedWriter transcript = null;
-    private InterpreterCfg cfg;
+    private final InterpreterCfg cfg;
 }

@@ -83,6 +83,16 @@ public class VisualEngine extends JFrame {
 
     private void reset()
     {
+        // Reset the interpreter
+        try {
+            this.activateGui();
+            interpreter.reset( Runtime.createRuntime() );
+        } catch (InterpretError e) {
+            this.output.append("\n\n*** Error creating runtime:\n" + e.getLocalizedMessage() + "\n");
+            this.deactivateGui();
+        }
+
+        // Welcome message
         this.output.setText( "" );
         this.output.append( "Pooi [Prototype-based, object-oriented interpreter]\n"
                 + "\ntype in your message\n"
@@ -791,14 +801,6 @@ public class VisualEngine extends JFrame {
                     JOptionPane.YES_NO_OPTION );
 
         if ( n == JOptionPane.YES_OPTION ){
-            try {
-                this.activateGui();
-                Runtime.createRuntime();
-            } catch (InterpretError e) {
-                this.output.append("\n\n*** Error creating runtime:\n" + e.getLocalizedMessage() + "\n");
-                this.deactivateGui();
-            }
-
             this.reset();
         }
 
