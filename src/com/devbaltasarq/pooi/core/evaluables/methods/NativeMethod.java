@@ -1,9 +1,9 @@
 package com.devbaltasarq.pooi.core.evaluables.methods;
 
 import com.devbaltasarq.pooi.core.Evaluable;
+import com.devbaltasarq.pooi.core.Interpreter.InterpretError;
 import com.devbaltasarq.pooi.core.ObjectBag;
 import com.devbaltasarq.pooi.core.evaluables.Method;
-import com.devbaltasarq.pooi.core.exceps.InterpretError;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;

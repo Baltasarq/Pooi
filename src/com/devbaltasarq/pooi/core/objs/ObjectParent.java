@@ -8,8 +8,7 @@
  */
 
 package com.devbaltasarq.pooi.core.objs;
-
-import com.devbaltasarq.pooi.core.exceps.InterpretError;
+import com.devbaltasarq.pooi.core.Interpreter.InterpretError;
 import com.devbaltasarq.pooi.core.evaluables.methods.nativemethods.NativeMethodStr;
 import com.devbaltasarq.pooi.core.ObjectBag;
 import com.devbaltasarq.pooi.core.Reserved;
@@ -52,23 +51,19 @@ public class ObjectParent extends ObjectBag {
         return;
     }
 
-    public void registerCommonMethods()
+    public void registerCommonMethods() throws InterpretError
     {
-        try {
-            this.set( NativeMethodStr.EtqMthToString, new NativeMethodStr( this.getRuntime() ) );
-            this.set( NativeMethodList.EtqMthList, new NativeMethodList( this.getRuntime() ) );
-            this.set( NativeMethodGetPath.EtqMthPath, new NativeMethodGetPath( this.getRuntime() ) );
-            this.set( NativeMethodErase.EtqMthErase, new NativeMethodErase( this.getRuntime() ) );
-            this.set( NativeMethodGetName.EtqMthGetName, new NativeMethodGetName( this.getRuntime() ) );
-            this.set( NativeMethodSet.EtqMthSet, new NativeMethodSet( this.getRuntime() ) );
-            this.set( NativeMethodCopy.EtqMthCopy, new NativeMethodCopy( this.getRuntime() ) );
-            this.set( NativeMethodCreateChild.EtqMthCreateChild, new NativeMethodCreateChild( this.getRuntime() ) );
-            this.set( NativeMethodSetName.EtqMthSetName, new NativeMethodSetName( this.getRuntime() ) );
-            this.set( NativeMethodSetName.EtqMthRename, new NativeMethodSetName( this.getRuntime() ) );
-            this.set( NativeMethodIs.EtqMthIs, new NativeMethodIs( this.getRuntime() ) );
-            this.set( NativeMethodRenameMethod.EtqMthRenameMethod, new NativeMethodRenameMethod( this.getRuntime() ) );
-        } catch(InterpretError ignored)
-        {
-        }
+        this.set( NativeMethodStr.EtqMthToString, new NativeMethodStr( this.getRuntime() ) );
+        this.set( NativeMethodList.EtqMthList, new NativeMethodList( this.getRuntime() ) );
+        this.set( NativeMethodGetPath.EtqMthPath, new NativeMethodGetPath( this.getRuntime() ) );
+        this.set( NativeMethodErase.EtqMthErase, new NativeMethodErase( this.getRuntime() ) );
+        this.set( NativeMethodGetName.EtqMthGetName, new NativeMethodGetName( this.getRuntime() ) );
+        this.set( NativeMethodSet.EtqMthSet, new NativeMethodSet( this.getRuntime() ) );
+        this.set( NativeMethodCopy.EtqMthCopy, new NativeMethodCopy( this.getRuntime() ) );
+        this.set( NativeMethodCreateChild.EtqMthCreateChild, new NativeMethodCreateChild( this.getRuntime() ) );
+        this.set( NativeMethodSetName.EtqMthSetName, new NativeMethodSetName( this.getRuntime() ) );
+        this.set( NativeMethodSetName.EtqMthRename, new NativeMethodSetName( this.getRuntime() ) );
+        this.set( NativeMethodIs.EtqMthIs, new NativeMethodIs( this.getRuntime() ) );
+        this.set( NativeMethodRenameMethod.EtqMthRenameMethod, new NativeMethodRenameMethod( this.getRuntime() ) );
     }
 }

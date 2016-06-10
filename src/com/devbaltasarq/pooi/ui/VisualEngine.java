@@ -6,9 +6,10 @@ import com.devbaltasarq.pooi.core.ObjectBag;
 import com.devbaltasarq.pooi.core.Runtime;
 import com.devbaltasarq.pooi.core.evaluables.Attribute;
 import com.devbaltasarq.pooi.core.evaluables.Reference;
-import com.devbaltasarq.pooi.core.exceps.InterpretError;
+import com.devbaltasarq.pooi.core.Interpreter.InterpretError;
 import com.devbaltasarq.pooi.core.objs.ObjectOs;
 import com.devbaltasarq.pooi.core.objs.ObjectRoot;
+import com.devbaltasarq.pooi.core.objs.SysObject;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -38,9 +39,9 @@ import java.util.HashSet;
 public class VisualEngine extends JFrame {
     public static final int MinFontSize = 10;
     public static final int MaxFontSize = 32;
-    public static final String EtqIconApp = "com/devbaltasarq/pooi/res/pooiIcon.png";
-    public static final String EtqIconReset = "com/devbaltasarq/pooi/res/reset.png";
-    public static final String EtqIconNew = "com/devbaltasarq/pooi/res/new.png";
+    public static final String EtqIconApp = "icons/pooiIcon.png";
+    public static final String EtqIconReset = "icons/reset.png";
+    public static final String EtqIconNew = "icons/new.png";
     
     /** Creates new form VisualEngine */
     public VisualEngine(Interpreter interpreter)
@@ -52,7 +53,7 @@ public class VisualEngine extends JFrame {
         this.addWindowListener(new WindowListener() {
             @Override
             public void windowOpened(WindowEvent windowEvent) {
-                VisualEngine.this.reset();
+                VisualEngine.this.reset( VisualEngine.this.interpreter == null );
                 VisualEngine.this.input.requestFocusInWindow();
 
                 final File file = VisualEngine.this.getInterpreter().getConfiguration().getScript();
@@ -81,26 +82,36 @@ public class VisualEngine extends JFrame {
         });
     }
 
-    private void reset()
+    /**
+     * Resets the environment to be blank as in the first time.
+     * @param resetInterpreter true to create the interpreter, if there is none,
+     *                         fale otherwise
+     */
+    private void reset(boolean resetInterpreter)
     {
+        this.output.setText( "" );
+        this.showWelcomeMessage();
+
         // Reset the interpreter
         try {
             this.activateGui();
-            interpreter.reset( Runtime.createRuntime() );
+            if ( resetInterpreter ) {
+                this.interpreter.reset( Runtime.createRuntime() );
+            }
         } catch (InterpretError e) {
             this.output.append("\n\n*** Error creating runtime:\n" + e.getLocalizedMessage() + "\n");
             this.deactivateGui();
         }
 
-        // Welcome message
-        this.output.setText( "" );
+        this.updateTree();
+        this.updateDiagram();
+    }
+
+    private void showWelcomeMessage() {
         this.output.append( "Pooi [Prototype-based, object-oriented interpreter]\n"
                 + "\ntype in your message\n"
                 + "try \"Root list\", \"help\" or \"about\" to start\n\n\n"
         );
-
-        this.updateTree();
-        this.updateDiagram();
     }
 
     private void buildFontDialog()
@@ -801,7 +812,7 @@ public class VisualEngine extends JFrame {
                     JOptionPane.YES_NO_OPTION );
 
         if ( n == JOptionPane.YES_OPTION ){
-            this.reset();
+            this.reset( true );
         }
 
         return;
@@ -894,6 +905,7 @@ public class VisualEngine extends JFrame {
             // Don't introduce certain objects in the diagram
             if ( rt.isSpecialObject( obj )
               || rt.isTypeObject( obj )
+              || obj instanceof SysObject
               || doNotAdd.contains( obj ) )
             {
                 continue;

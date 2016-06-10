@@ -7,7 +7,7 @@
 package com.devbaltasarq.pooi.core.objs;
 
 import com.devbaltasarq.pooi.core.ObjectBag;
-import com.devbaltasarq.pooi.core.exceps.InterpretError;
+import com.devbaltasarq.pooi.core.Interpreter.InterpretError;
 
 /**
  * Represents boolean objects
@@ -60,7 +60,7 @@ public class ObjectBool extends ValueObject {
      * @param name The name of the object.
      * @param container The object in which to include the new object
      * @return An ObjectBag reference to the new (copied) object
-     * @throws com.devbaltasarq.pooi.core.exceps.InterpretError
+     * @throws com.devbaltasarq.pooi.core.Interpreter.InterpretError
      */
     public ObjectBool createChild(String name, ObjectBag container)
             throws InterpretError

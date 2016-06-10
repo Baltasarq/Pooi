@@ -1,7 +1,7 @@
 package com.devbaltasarq.pooi.core;
 
 import com.devbaltasarq.pooi.core.evaluables.Reference;
-import com.devbaltasarq.pooi.core.exceps.InterpretError;
+import com.devbaltasarq.pooi.core.Interpreter.InterpretError;
 
 import java.util.ArrayList;
 

@@ -1,8 +1,8 @@
 package com.devbaltasarq.pooi.core;
 
+import com.devbaltasarq.pooi.core.Interpreter.InterpretError;
+import com.devbaltasarq.pooi.core.Interpreter.AttributeNotFound;
 import com.devbaltasarq.pooi.core.evaluables.*;
-import com.devbaltasarq.pooi.core.exceps.AttributeNotFound;
-import com.devbaltasarq.pooi.core.exceps.InterpretError;
 import com.devbaltasarq.pooi.core.objs.ObjectParent;
 import com.devbaltasarq.pooi.core.objs.ObjectRoot;
 import com.devbaltasarq.pooi.core.objs.ValueObject;
@@ -562,7 +562,7 @@ public class ObjectBag {
      * Adds an object to the list of attributes of this object
      * @param name The name of this new object in the attribute list
      * @param obj The ObjectBag reference to the object
-     * @throws com.devbaltasarq.pooi.core.exceps.InterpretError
+     * @throws com.devbaltasarq.pooi.core.Interpreter.InterpretError
      */
     public void set(String name, ObjectBag obj) throws InterpretError
     {
@@ -600,7 +600,7 @@ public class ObjectBag {
     /** Adds a new method to the list of methods of this object
       * @param name The name of this new method
       * @param mth The Method itself
-      * @throws com.devbaltasarq.pooi.core.exceps.InterpretError if name is not valid
+      * @throws com.devbaltasarq.pooi.core.Interpreter.InterpretError if name is not valid
      */
     public void set(String name, Method mth) throws InterpretError
     {
@@ -830,7 +830,7 @@ public class ObjectBag {
      * @param name The name of the object. Assigned automatically if empty.
      * @param container The object in which to include the new object
      * @return An ObjectBag reference to the new (copied) object
-     * @throws com.devbaltasarq.pooi.core.exceps.InterpretError  if the new name is not valid
+     * @throws com.devbaltasarq.pooi.core.Interpreter.InterpretError  if the new name is not valid
      */
     public ObjectBag copy(String name, ObjectBag container) throws InterpretError
     {
@@ -905,7 +905,7 @@ public class ObjectBag {
      * @param name The name of the object. Assigned automatically if empty.
      * @param container The object in which to include the new object
      * @return An ObjectBag reference to the new (copied) object
-     * @throws com.devbaltasarq.pooi.core.exceps.InterpretError
+     * @throws com.devbaltasarq.pooi.core.Interpreter.InterpretError
      */
     public ObjectBag createChild(String name, ObjectBag container)
         throws InterpretError
@@ -953,7 +953,7 @@ public class ObjectBag {
     /**
      * Removes an attribute from the attribute list
      * @param name The name of the attribute to removeMember
-     * @throws com.devbaltasarq.pooi.core.exceps.InterpretError
+     * @throws com.devbaltasarq.pooi.core.Interpreter.InterpretError
      */
     public void removeMember(String name) throws InterpretError
     {
@@ -1038,7 +1038,7 @@ public class ObjectBag {
     /**
      * Determines if this is a good identifier name for an object name.
      * @param id The identifier to check
-     * @throws com.devbaltasarq.pooi.core.exceps.InterpretError if it is reserved or already exists.
+     * @throws com.devbaltasarq.pooi.core.Interpreter.InterpretError if it is reserved or already exists.
      */
     public void chkIdentifierForMemberName(String id) throws InterpretError
     {

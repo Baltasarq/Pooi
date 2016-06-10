@@ -1,10 +1,10 @@
 package com.devbaltasarq.pooi.core.evaluables.methods.nativemethods;
 
 import com.devbaltasarq.pooi.core.Evaluable;
+import com.devbaltasarq.pooi.core.Interpreter.InterpretError;
 import com.devbaltasarq.pooi.core.ObjectBag;
 import com.devbaltasarq.pooi.core.Runtime;
 import com.devbaltasarq.pooi.core.evaluables.methods.NativeMethod;
-import com.devbaltasarq.pooi.core.exceps.InterpretError;
 
 /**
  * Returns the name of the object

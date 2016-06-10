@@ -3,7 +3,7 @@ package com.devbaltasarq.pooi.core.objs;
 import com.devbaltasarq.pooi.core.ObjectBag;
 import com.devbaltasarq.pooi.core.evaluables.Attribute;
 import com.devbaltasarq.pooi.core.evaluables.Method;
-import com.devbaltasarq.pooi.core.exceps.InterpretError;
+import com.devbaltasarq.pooi.core.Interpreter.InterpretError;
 
 /**
  * Represents objects created by the runtime

@@ -1,7 +1,7 @@
 package com.devbaltasarq.pooi.core.objs;
 
 import com.devbaltasarq.pooi.core.ObjectBag;
-import com.devbaltasarq.pooi.core.exceps.InterpretError;
+import com.devbaltasarq.pooi.core.Interpreter.InterpretError;
 
 /**
  * Represents a time instant (date and time)

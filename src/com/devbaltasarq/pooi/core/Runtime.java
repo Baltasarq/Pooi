@@ -2,6 +2,7 @@
 
 package com.devbaltasarq.pooi.core;
 
+import com.devbaltasarq.pooi.core.Interpreter.InterpretError;
 import com.devbaltasarq.pooi.core.evaluables.Attribute;
 import com.devbaltasarq.pooi.core.evaluables.Literal;
 import com.devbaltasarq.pooi.core.evaluables.Reference;
@@ -11,8 +12,6 @@ import com.devbaltasarq.pooi.core.evaluables.literals.RealLiteral;
 import com.devbaltasarq.pooi.core.evaluables.literals.StrLiteral;
 import com.devbaltasarq.pooi.core.evaluables.methods.InterpretedMethod;
 import com.devbaltasarq.pooi.core.evaluables.methods.nativemethods.*;
-import com.devbaltasarq.pooi.core.exceps.AttributeNotFound;
-import com.devbaltasarq.pooi.core.exceps.InterpretError;
 import com.devbaltasarq.pooi.core.objs.*;
 
 /**
@@ -23,6 +22,7 @@ import com.devbaltasarq.pooi.core.objs.*;
 public final class Runtime {
 
     public static final String EtqNameRoot = Reserved.RootObject;
+    public static final String EtqNameLib = Reserved.LibObject;
     public static final String EtqTopParentObject = Reserved.TopParentObject;
     public static final String EtqNameInt = Reserved.IntObject;
     public static final String EtqNameBool = Reserved.BoolObject;
@@ -55,6 +55,9 @@ public final class Runtime {
 
         this.dateTime = new SysObject( this, EtqNameDateTime, absParent, root );
         this.root.set( EtqNameDateTime, this.dateTime );
+
+        this.lib = new SysObject( this, EtqNameLib, absParent, root );
+        this.root.set( EtqNameLib, this.lib );
 
         // The first prototype
         this.anObject = new ObjectBag( this, EtqNameAnObject, absParent, root );
@@ -200,8 +203,7 @@ public final class Runtime {
         return toret;
     }
 
-    public ObjectReal createReal(double num)
-        throws InterpretError
+    public ObjectReal createReal(double num) throws InterpretError
     {
         return this.createReal( this.createNewLiteralName(), num );
     }
@@ -217,8 +219,7 @@ public final class Runtime {
         return toret;
     }
 
-    public ObjectBool createBool(boolean value)
-            throws InterpretError
+    public ObjectBool createBool(boolean value) throws InterpretError
     {
         return this.createBool( this.createNewLiteralName(), value );
     }
@@ -234,8 +235,7 @@ public final class Runtime {
         return toret;
     }
 
-    public ObjectBag createObject(String name)
-            throws InterpretError
+    public ObjectBag createObject(String name) throws InterpretError
     {
         final ObjectBag container = this.anObject.getContainer();
         final ObjectBag toret = new ObjectBag( this, name, this.anObject.getParentObject(), container );
@@ -243,8 +243,7 @@ public final class Runtime {
         return toret;
     }
 
-    public ObjectBag solveToObject(Evaluable evaluable)
-            throws InterpretError
+    public ObjectBag solveToObject(Evaluable evaluable) throws InterpretError
     {
         ObjectBag toret = null;
 
@@ -305,14 +304,12 @@ public final class Runtime {
         return this.anObject;
     }
 
-    public ObjectBag createLiteral(Literal value)
-            throws InterpretError
+    public ObjectBag createLiteral(Literal value) throws InterpretError
     {
         return this.createLiteral( this.createNewLiteralName(), value );
     }
 
-    public ObjectBag createLiteral(String id, Literal value)
-            throws InterpretError
+    public ObjectBag createLiteral(String id, Literal value) throws InterpretError
     {
         ObjectBag toret = null;
 
@@ -336,13 +333,13 @@ public final class Runtime {
     }
 
     public ObjectBag findObjectByPath(Reference ref)
-            throws AttributeNotFound
+            throws Interpreter.AttributeNotFound
     {
         return this.findObjectByPathInObject( this.getRoot(), ref );
     }
 
     public ObjectBag findObjectByPathInObject(ObjectBag self, Reference ref)
-            throws AttributeNotFound
+            throws Interpreter.AttributeNotFound
     {
         int numArg = 0;
         Attribute atr;
@@ -379,7 +376,7 @@ public final class Runtime {
             atr = toret.lookUpAttribute( atrPart );
 
             if ( atr == null ) {
-                throw new AttributeNotFound( toret.getName(), atrPart );
+                throw new Interpreter.AttributeNotFound( toret.getName(), atrPart );
             }
 
             toret = atr.getReference();
@@ -405,6 +402,7 @@ public final class Runtime {
     private final ObjectBag anObject;
     private final ObjectBag literals;
     private final ObjectOs os;
+    private final ObjectBag lib;
 
     private static Runtime rt;
     private static int numLiterals = 0;

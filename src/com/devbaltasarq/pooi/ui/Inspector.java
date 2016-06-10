@@ -22,11 +22,11 @@ import java.util.HashSet;
  * Created by Baltasar on 30/04/2016.
  */
 public class Inspector extends JDialog {
-    public static final String EtqIconCopy = "com/devbaltasarq/pooi/res/copy.png";
-    public static final String EtqIconAddMethod = "com/devbaltasarq/pooi/res/addMethod.png";
-    public static final String EtqIconAddAttribute = "com/devbaltasarq/pooi/res/addAttribute.png";
-    public static final String EtqIconExecute = "com/devbaltasarq/pooi/res/execute.png";
-    public static final String EtqIconDelete = "com/devbaltasarq/pooi/res/delete.png";
+    public static final String EtqIconCopy = "icons/copy.png";
+    public static final String EtqIconAddMethod = "icons/addMethod.png";
+    public static final String EtqIconAddAttribute = "icons/addAttribute.png";
+    public static final String EtqIconExecute = "icons/execute.png";
+    public static final String EtqIconDelete = "icons/delete.png";
 
     public Inspector(VisualEngine parent, ObjectBag obj) {
         this.beingBuilt = true;

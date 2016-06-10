@@ -10,6 +10,7 @@ public class Reserved {
     public static final String ParentAttribute = "parent";
 
     public static final String RootObject = "Root";
+    public static final String LibObject = "Lib";
     public static final String TopParentObject = "Object";
     public static final String IntObject = "Int";
     public static final String BoolObject = "Bool";

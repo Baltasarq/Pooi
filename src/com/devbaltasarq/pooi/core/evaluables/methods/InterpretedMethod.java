@@ -5,7 +5,7 @@ import com.devbaltasarq.pooi.core.Runtime;
 import com.devbaltasarq.pooi.core.evaluables.Command;
 import com.devbaltasarq.pooi.core.evaluables.Method;
 import com.devbaltasarq.pooi.core.evaluables.Reference;
-import com.devbaltasarq.pooi.core.exceps.InterpretError;
+import com.devbaltasarq.pooi.core.Interpreter.InterpretError;
 
 import java.util.ArrayList;
 import java.util.Arrays;

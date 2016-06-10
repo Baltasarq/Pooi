@@ -6,7 +6,6 @@ import com.devbaltasarq.pooi.core.evaluables.Method;
 import com.devbaltasarq.pooi.core.evaluables.Reference;
 import com.devbaltasarq.pooi.core.evaluables.methods.InterpretedMethod;
 import com.devbaltasarq.pooi.core.evaluables.methods.NativeMethod;
-import com.devbaltasarq.pooi.core.exceps.InterpretError;
 import com.devbaltasarq.pooi.core.objs.ObjectBool;
 
 import java.io.*;
@@ -25,20 +24,107 @@ public class Interpreter {
     public static final String EtqInfoObjAttrLicense = "license";
     public static final String EtqInfoObjAttrVerbose = "verbose";
     public static final String EtqInfoObjAttrHasGui = "gui";
+    public static final String EtqComment = "#";
+
+    /**
+     * Represents an interpreter error
+     * @author baltasarq
+     */
+    public static class InterpretError extends Exception {
+
+        /** Creates a new instance of InterpretError */
+        public InterpretError(String msg) {
+            super( msg );
+        }
+
+    }
+
+    /**
+     * Represents an execution error at bootstrapping
+     */
+    public static class LoadInternalScriptError extends InterpretError {
+
+        /** Creates a new instance of InterpretError */
+        public LoadInternalScriptError(String msg) {
+            super( msg );
+        }
+
+    }
+
+    public static class AttributeNotFound extends InterpretError {
+
+        /** Creates a new instance of AttributeNotFound */
+        public AttributeNotFound(String obj, String atr) {
+            super( "Attribute not found: '" + atr + "'" + " in '" + obj + "'" );
+        }
+
+    }
 
     /** Creates a fresh new interpreter, setting certain configuration options */
-    public Interpreter(Runtime rt, InterpreterCfg cfg) throws InterpretError
+    public Interpreter(Runtime rt, InterpreterCfg cfg, StringBuffer msgs) throws InterpretError
     {
         this.rt = rt;
         this.cfg = cfg;
         this.error = false;
         this.createInfoObject();
+
+        try {
+            this.loadScripts();
+        } catch(LoadInternalScriptError exc) {
+            msgs.append( exc.getMessage() );
+        }
+    }
+
+    private void loadScripts() throws LoadInternalScriptError
+    {
+        String uriDir = null;
+
+        try {
+            uriDir = this.getClass().getClassLoader().getResource( "scripts" ).getPath();
+            File scriptsDir = new File( uriDir );
+            for (File f : scriptsDir.listFiles()) {
+                this.interpretScript( f );
+            }
+        }
+        catch (NullPointerException | IllegalArgumentException e) {
+            throw new LoadInternalScriptError( "Unable to locate internal scripts at: " + uriDir );
+        }
+        catch(InterpretError exc) {
+            throw new LoadInternalScriptError( exc.getMessage() );
+        }
+    }
+
+    public void interpretScript(File f) throws InterpretError
+    {
+        try {
+            BufferedReader reader = new BufferedReader( new FileReader( f ) );
+            String line;
+
+            while ( ( line = reader.readLine() ) != null ) {
+                line = line.trim();
+
+                // Eliminate ">", if needed
+                if ( line.startsWith( ">" ) ) {
+                    line = line.substring( 1 ).trim();
+                }
+
+                if ( line.startsWith( EtqComment ) ) {
+                    continue;
+                }
+
+                this.interpret( line );
+            }
+            reader.close();
+        } catch(IOException exc) {
+            throw new InterpretError( "ERROR loading script '" + f.getAbsolutePath() + "': " + exc.getMessage() );
+        }
     }
 
     public void reset(Runtime rt) throws InterpretError {
         this.rt = rt;
         this.error = false;
         this.createInfoObject();
+        this.loadScripts();
     }
 
     private final void createInfoObject() throws InterpretError
@@ -99,7 +185,7 @@ public class Interpreter {
         final ObjectBag objRoot = rt.getRoot();
 
         // Eliminate spurious literal objects
-        this.getRuntime().getLiteralsContainer().clear( false );
+        rt.getLiteralsContainer().clear( false );
 
         if ( objRoot == null ) {
             error = true;
@@ -123,10 +209,12 @@ public class Interpreter {
                 this.saveToTranscript( response );
             } catch(InterpretError e) {
                 error = true;
-                result.append( "Error: " + e.getMessage() );
+                response =  "Error: " + e.getMessage();
+                result.append( response );
             } catch (IOException e) {
                 error = true;
-                result.append( "Error: I/O: " + e.getMessage() );
+                response = "Error: I/O: " + e.getMessage();
+                result.append( response );
             }
         }
 
@@ -276,7 +364,7 @@ public class Interpreter {
     }
 
     protected Evaluable findCorrectReferenceInParam(Runtime rt, ObjectBag self, InterpretedMethod method, Evaluable ref)
-            throws InterpretError
+            throws InterpretError, AttributeNotFound
     {
         Evaluable toret = null;
 

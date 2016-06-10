@@ -2,8 +2,8 @@ package com.devbaltasarq.pooi.ui;
 
 import com.devbaltasarq.pooi.core.AppInfo;
 import com.devbaltasarq.pooi.core.Interpreter;
+import com.devbaltasarq.pooi.core.Interpreter.InterpretError;
 import com.devbaltasarq.pooi.core.InterpreterCfg;
-import com.devbaltasarq.pooi.core.exceps.InterpretError;
 
 import javax.swing.*;
 import java.io.File;
@@ -59,6 +59,7 @@ public class App {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        StringBuffer msg = new StringBuffer();
         com.devbaltasarq.pooi.core.Runtime rt = null;
         Interpreter interpreter = null;
         InterpreterCfg terpCfg = new InterpreterCfg();
@@ -67,20 +68,20 @@ public class App {
         // Prepare the interpreter (the world of objects)
         try {
             rt = com.devbaltasarq.pooi.core.Runtime.getRuntime();
-            interpreter = new Interpreter( rt, terpCfg );
+            interpreter = new Interpreter( rt, terpCfg, msg );
         } catch(InterpretError exc) {
             System.err.println( "PANIC (error bootstrapping): " + exc.getMessage() );
             System.exit( -1 );
         }
 
         if ( terpCfg.hasGui() ) {
-            guiApp( interpreter );
+            guiApp( interpreter, msg.toString() );
         } else {
-            consoleApp( interpreter );
+            consoleApp( interpreter, msg.toString() );
         }
     }
 
-    public static void guiApp(Interpreter interpreter)
+    public static void guiApp(Interpreter interpreter, String msg)
     {
         // Prepare look & feel, if possible
         try {
@@ -95,12 +96,8 @@ public class App {
 
         try {
             // Run Gui interpreter
-            java.awt.EventQueue.invokeLater( new Runnable() {
-                @Override
-                public void run() {
-                    g.setVisible( true );
-                }
-            } );
+            g.setVisible( true );
+            g.makeOutput( "\n" + msg + "\n\n" );
         } catch(Exception e)
         {
             g.makeOutput( "\n\nUnexpected error:\n" + e.getLocalizedMessage() + "\n" );
@@ -109,7 +106,7 @@ public class App {
 
     }
 
-    public static void consoleApp(Interpreter terp) {
+    public static void consoleApp(Interpreter terp, String msg) {
         String input = null;
         Scanner scan = new Scanner( System.in );
 
@@ -120,10 +117,11 @@ public class App {
             // Load script, if needed
             final File file = terp.getConfiguration().getScript();
             if ( file != null ) {
-                System.out.println( "\n" + terp.loadSession(file.getAbsolutePath()) );
+                System.out.println( "\n" + terp.loadSession( file.getAbsolutePath() ) );
             }
 
             do {
+                System.out.print( "\n" + msg + "\n" );
                 System.out.print( "\n> " );
                 input = scan.nextLine();
                 System.out.print( Interpreter.removeQuotes( terp.interpret( input ) ) );

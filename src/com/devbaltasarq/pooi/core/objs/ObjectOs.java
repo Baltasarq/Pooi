@@ -1,10 +1,10 @@
 package com.devbaltasarq.pooi.core.objs;
 
+import com.devbaltasarq.pooi.core.Interpreter.InterpretError;
 import com.devbaltasarq.pooi.core.evaluables.methods.nativemethods.NativeMethodOsExit;
 import com.devbaltasarq.pooi.core.evaluables.methods.nativemethods.NativeMethodOsInput;
 import com.devbaltasarq.pooi.core.evaluables.methods.nativemethods.NativeMethodOsNow;
 import com.devbaltasarq.pooi.core.evaluables.methods.nativemethods.NativeMethodOsPrint;
-import com.devbaltasarq.pooi.core.exceps.InterpretError;
 
 /**
  * The OS (Operating System) object which will provide services from the underlying

@@ -11,7 +11,7 @@ import com.devbaltasarq.pooi.core.evaluables.literals.StrLiteral;
 import com.devbaltasarq.pooi.core.evaluables.methods.InterpretedMethod;
 import com.devbaltasarq.pooi.core.evaluables.methods.nativemethods.NativeMethodSet;
 import com.devbaltasarq.pooi.core.evaluables.methods.nativemethods.NativeMethodStr;
-import com.devbaltasarq.pooi.core.exceps.InterpretError;
+import com.devbaltasarq.pooi.core.Interpreter.InterpretError;
 
 import java.util.ArrayList;
 

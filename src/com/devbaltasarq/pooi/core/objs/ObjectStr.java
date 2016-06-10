@@ -1,7 +1,7 @@
 package com.devbaltasarq.pooi.core.objs;
 
 import com.devbaltasarq.pooi.core.ObjectBag;
-import com.devbaltasarq.pooi.core.exceps.InterpretError;
+import com.devbaltasarq.pooi.core.Interpreter.InterpretError;
 
 /**
  *
@@ -58,7 +58,7 @@ public class ObjectStr extends ValueObject {
      * @param name The name of the object.
      * @param container The object in which to include the new object
      * @return An ObjectBag reference to the new (copied) object
-     * @throws com.devbaltasarq.pooi.core.exceps.InterpretError
+     * @throws com.devbaltasarq.pooi.core.Interpreter.InterpretError
      */
     public ObjectStr createChild(String name, ObjectBag container)
             throws InterpretError

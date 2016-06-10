@@ -1,7 +1,7 @@
 package com.devbaltasarq.pooi.core.objs;
 
+import com.devbaltasarq.pooi.core.Interpreter.InterpretError;
 import com.devbaltasarq.pooi.core.ObjectBag;
-import com.devbaltasarq.pooi.core.exceps.InterpretError;
 
 /**
  * The base class for all objects that hold values (Int, Bool, Real, Str)

@@ -2,8 +2,8 @@
 
 package com.devbaltasarq.pooi.core.objs;
 
+import com.devbaltasarq.pooi.core.Interpreter.InterpretError;
 import com.devbaltasarq.pooi.core.ObjectBag;
-import com.devbaltasarq.pooi.core.exceps.InterpretError;
 
 /**
  * Represents floating point objects
@@ -39,8 +39,7 @@ public class ObjectReal extends ValueObject {
     }
 
     @Override
-    public ObjectReal copy(String name, ObjectBag container)
-            throws InterpretError
+    public ObjectReal copy(String name, ObjectBag container) throws InterpretError
     {
         // Copy
         ObjectReal toret =
@@ -64,7 +63,7 @@ public class ObjectReal extends ValueObject {
      * @param name The name of the object. Assigned automatically if empty.
      * @param container The object in which to include the new object
      * @return An ObjectBag reference to the new (copied) object
-     * @throws com.devbaltasarq.pooi.core.exceps.InterpretError
+     * @throws com.devbaltasarq.pooi.core.Interpreter.InterpretError
      */
     public ObjectReal createChild(String name, ObjectBag container)
             throws InterpretError

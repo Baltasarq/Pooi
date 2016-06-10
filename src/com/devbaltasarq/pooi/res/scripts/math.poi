@@ -1,0 +1,22 @@
+# The Math object
+(anObject copy) rename "Math"
+Math.PI = 3.1416
+Math.E = 2.72
+Math.sqr = {x: x * x }
+Root.Lib.Math = Root.Math
+Root erase "Math"
+
+# Complex objects
+(anObject copy) rename "TraitsComplex"
+(anObject copy) rename "Complex"
+Complex.r = 0
+Complex.i = 0
+Complex.parent = TraitsComplex
+TraitsComplex.add = {c2: c1.r = (c1.r + c2.i); c1.i = (c2.r + c1.i)}
+TraitsComplex.substract = {c2: c1.r = (c1.r - c2.r); c1.i = (c1.i - c2.i)}
+TraitsComplex.multiplyByScalar = {x: c1.r = (c1.r * x); c1.i = ( c1.i * x )}
+
+Root.Lib.Math.Complex = Root.Complex
+Root.Lib.Math.TraitsComplex = Root.TraitsComplex
+Root erase "Complex"
+Root erase "TraitsComplex"
