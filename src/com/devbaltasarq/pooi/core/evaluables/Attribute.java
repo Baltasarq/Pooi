@@ -19,16 +19,16 @@ import com.devbaltasarq.pooi.core.objs.ValueObject;
 public class Attribute extends Member {
     
     /** Creates a new instance of Attribute */
-    public Attribute(String n, ObjectBag r) {
+    public Attribute(String n, ObjectBag ref) {
         super( n );
-        reference = r;
+        this.setReference( ref );
     }
 
     /** Changes the object this attributes points to
      * @param obj The object this attribute will point to
      */
-    public void setReference(ObjectBag obj)
-    {
+    public void setReference(ObjectBag obj) {
+
         reference = obj;
     }
 
@@ -48,7 +48,7 @@ public class Attribute extends Member {
      */
     public String getKind()
     {
-        String toret = this.getName() + " = " + this.getReference().getKind();
+        String toret = this.getReference().getKind();
 
         if ( this.reference instanceof ValueObject ) {
             toret = this.getReference().getKind();

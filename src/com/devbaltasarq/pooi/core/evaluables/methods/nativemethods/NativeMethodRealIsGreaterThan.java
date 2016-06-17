@@ -37,7 +37,7 @@ public class NativeMethodRealIsGreaterThan extends NativeMethod {
         }
         catch(Exception exc)
         {
-            throw new InterpretError( "self object should be a Real" );
+            throw new InterpretError( ref.getPath() + " object should be a Real" );
         }
 
         final ObjectBag arg = rt.solveToObject( params[ 0 ] );

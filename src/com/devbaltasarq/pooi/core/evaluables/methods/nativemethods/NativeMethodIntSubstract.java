@@ -26,7 +26,7 @@ public class NativeMethodIntSubstract extends NativeMethod {
     public ObjectBag doIt(ObjectBag ref, Evaluable[] params, StringBuilder msg)
             throws InterpretError
     {
-        long result;
+        final String selfPath = ref.getPath();
         final Runtime rt = this.getRuntime();
         final ObjectInt self;
         final ObjectInt toret;
@@ -38,33 +38,39 @@ public class NativeMethodIntSubstract extends NativeMethod {
         }
         catch(Exception exc)
         {
-            throw new InterpretError( "self object should be an Int" );
+            throw new InterpretError( selfPath + " should be an Int" );
         }
 
         final ObjectBag arg = rt.solveToObject( params[ 0 ] );
+        toret = rt.createInt( doSubstraction( params[ 0 ].toString(), self, arg ) );
 
-        if ( arg instanceof ObjectInt ) {
-            result = self.getValue() - ( (ObjectInt) arg ).getValue();
-        }
-        else
-        if ( arg instanceof ObjectReal) {
-            result = ( self.getValue() - Math.round( ( (ObjectReal) arg ).getValue() ) );
-        } else {
-            throw new InterpretError(
-                    "expected int as parameter in '"
-                    + params[ 0 ].toString()
-                    + '\''
-            );
-        }
-
-
-        toret = rt.createInt( result );
-
-        msg.append( self.getPath() );
+        msg.append( selfPath );
         msg.append( " substracted from " );
         msg.append( arg.getPath() );
         msg.append( ", giving " );
         msg.append( toret.toString() );
+
+        return toret;
+    }
+
+    public static long doSubstraction(String paramName, ObjectInt self, ObjectBag arg)
+            throws InterpretError
+    {
+        long toret;
+
+        if ( arg instanceof ObjectInt ) {
+            toret = self.getValue() - ( (ObjectInt) arg ).getValue();
+        }
+        else
+        if ( arg instanceof ObjectReal) {
+            toret = ( self.getValue() - Math.round( ( (ObjectReal) arg ).getValue() ) );
+        } else {
+            throw new InterpretError(
+                    "expected int as parameter in '"
+                            + paramName
+                            + '\''
+            );
+        }
 
         return toret;
     }

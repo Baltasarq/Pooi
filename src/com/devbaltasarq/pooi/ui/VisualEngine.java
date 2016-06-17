@@ -2,12 +2,13 @@ package com.devbaltasarq.pooi.ui;
 
 import com.devbaltasarq.pooi.core.AppInfo;
 import com.devbaltasarq.pooi.core.Interpreter;
+import com.devbaltasarq.pooi.core.Interpreter.InterpretError;
 import com.devbaltasarq.pooi.core.ObjectBag;
 import com.devbaltasarq.pooi.core.Runtime;
 import com.devbaltasarq.pooi.core.evaluables.Attribute;
 import com.devbaltasarq.pooi.core.evaluables.Reference;
-import com.devbaltasarq.pooi.core.Interpreter.InterpretError;
 import com.devbaltasarq.pooi.core.objs.ObjectOs;
+import com.devbaltasarq.pooi.core.objs.ObjectParent;
 import com.devbaltasarq.pooi.core.objs.ObjectRoot;
 import com.devbaltasarq.pooi.core.objs.SysObject;
 
@@ -20,7 +21,10 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -213,7 +217,7 @@ public class VisualEngine extends JFrame {
         opSaveTranscript.setText("Save session transcript");
         opSaveTranscript.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                onSaveTranscript();
+                onSaveSession();
             }
         });
         menuFile.add(opSaveTranscript);
@@ -243,7 +247,7 @@ public class VisualEngine extends JFrame {
         opExit.setText("Quit");
         opExit.addActionListener( new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                close();
+                VisualEngine.this.close();
             }
         } );
         menuFile.add(opExit);
@@ -622,13 +626,14 @@ public class VisualEngine extends JFrame {
         
         FileNameExtensionFilter filter =
                 new FileNameExtensionFilter( 
-                    "Transcript text files", "txt"
+                    "Transcript text files", AppInfo.SessionFileExt.substring( 1  )
         );
+
         fileSelector.setFileFilter( filter );
         fileSelector.setCurrentDirectory( this.currentDir );
 
         // Show
-        if ( fileSelector.showOpenDialog(this) == JFileChooser.APPROVE_OPTION ) {
+        if ( fileSelector.showOpenDialog( this ) == JFileChooser.APPROVE_OPTION ) {
             this.currentDir = fileSelector.getCurrentDirectory();
             this.load( fileSelector.getSelectedFile().getAbsolutePath() );
         }
@@ -641,17 +646,17 @@ public class VisualEngine extends JFrame {
         this.updateDiagram();
     }
 
-    private void onSaveTranscript()
+    private void onSaveSession()
     {
         JFileChooser fileSelector = new JFileChooser();        
 
         // Prepare
-        fileSelector.setDialogTitle( "Choose a transcript text file" );
+        fileSelector.setDialogTitle( "Choose a session text file" );
         fileSelector.setDialogType( JFileChooser.SAVE_DIALOG );
         
         FileNameExtensionFilter filter =
                 new FileNameExtensionFilter( 
-                    "Transcript text files", "txt"
+                    "Transcript text files", AppInfo.SessionFileExt.substring( 1 )
         );
         fileSelector.setFileFilter( filter );
         fileSelector.setCurrentDirectory( this.currentDir  );
@@ -659,9 +664,25 @@ public class VisualEngine extends JFrame {
         // Show
         if ( fileSelector.showSaveDialog( this ) == JFileChooser.APPROVE_OPTION ) {
             this.currentDir = fileSelector.getCurrentDirectory();
-            interpreter.activateTranscript(
-                    fileSelector.getSelectedFile().getAbsolutePath()
-            );
+
+            // Prepare name
+            String fileName = fileSelector.getSelectedFile().getAbsolutePath();
+            if ( !( fileName.endsWith( AppInfo.SessionFileExt ) ) ) {
+                fileName += AppInfo.SessionFileExt;
+            }
+
+            // Save file
+            try {
+                final String contents = this.output.getText();
+                BufferedWriter bfw = new BufferedWriter( new FileWriter( fileName ) );
+
+                bfw.write( contents, 0, contents.length() );
+                bfw.newLine();
+                bfw.flush();
+                bfw.close();
+            } catch(IOException e) {
+                JOptionPane.showMessageDialog( this, e.getMessage(), AppInfo.Name, JOptionPane.ERROR_MESSAGE );
+            }
         }
     }
 
@@ -708,9 +729,14 @@ public class VisualEngine extends JFrame {
                     this.input.removeItemAt( 9 );
                 }
             }
-        } catch(StackOverflowError exc)
-        {
-            this.output.append( "\n\n*** ERROR: stack overflow\n\n" );
+        } catch(StackOverflowError exc) {
+            this.output.append( "\n\n*** INTERNAL ERROR: stack overflow\n\n" );
+        }
+        catch(NullPointerException exc) {
+            this.output.append( "\n\n*** INTERNAL ERROR: rogue null pointer\n\n" );
+        }
+        catch(Exception exc) {
+            this.output.append( "\n\n*** INTERNAL ERROR: " + exc.getMessage() + "\n\n" );
         }
         finally {
             this.updateTree();
@@ -799,8 +825,7 @@ public class VisualEngine extends JFrame {
 
     private void close()
     {
-        interpreter.endTranscript();
-        System.exit( 0 );
+        this.setVisible( false );
     }
 
     private void onReset()
@@ -867,6 +892,8 @@ public class VisualEngine extends JFrame {
         final int HorizontalSeparation = 25;
         final int VerticalSeparation = 50;
         final Runtime rt = this.interpreter.getRuntime();
+        final ObjectParent objAbsParent = rt.getAbsoluteParent();
+        final ObjectBag objAnObject = rt.getAnObject();
         final ArrayList<Integer> levels = new ArrayList<>( 2 );
         final ArrayList<Integer> xInLevel = new ArrayList<>( 2 );
 
@@ -875,8 +902,8 @@ public class VisualEngine extends JFrame {
         // Created unwanted objects to be shown
         final HashSet<ObjectBag> doNotAdd = new HashSet<>();
         doNotAdd.add( this.interpreter.getObjInfo() );
-        doNotAdd.add( rt.getAbsoluteParent() );
-        doNotAdd.add( rt.getAnObject() );
+        doNotAdd.add( objAbsParent );
+        doNotAdd.add( objAnObject );
 
         // Register boxes
         this.diagramBoxes = new HashMap<>();
@@ -888,14 +915,14 @@ public class VisualEngine extends JFrame {
         levels.add( 300 );
 
         // Inheritance root
-        ObjectBox rootBox = new ObjectBox( rt.getAbsoluteParent(), 20, 20 );
+        ObjectBox rootBox = new ObjectBox( objAbsParent, 20, 20 );
         rootBox.prepareDrawing( pnlCanvas );
-        diagramBoxes.put( rt.getAbsoluteParent().getPath(), rootBox );
+        diagramBoxes.put( objAbsParent.getPath(), rootBox );
 
         // anObject
-        ObjectBox anObjectBox = new ObjectBox( rt.getAnObject(), xInLevel.get( 0 ), levels.get( 0 ) );
+        ObjectBox anObjectBox = new ObjectBox( objAnObject, xInLevel.get( 0 ), levels.get( 0 ) );
         xInLevel.set( 0, xInLevel.get( 0 ) + anObjectBox.prepareDrawing( pnlCanvas ).width + HorizontalSeparation );
-        diagramBoxes.put( rt.getAnObject().getPath(), anObjectBox );
+        diagramBoxes.put( objAnObject.getPath(), anObjectBox );
 
         // For all objects under root
         for(Attribute atr: rt.getRoot().getAttributes()) {

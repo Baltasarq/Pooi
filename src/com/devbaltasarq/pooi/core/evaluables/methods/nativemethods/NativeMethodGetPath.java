@@ -22,12 +22,13 @@ public class NativeMethodGetPath extends NativeMethod {
     public ObjectBag doIt(ObjectBag ref, Evaluable[] params, StringBuilder msg)
             throws InterpretError
     {
+        final String refPath = ref.getPath();
         final Runtime rt = this.getRuntime();
 
         chkParametersNumber( 0, params );
 
-        msg.append( ref.getPath() );
-        return rt.createString( ref.getPath() );
+        msg.append( refPath );
+        return rt.createString( refPath );
     }
 
     public int getNumParams() {

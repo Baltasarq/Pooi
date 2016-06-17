@@ -16,9 +16,8 @@ import com.devbaltasarq.pooi.core.Reserved;
 public class ParentAttribute extends Attribute {
     public static final String ParentAttributeName = Reserved.ParentAttribute;
 
-    /** Creates a new instance of AttributeSpecial */
-    public ParentAttribute(ObjectBag o) {
-        super( ParentAttributeName, o );
+    /** Creates a new instance of ParentAttribute */
+    public ParentAttribute(ObjectBag ref) {
+        super( ParentAttributeName, ref );
     }
-    
 }

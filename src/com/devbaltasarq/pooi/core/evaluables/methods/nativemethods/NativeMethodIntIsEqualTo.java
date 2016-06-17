@@ -27,6 +27,7 @@ public class NativeMethodIntIsEqualTo extends NativeMethod {
             throws InterpretError
     {
         boolean result;
+        final String selfPath = ref.getPath();
         final Runtime rt = this.getRuntime();
         final ObjectInt self;
 
@@ -37,7 +38,7 @@ public class NativeMethodIntIsEqualTo extends NativeMethod {
         }
         catch(Exception exc)
         {
-            throw new InterpretError( "self object should be an Int" );
+            throw new InterpretError( selfPath + " should be an Int" );
         }
 
         final ObjectBag arg = rt.solveToObject( params[ 0 ] );

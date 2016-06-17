@@ -36,7 +36,7 @@ public class NativeMethodStrIsLessThan extends NativeMethod {
         }
         catch(Exception exc)
         {
-            throw new InterpretError( "self object should be a Str" );
+            throw new InterpretError( ref.getPath() + " object should be a Str" );
         }
 
         final ObjectBag arg = rt.solveToObject( params[ 0 ] );

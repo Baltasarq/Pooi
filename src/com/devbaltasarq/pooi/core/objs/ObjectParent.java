@@ -54,6 +54,7 @@ public class ObjectParent extends ObjectBag {
     public void registerCommonMethods() throws InterpretError
     {
         this.set( NativeMethodStr.EtqMthToString, new NativeMethodStr( this.getRuntime() ) );
+        this.set( NativeMethodEmbed.EtqMthEmbed, new NativeMethodEmbed( this.getRuntime() ) );
         this.set( NativeMethodList.EtqMthList, new NativeMethodList( this.getRuntime() ) );
         this.set( NativeMethodGetPath.EtqMthPath, new NativeMethodGetPath( this.getRuntime() ) );
         this.set( NativeMethodErase.EtqMthErase, new NativeMethodErase( this.getRuntime() ) );

@@ -26,6 +26,9 @@ public class Interpreter {
     public static final String EtqInfoObjAttrHasGui = "gui";
     public static final String EtqComment = "#";
 
+    public static final String PathToScripts = "scripts/";
+    public static final String[] InternalScripts = { "math.poi" };
+
     /**
      * Represents an interpreter error
      * @author baltasarq
@@ -77,27 +80,22 @@ public class Interpreter {
 
     private void loadScripts() throws LoadInternalScriptError
     {
-        String uriDir = null;
+        for (String path: InternalScripts ) {
+            String completePath = PathToScripts + path;
+            InputStream stream = this.getClass().getClassLoader().getResourceAsStream( completePath );
 
-        try {
-            uriDir = this.getClass().getClassLoader().getResource( "scripts" ).getPath();
-            File scriptsDir = new File( uriDir );
-            for (File f : scriptsDir.listFiles()) {
-                this.interpretScript( f );
+            try {
+                this.interpretScript( path, stream );
+            } catch(InterpretError exc) {
+                throw new LoadInternalScriptError( exc.getMessage() );
             }
-        }
-        catch (NullPointerException | IllegalArgumentException e) {
-            throw new LoadInternalScriptError( "Unable to locate internal scripts at: " + uriDir );
-        }
-        catch(InterpretError exc) {
-            throw new LoadInternalScriptError( exc.getMessage() );
         }
     }
 
-    public void interpretScript(File f) throws InterpretError
+    public void interpretScript(String fileName, InputStream stream) throws InterpretError
     {
         try {
-            BufferedReader reader = new BufferedReader( new FileReader( f ) );
+            BufferedReader reader = new BufferedReader( new InputStreamReader( stream ) );
             String line;
 
             while ( ( line = reader.readLine() ) != null ) {
@@ -116,7 +114,7 @@ public class Interpreter {
             }
             reader.close();
         } catch(IOException exc) {
-            throw new InterpretError( "ERROR loading script '" + f.getAbsolutePath() + "': " + exc.getMessage() );
+            throw new InterpretError( "ERROR loading script '" + fileName + "': " + exc.getMessage() );
         }
     }
 
@@ -177,7 +175,7 @@ public class Interpreter {
 
     public String interpret(String cmds)
     {
-        String response = null;
+        String response = "";
         StringBuilder msg = new StringBuilder();
         StringBuilder result = new StringBuilder();
         InterpretedMethod method = null;
@@ -192,7 +190,6 @@ public class Interpreter {
             msg.append( "terminated." );
         } else {
             try {
-                this.saveToTranscript( "> " + cmds );
                 method = new InterpretedMethod( rt, "REL_TopLevel", cmds );
                 this.execute( method, objRoot, method.getRealParams(), msg, result );
 
@@ -204,16 +201,13 @@ public class Interpreter {
                 {
                     msg.delete( 0, msg.length() );
                 }
-
-                this.saveToTranscript( msg.toString() );
-                this.saveToTranscript( response );
             } catch(InterpretError e) {
                 error = true;
                 response =  "Error: " + e.getMessage();
                 result.append( response );
-            } catch (IOException e) {
+            } catch (Exception e) {
                 error = true;
-                response = "Error: I/O: " + e.getMessage();
+                response = "Error: unexpected: " + e.getMessage();
                 result.append( response );
             }
         }
@@ -348,10 +342,12 @@ public class Interpreter {
             }
 
             // Gather the results
-            result.delete( 0, result.length() );
-
             if ( toret != null ) {
-                result.append( toret.getNameOrValueAsString() + '\n' );
+                result.append( removeQuotes( toret.getNameOrValueAsString() ) + '\n' );
+
+                if ( result.toString().equals( msg.toString() ) ) {
+                    msg.delete( 0, msg.length() );
+                }
             }
         } catch(InterpretError e) {
             this.error = true;
@@ -363,57 +359,40 @@ public class Interpreter {
         return toret;
     }
 
-    protected Evaluable findCorrectReferenceInParam(Runtime rt, ObjectBag self, InterpretedMethod method, Evaluable ref)
-            throws InterpretError, AttributeNotFound
+    protected Evaluable findCorrectReferenceInParam(Runtime rt, ObjectBag self, InterpretedMethod method, Evaluable val)
+            throws InterpretError
     {
         Evaluable toret = null;
 
-        if ( ref instanceof Reference ) {
-            toret = method.getRealParameter( ref.toString() );
+        if ( val instanceof Reference ) {
+            final Reference ref = (Reference) val;
+            final String[] parts = ref.getAttrs();
+            final String firstAttr = parts[ 0 ];
+            ObjectBag startPoint = rt.getRoot();
+            Evaluable param = method.getRealParameter( firstAttr );
 
-            if ( toret == null ) {
-                ObjectBag obj = rt.findObjectByPathInObject( self, (Reference) ref );
-
-                if ( obj != null ) {
-                    toret = obj.toReference();
+            if ( !( firstAttr.equals( Reserved.RootObject ) ) ) {
+                if ( firstAttr.equals( Reserved.SelfRef ) ) {
+                    startPoint = self;
                 }
+                else
+                if ( param != null ) {
+                    startPoint = rt.solveToObject( param );
+                }
+            }
+
+            ObjectBag obj = rt.findObjectByPathInObject( startPoint, ref );
+
+            if ( obj != null ) {
+                toret = obj.toReference();
             }
         }
 
         if ( toret == null ) {
-            toret = ref;
+            toret = val;
         }
 
         return toret;
-    }
-
-    protected String saveToTranscript(String txt) throws IOException
-    {
-        if ( transcript != null ) {
-            transcript.write( txt + "\n" );
-        }
-        
-        return txt;
-    }
-
-    public void activateTranscript(String fileName)
-    {
-        try {
-            transcript = new BufferedWriter( new FileWriter( new File( fileName ) ) );
-        } catch(Exception e) {
-            transcript = null;
-        }
-    }
-    
-    public void endTranscript()
-    {
-        if ( transcript != null ) {
-            try {
-                transcript.close();
-            } catch (IOException ignored) {
-                
-            }
-        }
     }
 
     public boolean getError()
@@ -513,6 +492,5 @@ public class Interpreter {
     protected boolean error;
     protected Runtime rt;
     private ObjectBag objInfo;
-    protected BufferedWriter transcript = null;
     private final InterpreterCfg cfg;
 }

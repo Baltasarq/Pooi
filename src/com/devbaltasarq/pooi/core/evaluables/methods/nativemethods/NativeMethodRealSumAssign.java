@@ -1,35 +1,34 @@
 package com.devbaltasarq.pooi.core.evaluables.methods.nativemethods;
 
 import com.devbaltasarq.pooi.core.Evaluable;
+import com.devbaltasarq.pooi.core.Interpreter.InterpretError;
 import com.devbaltasarq.pooi.core.ObjectBag;
 import com.devbaltasarq.pooi.core.Runtime;
 import com.devbaltasarq.pooi.core.evaluables.methods.NativeMethod;
-import com.devbaltasarq.pooi.core.Interpreter.InterpretError;
-import com.devbaltasarq.pooi.core.objs.ObjectInt;
 import com.devbaltasarq.pooi.core.objs.ObjectReal;
 
 /**
- * Compare two numbers.
+ * To reside in Int, in order to set two numbers.
  * User: baltasarq
  * Date: 11/30/12
  */
-public class NativeMethodRealIsEqualTo extends NativeMethod {
+public class NativeMethodRealSumAssign extends NativeMethod {
 
-    public static final String EtqMthRealIsEqualTo = "==";
+    public static final String EtqMthRealSumAssign = "+=";
 
-    public NativeMethodRealIsEqualTo(Runtime rt)
+    public NativeMethodRealSumAssign(Runtime rt)
     {
-        super( rt, EtqMthRealIsEqualTo );
+        super( rt, EtqMthRealSumAssign );
     }
 
     @Override
     public ObjectBag doIt(ObjectBag ref, Evaluable[] params, StringBuilder msg)
             throws InterpretError
     {
-        boolean result;
         final String selfPath = ref.getPath();
         final Runtime rt = this.getRuntime();
         final ObjectReal self;
+        final ObjectReal toret;
 
         chkParametersNumber( 1, params );
 
@@ -43,23 +42,16 @@ public class NativeMethodRealIsEqualTo extends NativeMethod {
 
         final ObjectBag arg = rt.solveToObject( params[ 0 ] );
 
-        if ( arg instanceof ObjectInt ) {
-            result = ( self.getValue() == ( (double) ( (ObjectInt) arg ).getValue() ) );
-        }
-        else
-        if ( arg instanceof ObjectReal) {
-            result = ( self.getValue() == ( (ObjectReal) arg ).getValue() );
-        } else {
-            throw new InterpretError(
-                    "expected int as parameter in '"
-                    + params[ 0 ].toString()
-                    + '\''
-            );
-        }
+        toret = self;
+        self.assign( NativeMethodRealSum.doSum( params[ 0 ].toString(), self, arg ) );
 
+        msg.append( selfPath );
+        msg.append( " and " );
+        msg.append( arg.getPath() );
+        msg.append( " added, giving " );
+        msg.append( toret.toString() );
 
-        msg.append( Boolean.toString( result ) );
-        return rt.createBool( result );
+        return toret;
     }
 
     public int getNumParams() {

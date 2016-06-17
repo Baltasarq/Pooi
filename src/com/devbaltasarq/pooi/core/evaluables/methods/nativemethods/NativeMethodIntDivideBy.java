@@ -1,10 +1,10 @@
 package com.devbaltasarq.pooi.core.evaluables.methods.nativemethods;
 
 import com.devbaltasarq.pooi.core.Evaluable;
+import com.devbaltasarq.pooi.core.Interpreter.InterpretError;
 import com.devbaltasarq.pooi.core.ObjectBag;
 import com.devbaltasarq.pooi.core.Runtime;
 import com.devbaltasarq.pooi.core.evaluables.methods.NativeMethod;
-import com.devbaltasarq.pooi.core.Interpreter.InterpretError;
 import com.devbaltasarq.pooi.core.objs.ObjectInt;
 import com.devbaltasarq.pooi.core.objs.ObjectReal;
 
@@ -26,7 +26,7 @@ public class NativeMethodIntDivideBy extends NativeMethod {
     public ObjectBag doIt(ObjectBag ref, Evaluable[] params, StringBuilder msg)
             throws InterpretError
     {
-        long result = 0;
+        final String selfPath = ref.getPath();
         final Runtime rt = this.getRuntime();
         final ObjectInt self;
         final ObjectInt toret;
@@ -38,42 +38,47 @@ public class NativeMethodIntDivideBy extends NativeMethod {
         }
         catch(Exception exc)
         {
-            throw new InterpretError( "self object should be an Int" );
+            throw new InterpretError( selfPath + " object should be an Int" );
         }
 
         final ObjectBag arg = rt.solveToObject( params[ 0 ] );
 
-        if ( arg instanceof ObjectInt ) {
-            long divider = ( (ObjectInt) arg ).getValue();
+        toret = rt.createInt( doDivision( params[ 0 ].toString(), self, arg ) );
 
-            if ( divider != 0 ) {
-                result = self.getValue() / divider;
-            }
-        }
-        else
-        if ( arg instanceof ObjectReal) {
-            long divider = Math.round( ( (ObjectReal) arg ).getValue() );
-
-            if ( divider != 0 ) {
-                result = self.getValue() / divider;
-            }
-        } else {
-            throw new InterpretError(
-                    "expected int as parameter in '"
-                    + params[ 0 ].toString()
-                    + '\''
-            );
-        }
-
-
-        toret = rt.createInt( result );
-
-        msg.append( self.getPath() );
+        msg.append( selfPath );
         msg.append( " divided by " );
         msg.append( arg.getPath() );
         msg.append( ", giving " );
         msg.append( toret.toString() );
 
+        return toret;
+    }
+
+    public static long doDivision(String paramName, ObjectInt self, ObjectBag arg) throws InterpretError
+    {
+        long toret = 0;
+
+        if ( arg instanceof ObjectInt ) {
+            long divider = ( (ObjectInt) arg ).getValue();
+
+            if ( divider != 0 ) {
+                toret = self.getValue() / divider;
+            }
+        }
+        else
+        if ( arg instanceof ObjectReal ) {
+            long divider = Math.round( ( (ObjectReal) arg ).getValue() );
+
+            if ( divider != 0 ) {
+                toret = self.getValue() / divider;
+            }
+        } else {
+            throw new InterpretError(
+                    "expected int as parameter in '"
+                    + paramName
+                    + '\''
+            );
+        }
         return toret;
     }
 

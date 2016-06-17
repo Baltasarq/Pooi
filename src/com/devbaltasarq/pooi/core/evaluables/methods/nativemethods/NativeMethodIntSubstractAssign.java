@@ -6,20 +6,19 @@ import com.devbaltasarq.pooi.core.ObjectBag;
 import com.devbaltasarq.pooi.core.Runtime;
 import com.devbaltasarq.pooi.core.evaluables.methods.NativeMethod;
 import com.devbaltasarq.pooi.core.objs.ObjectInt;
-import com.devbaltasarq.pooi.core.objs.ObjectReal;
 
 /**
- * Multiply two numbers.
+ * Substract two numbers.
  * User: baltasarq
  * Date: 11/30/12
  */
-public class NativeMethodIntMultiplyBy extends NativeMethod {
+public class NativeMethodIntSubstractAssign extends NativeMethod {
 
-    public static final String EtqMthIntMul = "*";
+    public static final String EtqMthIntSubAssign = "-=";
 
-    public NativeMethodIntMultiplyBy(Runtime rt)
+    public NativeMethodIntSubstractAssign(Runtime rt)
     {
-        super( rt, EtqMthIntMul );
+        super( rt, EtqMthIntSubAssign );
     }
 
     @Override
@@ -43,33 +42,16 @@ public class NativeMethodIntMultiplyBy extends NativeMethod {
 
         final ObjectBag arg = rt.solveToObject( params[ 0 ] );
 
-        toret = rt.createInt( doProduct( params[ 0 ].toString(), self, arg ) );
+        toret = self;
+        self.assign( NativeMethodIntSubstract.doSubstraction( params[ 0 ].toString(), self, arg  ) );
 
         msg.append( selfPath );
-        msg.append( " multiplied by " );
+        msg.append( " substracted from " );
         msg.append( arg.getPath() );
         msg.append( ", giving " );
         msg.append( toret.toString() );
 
         return toret;
-    }
-
-    public static long doProduct(String paramName, ObjectInt self, ObjectBag arg) throws InterpretError {
-        long result;
-        if ( arg instanceof ObjectInt ) {
-            result = ( ( (ObjectInt) arg ).getValue() * self.getValue() );
-        }
-        else
-        if ( arg instanceof ObjectReal ) {
-            result = ( Math.round( ( (ObjectReal) arg ).getValue() ) * self.getValue() );
-        } else {
-            throw new InterpretError(
-                    "expected int as parameter in '"
-                    + paramName
-                    + '\''
-            );
-        }
-        return result;
     }
 
     public int getNumParams() {

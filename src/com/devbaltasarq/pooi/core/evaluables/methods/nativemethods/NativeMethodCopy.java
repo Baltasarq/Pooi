@@ -21,16 +21,16 @@ public class NativeMethodCopy extends NativeMethod {
     public ObjectBag doIt(ObjectBag ref, Evaluable[] params, StringBuilder msg)
             throws InterpretError
     {
-        final ObjectBag container = ref.getContainer();
+        final ObjectBag root = ref.getRuntime().getRoot();
         ObjectBag toret;
 
         chkParametersNumber( 0, params );
-        toret = ref.copy( "", container );
+        toret = ref.copy( "", root );
 
         // Compose textual answer
         msg.append( ref.getName() );
         msg.append( " was copied into " );
-        msg.append( container.getPath() );
+        msg.append( root.getPath() );
         msg.append( " as '" );
         msg.append( toret.getPath() );
         msg.append( '\'' );

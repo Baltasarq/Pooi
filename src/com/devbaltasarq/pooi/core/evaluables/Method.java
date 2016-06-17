@@ -15,7 +15,8 @@ public abstract class Method extends Member {
 
     public Method(Runtime rt, String name)
     {
-        super( name ); this.rt = rt;
+        super( name );
+        this.rt = rt;
     }
 
     public abstract int getNumParams();
@@ -100,9 +101,8 @@ public abstract class Method extends Member {
         StringBuilder toret = new StringBuilder();
 
         toret.append( this.getName() );
-        toret.append( '(' );
+        toret.append( ' ' );
         toret.append( this.getFormalParametersAsString() );
-        toret.append( ')' );
         toret.append( " = " );
         toret.append( this.getMethodBodyAsString() );
 

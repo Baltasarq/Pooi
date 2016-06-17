@@ -1,9 +1,7 @@
 package com.devbaltasarq.pooi.core.objs;
 
-import com.devbaltasarq.pooi.core.ObjectBag;
-import com.devbaltasarq.pooi.core.evaluables.Attribute;
-import com.devbaltasarq.pooi.core.evaluables.Method;
 import com.devbaltasarq.pooi.core.Interpreter.InterpretError;
+import com.devbaltasarq.pooi.core.ObjectBag;
 
 /**
  * Represents objects created by the runtime
@@ -13,7 +11,6 @@ import com.devbaltasarq.pooi.core.Interpreter.InterpretError;
  * Date: 30/11/12
  */
 public class SysObject extends ObjectBag {
-
     /**
      * Creates a new instance of ObjectBag
      * When an empty name is passed, an automatic name is created.
@@ -27,18 +24,5 @@ public class SysObject extends ObjectBag {
             throws InterpretError
     {
         super( rt, n, parent, container, ObjectBag.DontCheck );
-    }
-
-    public void set(String name, Method mth) throws InterpretError
-    {
-        this.setMethod( name, mth );
-    }
-
-    public void set(String name, ObjectBag obj) throws InterpretError
-    {
-        final Attribute atr = new Attribute( name, obj );
-
-        atr.getReference().setContainer( this );
-        this.setAttribute( name, atr );
     }
 }

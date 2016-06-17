@@ -268,27 +268,24 @@ public class Lexer {
             final char lastChar = token.charAt(  token.length() -1 );
 
             if ( Character.isLetter( firstChar )
-              || firstChar == '_' )
+              || firstChar == '_'
+              || Reserved.AllowedSymbolsInMethodName.indexOf( firstChar ) >= 0 )
             {
-                if ( Character.isLetterOrDigit( lastChar )
-                  || lastChar == '_'
-                  || lastChar == '?' )
-                {
-                    final int len = token.length() -1;
-                    int i = 1;
+                final int len = token.length() -1;
+                int i = 1;
 
-                    for(; i < len; ++i) {
-                        final char ch = token.charAt( i );
+                for(; i < len; ++i) {
+                    final char ch = token.charAt( i );
 
-                        if ( !Character.isLetterOrDigit( ch )
-                          && ch != '_' )
-                        {
-                            break;
-                        }
+                    if ( !Character.isLetterOrDigit( ch )
+                      && ch != '_'
+                      && Reserved.AllowedSymbolsInMethodName.indexOf( ch ) < 0 )
+                    {
+                        break;
                     }
-
-                    toret = ( i >= len );    // in case length is 1: "x"
                 }
+
+                toret = ( i >= len );    // in case length is 1: "x"
             }
         }
 

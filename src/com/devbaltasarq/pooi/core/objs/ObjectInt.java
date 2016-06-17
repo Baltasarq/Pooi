@@ -31,7 +31,7 @@ public class ObjectInt extends ValueObject {
     @Override
     public String toString()
     {
-        return Long.toString( getValue() );
+        return Long.toString( this.getValue() );
     }
 
     public long getValue() {
@@ -54,7 +54,7 @@ public class ObjectInt extends ValueObject {
     {
         // Copy
         ObjectInt toret = new ObjectInt( this.getRuntime(), name, this.getParentObject(), container );
-        toret.assign( getValue() );
+        toret.assign( this.getValue() );
         container.set( name, toret );
 
         return toret;

@@ -27,6 +27,7 @@ public final class Runtime {
     public static final String EtqNameInt = Reserved.IntObject;
     public static final String EtqNameBool = Reserved.BoolObject;
     public static final String EtqNameReal = Reserved.RealObject;
+    public static final String EtqNameNothing = Reserved.NothingObject;
     public static final String EtqNameStr = Reserved.StrObject;
     public static final String EtqNameDateTime = "DateTime";
     public static final String EtqNameAnObject = "anObject";
@@ -35,10 +36,15 @@ public final class Runtime {
 
     private Runtime() throws InterpretError
     {
-        // The inheritance root and the main container
+        // The inheritance root and the main container. Chicken&egg problem.
         this.absParent = new ObjectParent( this, EtqTopParentObject );
         this.root = new ObjectRoot( this, EtqNameRoot, absParent );
+        this.absParent.setContainer( this.root );
         this.root.set( EtqTopParentObject, this.absParent );
+
+        // Nothing
+        this.nothing = new SysObject( this, EtqNameNothing, absParent, root );
+        this.root.set( EtqNameNothing, this.nothing );
 
         // Main "type" objects
         this.str = new SysObject( this, EtqNameStr, absParent, root );
@@ -60,7 +66,7 @@ public final class Runtime {
         this.root.set( EtqNameLib, this.lib );
 
         // The first prototype
-        this.anObject = new ObjectBag( this, EtqNameAnObject, absParent, root );
+        this.anObject = new SysObject( this, EtqNameAnObject, absParent, root );
         this.root.set( EtqNameAnObject, this.anObject );
 
         // An object to hold literals
@@ -79,9 +85,13 @@ public final class Runtime {
     {
         // Int
         this.integer.set( NativeMethodIntSum.EtqMthIntSum, new NativeMethodIntSum( this ) );
+        this.integer.set( NativeMethodIntSumAssign.EtqMthIntSumAssign, new NativeMethodIntSumAssign( this ) );
         this.integer.set( NativeMethodIntSubstract.EtqMthIntSub, new NativeMethodIntSubstract( this ) );
+        this.integer.set( NativeMethodIntSubstractAssign.EtqMthIntSubAssign, new NativeMethodIntSubstractAssign( this ) );
         this.integer.set( NativeMethodIntMultiplyBy.EtqMthIntMul, new NativeMethodIntMultiplyBy( this ) );
+        this.integer.set( NativeMethodIntMultiplyByAssign.EtqMthIntMulAssign, new NativeMethodIntMultiplyByAssign( this ) );
         this.integer.set( NativeMethodIntDivideBy.EtqMthIntDiv, new NativeMethodIntDivideBy( this ) );
+        this.integer.set( NativeMethodIntDivideByAssign.EtqMthIntDivAssign, new NativeMethodIntDivideByAssign( this ) );
         this.integer.set( NativeMethodIntIsNegative.EtqMthIntIsNegative, new NativeMethodIntIsNegative( this ) );
         this.integer.set( NativeMethodIntAbs.EtqMthIntAbs, new NativeMethodIntAbs( this ) );
         this.integer.set( NativeMethodIntIsEqualTo.EtqMthIntIsEqualTo, new NativeMethodIntIsEqualTo( this ) );
@@ -90,9 +100,13 @@ public final class Runtime {
 
         // Real
         this.real.set( NativeMethodRealSum.EtqMthRealSum, new NativeMethodRealSum( this ) );
+        this.real.set( NativeMethodRealSumAssign.EtqMthRealSumAssign, new NativeMethodRealSumAssign( this ) );
         this.real.set( NativeMethodRealSubstract.EtqMthRealSub, new NativeMethodRealSubstract( this ) );
+        this.real.set( NativeMethodRealSubstractAssign.EtqMthRealSubAssign, new NativeMethodRealSubstractAssign( this ) );
         this.real.set( NativeMethodRealMultiplyBy.EtqMthRealMul, new NativeMethodRealMultiplyBy( this ) );
+        this.real.set( NativeMethodRealMultiplyByAssign.EtqMthRealMulAssign, new NativeMethodRealMultiplyByAssign( this ) );
         this.real.set( NativeMethodRealDivideBy.EtqMthRealDiv, new NativeMethodRealDivideBy( this ) );
+        this.real.set( NativeMethodRealDivideByAssign.EtqMthRealDivAssign, new NativeMethodRealDivideByAssign( this ) );
         this.real.set( NativeMethodRealIsNegative.EtqMthRealIsNegative, new NativeMethodRealIsNegative( this ) );
         this.real.set( NativeMethodRealAbs.EtqMthRealAbs, new NativeMethodRealAbs( this ) );
         this.real.set( NativeMethodRealIsEqualTo.EtqMthRealIsEqualTo, new NativeMethodRealIsEqualTo( this ) );
@@ -101,6 +115,7 @@ public final class Runtime {
 
         // Str
         this.str.set( NativeMethodStrConcat.EtqMthStrConcat, new NativeMethodStrConcat( this ) );
+        this.str.set( NativeMethodStrConcatAssign.EtqMthStrConcatAssign, new NativeMethodStrConcatAssign( this ) );
         this.str.set( NativeMethodStrMays.EtqMthStrMays, new NativeMethodStrMays( this ) );
         this.str.set( NativeMethodStrMins.EtqMthStrMins, new NativeMethodStrMins( this ) );
         this.str.set( NativeMethodStrTrim.EtqMthStrTrim, new NativeMethodStrTrim( this ) );
@@ -277,12 +292,18 @@ public final class Runtime {
               || obj == this.getRoot()
               || obj == this.getLiteralsContainer()
               || obj == this.getOs()
+              || obj == this.getNothingObject()
         );
     }
 
     public ObjectRoot getRoot()
     {
         return this.root;
+    }
+
+    public SysObject getNothingObject()
+    {
+        return this.nothing;
     }
 
     public ObjectOs getOs() {
@@ -294,12 +315,12 @@ public final class Runtime {
         return this.absParent;
     }
 
-    public ObjectBag getLiteralsContainer()
+    public SysObject getLiteralsContainer()
     {
         return this.literals;
     }
 
-    public ObjectBag getAnObject()
+    public SysObject getAnObject()
     {
         return this.anObject;
     }
@@ -341,33 +362,24 @@ public final class Runtime {
     public ObjectBag findObjectByPathInObject(ObjectBag self, Reference ref)
             throws Interpreter.AttributeNotFound
     {
+        final String firstPart = ref.getAttrs()[ 0 ];
         int numArg = 0;
         Attribute atr;
         ObjectBag toret = self;
 
         // Prepare starting attribute
         if ( self == this.getRoot() ) {
-            if ( ref.getAttrs()[ 0 ].equals( Reserved.RootObject ) )
+            if ( firstPart.equals( Reserved.RootObject ) )
             {
                 ++numArg;
             }
         } else {
-            if ( ref.getAttrs()[ 0 ].equals( Reserved.SelfRef ) ) {
-                ++numArg;
-            }
-            else
-            if ( ref.getAttrs()[ 0 ].equals( Reserved.RootObject ) )
+            if ( firstPart.equals( Reserved.RootObject ) )
             {
-                toret = self = this.getRoot();
-                ++numArg;
+                toret = this.getRoot();
             }
-            else {
-                final Attribute attr = toret.lookUpAttribute( ref.getAttrs()[ 0 ].trim() );
 
-                if ( attr == null ) {
-                    toret = self = this.getRoot();
-                }
-            }
+            ++numArg;
         }
 
         // Look for destination object
@@ -394,15 +406,16 @@ public final class Runtime {
 
     private final ObjectRoot root;
     private final ObjectParent absParent;
-    private final ObjectBag str;
-    private final ObjectBag integer;
-    private final ObjectBag real;
-    private final ObjectBag bool;
-    private final ObjectBag dateTime;
-    private final ObjectBag anObject;
-    private final ObjectBag literals;
-    private final ObjectOs os;
-    private final ObjectBag lib;
+    private final SysObject nothing;
+    private final SysObject str;
+    private final SysObject integer;
+    private final SysObject real;
+    private final SysObject bool;
+    private final SysObject dateTime;
+    private final SysObject anObject;
+    private final SysObject literals;
+    private final ObjectOs  os;
+    private final SysObject lib;
 
     private static Runtime rt;
     private static int numLiterals = 0;

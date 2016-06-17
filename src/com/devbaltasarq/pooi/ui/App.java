@@ -85,9 +85,7 @@ public class App {
     {
         // Prepare look & feel, if possible
         try {
-            UIManager.setLookAndFeel(
-                    UIManager.getSystemLookAndFeelClassName()
-            );
+            UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
         } catch(Exception ignored) {
         }
 
@@ -120,8 +118,9 @@ public class App {
                 System.out.println( "\n" + terp.loadSession( file.getAbsolutePath() ) );
             }
 
+            System.out.print( "\n" + msg + "\n" );
+
             do {
-                System.out.print( "\n" + msg + "\n" );
                 System.out.print( "\n> " );
                 input = scan.nextLine();
                 System.out.print( Interpreter.removeQuotes( terp.interpret( input ) ) );

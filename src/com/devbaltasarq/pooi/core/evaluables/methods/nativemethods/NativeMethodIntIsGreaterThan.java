@@ -37,7 +37,7 @@ public class NativeMethodIntIsGreaterThan extends NativeMethod {
         }
         catch(Exception exc)
         {
-            throw new InterpretError( "self object should be an Int" );
+            throw new InterpretError( ref.getPath() + " object should be an Int" );
         }
 
         final ObjectBag arg = rt.solveToObject( params[ 0 ] );

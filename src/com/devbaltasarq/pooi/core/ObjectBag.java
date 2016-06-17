@@ -111,7 +111,7 @@ public class ObjectBag {
         // Set the parent attribute
         if ( parent != null ) {
             // Use strictly the low-level method, since init will make recursion
-            this.setAttribute( ParentAttribute.ParentAttributeName, new ParentAttribute( parent ) );
+            this.setAttribute( ParentAttribute.ParentAttributeName, parent );
         }
     }
 
@@ -215,27 +215,28 @@ public class ObjectBag {
     }
 
     /**
-     * Returns a path, built with real attributes
+     * Returns a complete path, built with real objects.
+     * The path includes the object itself, at the end.
      *
      * @return The object path, as a native vector ObjectBag[]
      */
-   protected Attribute[] getObjectPath()
+   protected ObjectBag[] getObjectPath()
    {
-       Vector<Attribute> toret = new Vector<>();
-
+       Vector<ObjectBag> toret = new Vector<>();
        final ObjectRoot root = this.getRuntime().getRoot();
-       ObjectBag currentObj = this;
-       ObjectBag containerObj = currentObj.getContainer();
+       ObjectBag containerObj = this.getContainer();
 
-       while( currentObj != root ) {
-           toret.insertElementAt( containerObj.localInverseLookUp( currentObj ), 0 );
+       if ( this != root ) {
+           toret.add( this );
 
-           currentObj = containerObj;
-           containerObj = containerObj.getContainer();
+           while ( containerObj != root ) {
+               toret.insertElementAt( containerObj, 0 );
+               containerObj = containerObj.getContainer();
+           }
        }
 
-       toret.insertElementAt( new Attribute( root.getName(), root ), 0 );
-       return toret.toArray( new Attribute[ toret.size() ] );
+       toret.insertElementAt( root, 0  );
+       return toret.toArray( new ObjectBag[ toret.size() ] );
    }
 
     /**
@@ -245,11 +246,11 @@ public class ObjectBag {
      */
     public String getPath()
     {
-        Attribute[] path = this.getObjectPath();
+        ObjectBag[] path = this.getObjectPath();
         StringBuilder toret = new StringBuilder();
 
         for(int i = 0; i < path.length; ++i) {
-            final Attribute objPathPart = path[ i ];
+            final ObjectBag objPathPart = path[ i ];
 
             toret.append( objPathPart.getName() );
 
@@ -278,8 +279,10 @@ public class ObjectBag {
             }
        }
 
-       // Add the parent, at the end
-       atrList.add( loaded, parentAtr );
+       // Add the parent, at the end, the object Object does not have it
+       if ( parentAtr != null ) {
+           atrList.add( loaded, parentAtr );
+       }
    }
 
     /**
@@ -461,7 +464,7 @@ public class ObjectBag {
      */
     public Reference toReference()
     {
-        Attribute[] path = this.getObjectPath();
+        ObjectBag[] path = this.getObjectPath();
         ArrayList<String> toret = new ArrayList<>( path.length );
 
         for(int i = 0; i < path.length; ++i) {
@@ -492,6 +495,10 @@ public class ObjectBag {
         }
 
         for (Attribute atr : this.attributes.values()) {
+            if ( atr instanceof ParentAttribute ) {
+                continue;
+            }
+
             toret.append( "\t" );
             toret.append( atr.getKind() );
             toret.append( "\n" );
@@ -567,34 +574,35 @@ public class ObjectBag {
     public void set(String name, ObjectBag obj) throws InterpretError
     {
         boolean isParent = name.equals( ParentAttribute.ParentAttributeName );
-        final Runtime rt = this.getRuntime();
-        Attribute atr = localLookUpAttribute( name );
 
-        if ( atr == null ) {
-            this.chkIdentifier( name );
+        this.setAttribute( name, obj  );
 
-            if ( isParent ) {
-                this.chkCyclesInParent( obj );
-                atr = new ParentAttribute( obj );
-            } else {
-                atr = new Attribute( name, obj );
-            }
-
-            this.setAttribute( name, atr );
-        } else {
-            if ( isParent ) {
-                this.chkCyclesInParent( obj );
-            }
-
-            atr.setReference( obj );
+        // Avoid temporal names such as "lit22"
+        if ( obj.getName().startsWith( Runtime.EtqLit ) ) {
+            obj.setName( name );
         }
 
-        // No longer a temporal object
-        if ( obj.getContainer() == rt.getLiteralsContainer() ) {
+        // Change the container of the pointed object, if apropriated
+        if ( !isParent
+          && obj instanceof ValueObject )
+        {
             obj.setContainer( this );
         }
 
         return;
+    }
+
+    /**
+     * Adds an object to the list of attributes of this object,
+     * being only accessible from this.
+     * @param name The name of this new object in the attribute list
+     * @param obj The ObjectBag reference to the object
+     * @throws com.devbaltasarq.pooi.core.Interpreter.InterpretError
+     */
+    public void embed(String name, ObjectBag obj) throws InterpretError
+    {
+        set( name, obj );
+        obj.setContainer( this );
     }
 
     /** Adds a new method to the list of methods of this object
@@ -637,13 +645,32 @@ public class ObjectBag {
         return;
     }
 
-    protected final void setAttribute(String name, Attribute atr) throws InterpretError
+    protected final void setAttribute(String name, ObjectBag obj) throws InterpretError
     {
-        if ( this.localLookUpMember( name ) != null ) {
-            throw new InterpretError( "Already a member named: '" + name + "' in: " + this.getPath() );
+        boolean isParent = name.equals( ParentAttribute.ParentAttributeName );
+        final Runtime rt = this.getRuntime();
+        Attribute atr = localLookUpAttribute( name );
+
+        // Chk cycles in parent graph
+        if ( isParent ) {
+            this.chkCyclesInParent( obj );
         }
 
-        this.attributes.put( name, atr );
+        if ( atr == null ) {
+            this.chkIdentifier( name );
+
+            if ( isParent ) {
+                atr = new ParentAttribute( obj );
+            } else {
+                atr = new Attribute( name, obj );
+            }
+
+            this.attributes.put( name, atr );
+        } else {
+            atr.setReference( obj );
+        }
+
+        return;
     }
 
     /**
@@ -834,9 +861,10 @@ public class ObjectBag {
      */
     public ObjectBag copy(String name, ObjectBag container) throws InterpretError
     {
+        final Runtime rt = this.getRuntime();
         ObjectBag toret = null;
-        HashSet<ObjectBag> objectsCopied = new HashSet<>();
-        LinkedList<ContainerAttributePair> objectsToCopy = new LinkedList<>();
+        final HashSet<ObjectBag> objectsCopied = new HashSet<>();
+        final LinkedList<ContainerAttributePair> objectsToCopy = new LinkedList<>();
 
         objectsToCopy.add(
                 new ContainerAttributePair(
@@ -878,13 +906,18 @@ public class ObjectBag {
                 final ObjectBag potentialNewObj = atr.getReference();
 
                 if ( !( atr instanceof ParentAttribute ) ) {
-                    if ( !objectsCopied.contains( potentialNewObj )
-                      && !( potentialNewObj instanceof ValueObject ) )
-                    {
-                        objectsToCopy.add( new ContainerAttributePair( objDest, atr ) );
-                        objectsCopied.add( potentialNewObj );
+                    if ( !objectsCopied.contains( potentialNewObj ) ) {
+                        if ( potentialNewObj instanceof ValueObject ) {
+                            objDest.setAttribute(
+                                    atr.getName(),
+                                    potentialNewObj.copy( atr.getName(), objDest )
+                            );
+                        } else {
+                            objectsToCopy.add( new ContainerAttributePair( objDest, atr ) );
+                            objectsCopied.add( potentialNewObj );
+                        }
                     } else {
-                        objDest.set( atr.getName(), potentialNewObj );
+                        objDest.setAttribute( atr.getName(), potentialNewObj );
                     }
                 }
             }
@@ -939,7 +972,7 @@ public class ObjectBag {
 
         if ( !completely ) {
             try {
-                this.setAttribute( Reserved.ParentAttribute, new ParentAttribute( parentObject ) );
+                this.setAttribute( Reserved.ParentAttribute, parentObject );
             }
             catch (InterpretError ignored)
             {
@@ -999,9 +1032,23 @@ public class ObjectBag {
     /**
      * @param container the container to set
      */
-    public void setContainer(ObjectBag container)
+    public void setContainer(ObjectBag container) throws InterpretError
     {
-        this.container = container;
+        ObjectBag oldContainer = this.getContainer();
+
+        if ( container != oldContainer ) {
+            this.container = container;
+
+            if ( oldContainer != null ) {
+                final Attribute attr = oldContainer.localInverseLookUp( this );
+
+                if ( attr != null ) {
+                    oldContainer.removeMember( attr.getName() );
+                }
+            }
+        }
+
+        return;
     }
 
     /**
@@ -1009,19 +1056,10 @@ public class ObjectBag {
      */
     public void chkIdentifier(String id) throws InterpretError
     {
-        char ch;
-
         id = id.trim();
+
         if ( id.isEmpty() ) {
             throw new InterpretError( "an empty string is not a valid identifier" );
-        }
-
-        ch = id.charAt( 0 );
-
-        if ( !Character.isLetter( ch )
-          && ch != '_' )
-        {
-            throw new InterpretError( "'" + id + "' is not a valid id (digits at the beginning are not allowed)" );
         }
 
         if ( id.startsWith( "__" ) ) {

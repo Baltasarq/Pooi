@@ -5,7 +5,6 @@ import com.devbaltasarq.pooi.core.Interpreter.InterpretError;
 import com.devbaltasarq.pooi.core.ObjectBag;
 import com.devbaltasarq.pooi.core.Runtime;
 import com.devbaltasarq.pooi.core.evaluables.methods.NativeMethod;
-import com.devbaltasarq.pooi.core.objs.ObjectInt;
 import com.devbaltasarq.pooi.core.objs.ObjectReal;
 
 /**
@@ -13,13 +12,13 @@ import com.devbaltasarq.pooi.core.objs.ObjectReal;
  * User: baltasarq
  * Date: 11/30/12
  */
-public class NativeMethodIntMultiplyBy extends NativeMethod {
+public class NativeMethodRealMultiplyByAssign extends NativeMethod {
 
-    public static final String EtqMthIntMul = "*";
+    public static final String EtqMthRealMulAssign = "*=";
 
-    public NativeMethodIntMultiplyBy(Runtime rt)
+    public NativeMethodRealMultiplyByAssign(Runtime rt)
     {
-        super( rt, EtqMthIntMul );
+        super( rt, EtqMthRealMulAssign );
     }
 
     @Override
@@ -28,22 +27,23 @@ public class NativeMethodIntMultiplyBy extends NativeMethod {
     {
         final String selfPath = ref.getPath();
         final Runtime rt = this.getRuntime();
-        final ObjectInt self;
-        final ObjectInt toret;
+        final ObjectReal self;
+        final ObjectReal toret;
 
         chkParametersNumber( 1, params );
 
         try {
-            self = (ObjectInt) ref;
+            self = (ObjectReal) ref;
         }
         catch(Exception exc)
         {
-            throw new InterpretError( selfPath + " object should be an Int" );
+            throw new InterpretError( selfPath + " object should be a Real" );
         }
 
         final ObjectBag arg = rt.solveToObject( params[ 0 ] );
 
-        toret = rt.createInt( doProduct( params[ 0 ].toString(), self, arg ) );
+        toret = self;
+        self.assign( NativeMethodRealMultiplyBy.doProduct( params[ 0 ].toString(), self, arg )  );
 
         msg.append( selfPath );
         msg.append( " multiplied by " );
@@ -52,24 +52,6 @@ public class NativeMethodIntMultiplyBy extends NativeMethod {
         msg.append( toret.toString() );
 
         return toret;
-    }
-
-    public static long doProduct(String paramName, ObjectInt self, ObjectBag arg) throws InterpretError {
-        long result;
-        if ( arg instanceof ObjectInt ) {
-            result = ( ( (ObjectInt) arg ).getValue() * self.getValue() );
-        }
-        else
-        if ( arg instanceof ObjectReal ) {
-            result = ( Math.round( ( (ObjectReal) arg ).getValue() ) * self.getValue() );
-        } else {
-            throw new InterpretError(
-                    "expected int as parameter in '"
-                    + paramName
-                    + '\''
-            );
-        }
-        return result;
     }
 
     public int getNumParams() {

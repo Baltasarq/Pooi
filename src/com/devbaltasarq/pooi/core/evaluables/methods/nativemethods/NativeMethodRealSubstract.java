@@ -1,10 +1,10 @@
 package com.devbaltasarq.pooi.core.evaluables.methods.nativemethods;
 
 import com.devbaltasarq.pooi.core.Evaluable;
+import com.devbaltasarq.pooi.core.Interpreter.InterpretError;
 import com.devbaltasarq.pooi.core.ObjectBag;
 import com.devbaltasarq.pooi.core.Runtime;
 import com.devbaltasarq.pooi.core.evaluables.methods.NativeMethod;
-import com.devbaltasarq.pooi.core.Interpreter.InterpretError;
 import com.devbaltasarq.pooi.core.objs.ObjectInt;
 import com.devbaltasarq.pooi.core.objs.ObjectReal;
 
@@ -26,7 +26,7 @@ public class NativeMethodRealSubstract extends NativeMethod {
     public ObjectBag doIt(ObjectBag ref, Evaluable[] params, StringBuilder msg)
             throws InterpretError
     {
-        double result;
+        final String selfPath = ref.getPath();
         final Runtime rt = this.getRuntime();
         final ObjectReal self;
         final ObjectReal toret;
@@ -38,35 +38,38 @@ public class NativeMethodRealSubstract extends NativeMethod {
         }
         catch(Exception exc)
         {
-            throw new InterpretError( "self object should be a Real" );
+            throw new InterpretError( selfPath + " object should be a Real" );
         }
 
         final ObjectBag arg = rt.solveToObject( params[ 0 ] );
 
-        if ( arg instanceof ObjectReal ) {
-            result = self.getValue() - ( (ObjectReal) arg ).getValue();
-        }
-        else
-        if ( arg instanceof ObjectInt) {
-            result = ( self.getValue() - ( (ObjectInt) arg ).getValue() );
-        } else {
-            throw new InterpretError(
-                    "expected Real as parameter in '"
-                    + params[ 0 ].toString()
-                    + '\''
-            );
-        }
+        toret = rt.createReal( doSubstraction( params[ 0 ].toString(), self, arg ) );
 
-
-        toret = rt.createReal( result );
-
-        msg.append( self.getPath() );
+        msg.append( selfPath );
         msg.append( " substracted from " );
         msg.append( arg.getPath() );
         msg.append( ", giving " );
         msg.append( toret.toString() );
 
         return toret;
+    }
+
+    public static double doSubstraction(String paramName, ObjectReal self, ObjectBag arg) throws InterpretError {
+        double result;
+        if ( arg instanceof ObjectReal ) {
+            result = self.getValue() - ( (ObjectReal) arg ).getValue();
+        }
+        else
+        if ( arg instanceof ObjectInt ) {
+            result = ( self.getValue() - ( (ObjectInt) arg ).getValue() );
+        } else {
+            throw new InterpretError(
+                    "expected Real as parameter in '"
+                    + paramName
+                    + '\''
+            );
+        }
+        return result;
     }
 
     public int getNumParams() {

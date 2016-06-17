@@ -106,7 +106,7 @@ public class ObjectBox {
                     }
 
                     for (Method mth : this.getObj().getLocalMethods()) {
-                        lines.add( mth.getName() + "(" + mth.getFormalParametersAsString() + ")" );
+                        lines.add( mth.getName() + " " + mth.getFormalParametersAsString() + " " );
                         maxLength = Math.max( lines.get( lines.size() - 1 ).length(), maxLength );
                     }
                 }

@@ -8,26 +8,28 @@ import com.devbaltasarq.pooi.core.evaluables.methods.NativeMethod;
 import com.devbaltasarq.pooi.core.objs.ObjectStr;
 
 /**
- * Compare two strings.
+ * To reside in Str, in order to concat two strings.
  * User: baltasarq
  * Date: 11/30/12
  */
-public class NativeMethodStrIsGreaterThan extends NativeMethod {
+public class NativeMethodStrConcatAssign extends NativeMethod {
 
-    public static final String EtqMthStrIsGreaterThan = ">";
+    public static final String EtqMthStrConcatAssign = "+=";
 
-    public NativeMethodStrIsGreaterThan(Runtime rt)
+    public NativeMethodStrConcatAssign(Runtime rt)
     {
-        super( rt, EtqMthStrIsGreaterThan );
+        super( rt, EtqMthStrConcatAssign );
     }
 
     @Override
     public ObjectBag doIt(ObjectBag ref, Evaluable[] params, StringBuilder msg)
             throws InterpretError
     {
-        boolean result;
+        String result;
+        final String selfPath = ref.getPath();
         final Runtime rt = this.getRuntime();
         final ObjectStr self;
+        final ObjectStr toret;
 
         chkParametersNumber( 1, params );
 
@@ -36,24 +38,22 @@ public class NativeMethodStrIsGreaterThan extends NativeMethod {
         }
         catch(Exception exc)
         {
-            throw new InterpretError( ref.getPath() + " object should be a Str" );
+            throw new InterpretError( selfPath + " object should be an Str" );
         }
 
         final ObjectBag arg = rt.solveToObject( params[ 0 ] );
 
-        if ( arg instanceof ObjectStr ) {
-            result = ( self.getValue().compareTo( ( (ObjectStr) arg ).getValue() ) > 0 );
-        } else {
-            throw new InterpretError(
-                    "expected Str as parameter in '"
-                    + params[ 0 ].toString()
-                    + '\''
-            );
-        }
+        toret = self;
+        self.assign( NativeMethodStrConcat.doConcat( params[ 0 ].toString(), self, arg ) );
 
+        msg.append( selfPath );
+        msg.append( " and " );
+        msg.append( arg.getPath() );
+        msg.append( " added, giving '" );
+        msg.append( toret.toString() );
+        msg.append( '\'' );
 
-        msg.append( Boolean.toString( result ) );
-        return rt.createBool( result );
+        return toret;
     }
 
     public int getNumParams() {

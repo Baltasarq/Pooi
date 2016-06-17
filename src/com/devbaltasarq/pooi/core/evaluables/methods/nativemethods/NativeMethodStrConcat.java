@@ -26,6 +26,7 @@ public class NativeMethodStrConcat extends NativeMethod {
             throws InterpretError
     {
         String result;
+        final String selfPath = ref.getPath();
         final Runtime rt = this.getRuntime();
         final ObjectStr self;
         final ObjectStr toret;
@@ -37,30 +38,36 @@ public class NativeMethodStrConcat extends NativeMethod {
         }
         catch(Exception exc)
         {
-            throw new InterpretError( "self object should be an Str" );
+            throw new InterpretError( selfPath + " object should be an Str" );
         }
 
         final ObjectBag arg = rt.solveToObject( params[ 0 ] );
 
-        if ( arg instanceof ObjectStr ) {
-            result = self.getValue() + ( (ObjectStr) arg ).getValue();
-        } else {
-            throw new InterpretError(
-                    "expected Str as parameter in '"
-                    + params[ 0 ].toString()
-                    + '\''
-            );
-        }
+        toret = rt.createString( doConcat( params[ 0 ].toString(), self, arg ) );
 
-        toret = rt.createString( result );
-
-        msg.append( self.getPath() );
+        msg.append( selfPath );
         msg.append( " and " );
         msg.append( arg.getPath() );
         msg.append( " added, giving '" );
         msg.append( toret.toString() );
         msg.append( '\'' );
 
+        return toret;
+    }
+
+    public static String doConcat(String paramName, ObjectStr self, ObjectBag arg) throws InterpretError
+    {
+        String toret;
+
+        if ( arg instanceof ObjectStr ) {
+            toret = self.getValue() + ( (ObjectStr) arg ).getValue();
+        } else {
+            throw new InterpretError(
+                    "expected Str as parameter in '"
+                            + paramName
+                            + '\''
+            );
+        }
         return toret;
     }
 

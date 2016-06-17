@@ -32,8 +32,9 @@ public class Inspector extends JDialog {
         this.beingBuilt = true;
         this.visualEngine = parent;
         this.rt = parent.getInterpreter().getRuntime();
-        this.objRoot = rt.getAbsoluteParent();
+        this.objInheritanceRoot = rt.getAbsoluteParent();
         this.obj = obj;
+        this.objPath = obj.getPath();
         this.setIconImage( parent.getIconImage() );
         this.setFont( this.visualEngine.getFont() );
         this.build();
@@ -377,7 +378,7 @@ public class Inspector extends JDialog {
             }
 
             obj = obj.getParentObject();
-        } while( obj != objRoot
+        } while( obj != objInheritanceRoot
               && obj != null );
     }
 
@@ -457,7 +458,7 @@ public class Inspector extends JDialog {
             }
         }
 
-        this.visualEngine.execute( obj.getPath() + " " + methodName + " " + arguments );
+        this.visualEngine.execute( this.objPath + " " + methodName + " " + arguments );
         this.finish();
     }
 
@@ -475,7 +476,7 @@ public class Inspector extends JDialog {
         if ( newName != null ) {
             newName = newName.trim();
             if ( newName.length() > 0 ) {
-                this.visualEngine.execute( "(" + obj.getPath() + " copy) rename \"" + newName + '\"' );
+                this.visualEngine.execute( "(" + this.objPath + " copy) rename \"" + newName + '\"' );
                 this.finish();
             }
         }
@@ -584,6 +585,7 @@ public class Inspector extends JDialog {
             if ( !( this.getObj().getParentObject().getName().equals( newParentName  ) ) ) {
                 this.visualEngine.execute( this.getObj().getPath() + ".parent = " + newParentName );
                 this.updateObjectBasicAttributes();
+                this.finish();
             }
         }
     }
@@ -682,9 +684,10 @@ public class Inspector extends JDialog {
         }
     }
 
-    private ObjectBag obj;
-    private Runtime rt;
-    private ObjectBag objRoot;
+    final private ObjectBag obj;
+    final private String objPath;
+    final private Runtime rt;
+    final private ObjectParent objInheritanceRoot;
     private String[] availableObjectsNames;
     private Boolean beingBuilt;
 
