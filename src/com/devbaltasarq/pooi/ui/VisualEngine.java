@@ -114,7 +114,7 @@ public class VisualEngine extends JFrame {
     private void showWelcomeMessage() {
         this.output.append( "Pooi [Prototype-based, object-oriented interpreter]\n"
                 + "\ntype in your message\n"
-                + "try \"Root list\", \"help\" or \"about\" to start\n\n\n"
+                + "try \"Root list\", or \"info.help\" to start\n\n\n"
         );
     }
 
@@ -688,13 +688,12 @@ public class VisualEngine extends JFrame {
 
     private void onHelp()
     {
-        this.execute( "help" );
+        this.execute( "Root.info.help" );
     }
 
     private void onAbout()
     {
-        this.execute( "about" );
-        this.execute( "author" );
+        this.execute( "Root.info about" );
     }
 
     private void onInputEntered()

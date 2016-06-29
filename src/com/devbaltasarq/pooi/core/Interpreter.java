@@ -24,6 +24,7 @@ public class Interpreter {
     public static final String EtqInfoObjAttrLicense = "license";
     public static final String EtqInfoObjAttrVerbose = "verbose";
     public static final String EtqInfoObjAttrHasGui = "gui";
+    public static final String EtqInfoObjMthAbout = "about";
     public static final String EtqComment = "#";
 
     public static final String PathToScripts = "scripts/";
@@ -127,6 +128,11 @@ public class Interpreter {
 
     private final void createInfoObject() throws InterpretError
     {
+        // About method
+        Method mthAbout = new InterpretedMethod( this.rt, EtqInfoObjMthAbout,
+                "((((Root.info.name + \" v\") + Root.info.version) + \"\n\") + Root.info.license)"
+        );
+
         // Info object
         this.objInfo = this.getRuntime().createObject( EtqInfoObject );
         this.objInfo.set( EtqInfoObjAttrName, this.rt.createString(EtqInfoObjAttrName, AppInfo.Name ) );
@@ -136,6 +142,7 @@ public class Interpreter {
         this.objInfo.set( EtqInfoObjAttrLicense, this.rt.createString(EtqInfoObjAttrLicense, AppInfo.License ) );
         this.objInfo.set( EtqInfoObjAttrVerbose, this.rt.createBool( this.cfg.isVerbose() ) );
         this.objInfo.set( EtqInfoObjAttrHasGui, this.rt.createBool( this.cfg.hasGui() ) );
+        this.objInfo.set( EtqInfoObjMthAbout, mthAbout );
         this.objInfo.set( EtqInfoObjAttrHelp, this.rt.createString(EtqInfoObjAttrHelp,
                                       "copy objects in order to create new ones\n"
                                                + " insert orders in the form ( <object> <msg> <args> )\n\n"
@@ -332,7 +339,9 @@ public class Interpreter {
 
                 if ( !error ) {
                     msg.append( '\n' );
-                    stack.push( toret.toReference() );
+                    if ( toret != null ) {
+                        stack.push( toret.toReference() );
+                    }
                 } else {
                     break;
                 }
@@ -343,7 +352,11 @@ public class Interpreter {
 
             // Gather the results
             if ( toret != null ) {
-                result.append( removeQuotes( toret.getNameOrValueAsString() ) + '\n' );
+                final String txtResult = removeQuotes( toret.getNameOrValueAsString() ) + "\n";
+
+                if ( !( result.toString().endsWith( txtResult ) ) ) {
+                    result.append( txtResult );
+                }
 
                 if ( result.toString().equals( msg.toString() ) ) {
                     msg.delete( 0, msg.length() );
