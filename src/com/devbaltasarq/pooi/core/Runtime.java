@@ -97,6 +97,7 @@ public final class Runtime {
         this.integer.set( NativeMethodIntIsEqualTo.EtqMthIntIsEqualTo, new NativeMethodIntIsEqualTo( this ) );
         this.integer.set( NativeMethodIntIsGreaterThan.EtqMthIntIsGreaterThan, new NativeMethodIntIsGreaterThan( this) );
         this.integer.set( NativeMethodIntIsLessThan.EtqMthIntIsLessThan, new NativeMethodIntIsLessThan( this ) );
+        this.integer.set( NativeMethodIntReal.EtqMthReal, new NativeMethodIntReal( this ) );
 
         // Real
         this.real.set( NativeMethodRealSum.EtqMthRealSum, new NativeMethodRealSum( this ) );
@@ -112,6 +113,8 @@ public final class Runtime {
         this.real.set( NativeMethodRealIsEqualTo.EtqMthRealIsEqualTo, new NativeMethodRealIsEqualTo( this ) );
         this.real.set( NativeMethodRealIsGreaterThan.EtqMthRealIsGreaterThan, new NativeMethodRealIsGreaterThan( this ) );
         this.real.set( NativeMethodRealIsLessThan.EtqMthRealIsLessThan, new NativeMethodRealIsLessThan( this ) );
+        this.real.set( NativeMethodRealInt.EtqMthInt, new NativeMethodRealInt( this ) );
+        this.real.set( NativeMethodRealRound.EtqMthRound, new NativeMethodRealRound( this ) );
 
         // Str
         this.str.set( NativeMethodStrConcat.EtqMthStrConcat, new NativeMethodStrConcat( this ) );
