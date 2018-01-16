@@ -41,11 +41,11 @@ import java.util.HashSet;
  * @author  baltasarq
  */
 public class VisualEngine extends JFrame {
-    public static final int MinFontSize = 10;
-    public static final int MaxFontSize = 32;
-    public static final String EtqIconApp = "icons/pooiIcon.png";
-    public static final String EtqIconReset = "icons/reset.png";
-    public static final String EtqIconNew = "icons/new.png";
+    private static final int MinFontSize = 10;
+    private static final int MaxFontSize = 32;
+    private static final String EtqIconApp = "icons/pooiIcon.png";
+    private static final String EtqIconReset = "icons/reset.png";
+    private static final String EtqIconNew = "icons/new.png";
     
     /** Creates new form VisualEngine */
     public VisualEngine(Interpreter interpreter)
@@ -305,7 +305,7 @@ public class VisualEngine extends JFrame {
         this.output.setBackground( new java.awt.Color( 0, 0, 0 ) );
         this.output.setColumns( 20 );
         this.output.setEditable( false );
-        this.output.setFont( new java.awt.Font( "Courier New", 0, 14 ) );
+        this.output.setFont( new java.awt.Font( "Courier New", Font.PLAIN, 14 ) );
         this.output.setForeground( new java.awt.Color( 255, 255, 255 ) );
         this.output.setRows( 5 );
         this.output.setCursor(new java.awt.Cursor( java.awt.Cursor.DEFAULT_CURSOR ) );
@@ -347,7 +347,7 @@ public class VisualEngine extends JFrame {
         trObjectsTree = new JTree();
         trObjectsTree.addTreeSelectionListener( new TreeSelectionListener() {
             public void valueChanged(TreeSelectionEvent evt) {
-                onSelectedItemChanged( evt.getNewLeadSelectionPath() );
+                onSelectedItemChanged();
             }
         } );
         trObjectsTree.addMouseListener( new MouseListener() {
@@ -699,50 +699,51 @@ public class VisualEngine extends JFrame {
     private void onInputEntered()
     {
         String msg = (String) this.input.getSelectedItem();
-        msg = msg.trim();
 
-        try {
-            if ( this.input.isEnabled()
-              && !msg.isEmpty() )
-            {
-                this.input.setEnabled( false );
-                this.input.setSelectedItem( "" );
+        if ( msg != null ) {
+            msg = msg.trim();
 
-                // Show the order in the output panel
-                this.output.append( "> " + msg + "\n" ) ;
+            try {
+                if (this.input.isEnabled()
+                        && !msg.isEmpty()) {
+                    this.input.setEnabled(false);
+                    this.input.setSelectedItem("");
 
-                // Interpret the order
-                this.output.append( interpreter.interpret( msg ) );
-                this.output.append( "\n\n" );
-                this.output.setCaretPosition( output.getText().length() );
+                    // Show the order in the output panel
+                    this.output.append("> " + msg + "\n");
 
-                // Check for the root existing -- if not, end
-                if ( this.interpreter.getRuntime().getRoot() == null ) {
-                    this.close();
+                    // Interpret the order
+                    this.output.append(interpreter.interpret(msg));
+                    this.output.append("\n\n");
+                    this.output.setCaretPosition(output.getText().length());
+
+                    // Check for the root existing -- if not, end
+                    if (this.interpreter.getRuntime().getRoot() == null) {
+                        this.close();
+                    }
+
+                    // Set it to the order history
+                    this.input.insertItemAt(msg, 0);
+
+                    if (this.input.getItemCount() >= 10) {
+                        this.input.removeItemAt(9);
+                    }
                 }
-
-                // Set it to the order history
-                this.input.insertItemAt( msg, 0  );
-
-                if ( this.input.getItemCount() >= 10 ) {
-                    this.input.removeItemAt( 9 );
-                }
+            } catch (StackOverflowError exc) {
+                this.output.append("\n\n*** INTERNAL ERROR: stack overflow\n\n");
+            } catch (NullPointerException exc) {
+                this.output.append("\n\n*** INTERNAL ERROR: rogue null pointer\n\n");
+            } catch (Exception exc) {
+                this.output.append("\n\n*** INTERNAL ERROR: " + exc.getMessage() + "\n\n");
+            } finally {
+                this.updateTree();
+                this.updateDiagram();
+                this.input.setEnabled(true);
+                this.input.requestFocus();
             }
-        } catch(StackOverflowError exc) {
-            this.output.append( "\n\n*** INTERNAL ERROR: stack overflow\n\n" );
         }
-        catch(NullPointerException exc) {
-            this.output.append( "\n\n*** INTERNAL ERROR: rogue null pointer\n\n" );
-        }
-        catch(Exception exc) {
-            this.output.append( "\n\n*** INTERNAL ERROR: " + exc.getMessage() + "\n\n" );
-        }
-        finally {
-            this.updateTree();
-            this.updateDiagram();
-            this.input.setEnabled( true );
-            this.input.requestFocus();
-        }
+
+        return;
     }
 
     private void setSelectedObject(ObjectBag obj)
@@ -794,14 +795,14 @@ public class VisualEngine extends JFrame {
         return toret.toString();
     }
 
-    private void onSelectedItemChanged(TreePath treePath)
+    private void onSelectedItemChanged()
     {
         if ( !rebuildingTree ) {
             rebuildingTree = true;
             String path = this.getSelectedObjectPath();
 
             if ( !path.isEmpty() ) {
-                this.input.setSelectedItem(path.toString());
+                this.input.setSelectedItem( path.toString() );
             }
 
             this.input.requestFocusInWindow();
@@ -996,8 +997,8 @@ public class VisualEngine extends JFrame {
             Dimension dimChild = box.getMeasuredDimension();
             Dimension dimParent = parentBox.getMeasuredDimension();
 
-            int childPosX = box.getX() + ( (int) ( dimChild.width / 2 ) );
-            int parentPosX = parentBox.getX() + ( (int) ( dimParent.width / 2 ) );
+            int childPosX = box.getX() + ( dimChild.width / 2 );
+            int parentPosX = parentBox.getX() + ( dimParent.width / 2 );
             this.pnlCanvas.drawLine( childPosX, box.getY(), parentPosX, parentBox.getY() + dimParent.height  );
         }
 
@@ -1088,7 +1089,7 @@ public class VisualEngine extends JFrame {
 
     public String makeInput(String msg)
     {
-        String toret = (String) JOptionPane.showInputDialog(
+        String toret = JOptionPane.showInputDialog(
                 this,
                 msg,
                 AppInfo.Name,

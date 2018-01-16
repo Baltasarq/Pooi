@@ -8,6 +8,8 @@ package com.devbaltasarq.pooi.core;
 public class Reserved {
 
     public static final String ParentAttribute = "parent";
+    public static final String SetMethod = "set";
+
 
     public static final String RootObject = "Root";
     public static final String LibObject = "Lib";
@@ -17,6 +19,7 @@ public class Reserved {
     public static final String BoolObject = "Bool";
     public static final String RealObject = "Real";
     public static final String StrObject = "Str";
+    public static final String DateTimeObject = "DateTime";
     public static final String SelfRef = "self";
     public static final String AssignmentOperator = "=";
     public static final String AllowedSymbolsInMethodName = "!<>+-*/=?^";
@@ -31,6 +34,8 @@ public class Reserved {
             + ' ' + RealObject + ' '
             + ' ' + StrObject + ' '
             + ' ' + AssignmentOperator + ' '
+            + ' ' + DateTimeObject + ' '
+            + ' ' + SetMethod + ' '
     ;
 
     public static boolean isReservedForObjects(String id)

@@ -145,7 +145,6 @@ public class Parser {
     {
         char ch;
         String toret = "";
-        Lexer.TokenType tokenType;
 
         // Decide which kind of message, native: *,+,-... or average
         lex.skipSpaces();

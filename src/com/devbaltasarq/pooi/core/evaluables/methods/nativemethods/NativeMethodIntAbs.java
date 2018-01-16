@@ -41,6 +41,7 @@ public class NativeMethodIntAbs extends NativeMethod {
         return rt.createInt( result );
     }
 
+    @Override
     public int getNumParams() {
         return 0;
     }

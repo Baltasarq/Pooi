@@ -59,7 +59,7 @@ public class ObjectParent extends ObjectBag {
         this.set( NativeMethodGetPath.EtqMthPath, new NativeMethodGetPath( this.getRuntime() ) );
         this.set( NativeMethodErase.EtqMthErase, new NativeMethodErase( this.getRuntime() ) );
         this.set( NativeMethodGetName.EtqMthGetName, new NativeMethodGetName( this.getRuntime() ) );
-        this.set( NativeMethodSet.EtqMthSet, new NativeMethodSet( this.getRuntime() ) );
+        this.set( NativeMethodSet.EtqMthSet, new NativeMethodSet( this.getRuntime() ), DontCheck );
         this.set( NativeMethodCopy.EtqMthCopy, new NativeMethodCopy( this.getRuntime() ) );
         this.set( NativeMethodCreateChild.EtqMthCreateChild, new NativeMethodCreateChild( this.getRuntime() ) );
         this.set( NativeMethodSetName.EtqMthSetName, new NativeMethodSetName( this.getRuntime() ) );

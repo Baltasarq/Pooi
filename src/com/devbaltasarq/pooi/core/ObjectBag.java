@@ -22,15 +22,18 @@ public class ObjectBag {
      *  Its objective is to wrap a method in the list of available methods in this object.
      */
     public static class Slot {
-        public Slot(Method mth) {
+        public Slot(Method mth)
+        {
             this.mth = mth;
         }
 
-        public Method getMethod() {
+        public Method getMethod()
+        {
             return mth;
         }
 
-        public void setMethod(Method mth) {
+        public void setMethod(Method mth)
+        {
             this.mth = mth;
         }
 
@@ -582,7 +585,7 @@ public class ObjectBag {
             obj.setName( name );
         }
 
-        // Change the container of the pointed object, if apropriated
+        // Change the container of the pointed object, if appropriated
         if ( !isParent
           && obj instanceof ValueObject )
         {
@@ -612,26 +615,23 @@ public class ObjectBag {
      */
     public void set(String name, Method mth) throws InterpretError
     {
-        this.chkIdentifierForMemberName( name );
+        this.set( name, mth, Check );
+    }
+    /** Adds a new method to the list of methods of this object
+     * @param name The name of this new method
+     * @param mth The Method itself
+     * @throws com.devbaltasarq.pooi.core.Interpreter.InterpretError if name is not valid
+     */
+    public void set(String name, Method mth, boolean check) throws InterpretError
+    {
+        if ( check ) {
+            this.chkIdentifierForMemberName(name);
+        }
+
         this.setMethod( name, mth );
     }
 
-    /**
-     * Returns a member, local to this object, given a name.
-     * @param id A String containing the name.
-     * @return The member corresponding to that id, or null.
-     */
-    public Member localLookUpMember(String id) {
-        Member toret = localLookUpAttribute( id );
-
-        if ( toret == null ) {
-            toret = localLookUpMethod( id );
-        }
-
-        return toret;
-    }
-
-    protected final void setMethod(String name, Method mth) throws InterpretError
+    protected final void setMethod(String name, Method mth)
     {
         final Slot slot = this.lookUpSlot( name );
 
@@ -648,7 +648,6 @@ public class ObjectBag {
     protected final void setAttribute(String name, ObjectBag obj) throws InterpretError
     {
         boolean isParent = name.equals( ParentAttribute.ParentAttributeName );
-        final Runtime rt = this.getRuntime();
         Attribute atr = localLookUpAttribute( name );
 
         // Chk cycles in parent graph
@@ -721,7 +720,8 @@ public class ObjectBag {
         return;
     }
 
-    public void renameMethod(String oldName, String newName) throws InterpretError {
+    public void renameMethod(String oldName, String newName) throws InterpretError
+    {
         final Slot slot = this.lookUpSlot( oldName );
 
         if ( slot != null ) {
@@ -750,7 +750,8 @@ public class ObjectBag {
         return;
     }
 
-    public void renameAttribute(String oldName, String newName) throws InterpretError {
+    public void renameAttribute(String oldName, String newName) throws InterpretError
+    {
         final Attribute attr = this.localLookUpAttribute( oldName );
         ObjectBag ref = null;
 
@@ -846,7 +847,8 @@ public class ObjectBag {
      * @param mthName The name of the method.
      * @return A Slot object pointing to the method, null otherwise.
      */
-    public Slot lookUpSlot(String mthName) {
+    public Slot lookUpSlot(String mthName)
+    {
         return this.methods.get( mthName );
     }
 

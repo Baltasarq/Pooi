@@ -83,7 +83,10 @@ public abstract class Method extends Member {
         return toret.toString().trim();
     }
 
-    /** @return Gets the body of the method as a representation in text */
+    /** @return Gets the body of the method as a representation in text
+     *  Native methods return with something like "{: }", which is enough.
+     *  Interpreted methods must be represented accurately.
+     */
     public abstract String getMethodBodyAsString();
 
     /**

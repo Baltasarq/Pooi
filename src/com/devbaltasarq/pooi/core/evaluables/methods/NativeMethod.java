@@ -8,9 +8,8 @@ import com.devbaltasarq.pooi.core.evaluables.Method;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-/**
- * Representing available methods in the interpreter
- * @author baltasarq
+/** Representing available methods in the interpreter
+ *  @author baltasarq
  */
 public abstract class NativeMethod extends Method {
 
@@ -26,9 +25,8 @@ public abstract class NativeMethod extends Method {
     public abstract ObjectBag doIt(ObjectBag ref, Evaluable[] params, StringBuilder msg)
             throws InterpretError;
 
-    /**
-     * Copy the needed NativeMethod by means of reflection
-     * @return The copied method, as a Method object.
+    /** Copy the needed NativeMethod by means of reflection
+     *  @return The copied method, as a Method object.
      */
     @Override
     public NativeMethod copy()
@@ -48,8 +46,12 @@ public abstract class NativeMethod extends Method {
         return toret;
     }
 
+    /** Return A textual representation of the method
+     *  @return A string describing the method.
+     */
     @Override
-    public String getMethodBodyAsString() {
-        return "{: }";
+    public String getMethodBodyAsString()
+    {
+        return "{ " + this.getFormalParametersAsString() + ": }";
     }
 }

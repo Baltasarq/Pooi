@@ -81,7 +81,7 @@ public final class Runtime {
         this.getLiteralsContainer().clear( false );
     }
 
-    public void addMethodsToRuntimeObjects() throws InterpretError
+    private void addMethodsToRuntimeObjects() throws InterpretError
     {
         // Int
         this.integer.set( NativeMethodIntSum.EtqMthIntSum, new NativeMethodIntSum( this ) );
@@ -115,6 +115,10 @@ public final class Runtime {
         this.real.set( NativeMethodRealIsLessThan.EtqMthRealIsLessThan, new NativeMethodRealIsLessThan( this ) );
         this.real.set( NativeMethodRealInt.EtqMthInt, new NativeMethodRealInt( this ) );
         this.real.set( NativeMethodRealRound.EtqMthRound, new NativeMethodRealRound( this ) );
+
+        // Bool
+        this.bool.set( NativeMethodBoolNot.EtqMthBoolNot, new NativeMethodBoolNot( this ) );
+        this.bool.set( NativeMethodBoolIsTrue.EtqMthBoolIsTrue, new NativeMethodBoolIsTrue( this ) );
 
         // Str
         this.str.set( NativeMethodStrConcat.EtqMthStrConcat, new NativeMethodStrConcat( this ) );

@@ -12,11 +12,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Stack;
 
-/**
- * Method holding interpreted code.
- * User: baltasarq
- * Date: 11/19/12
- */
+/** Method holding interpreted code. */
 public class InterpretedMethod extends Method {
     public static final String DefaultMethodId = "__mth_";
 
@@ -113,6 +109,7 @@ public class InterpretedMethod extends Method {
         this.stackCmds.addAll( Arrays.asList( Parser.parseOrder( this.getRuntime(), cmd ) ) );
     }
 
+    @Override
     public InterpretedMethod copy()
     {
         InterpretedMethod toret = new InterpretedMethod( this.getRuntime(), this.getName() );
@@ -120,7 +117,7 @@ public class InterpretedMethod extends Method {
         // Commands
         toret.stackCmds.addAll( Arrays.asList( this.getCmds() ) );
 
-        // Formal paramenters
+        // Formal parameters
         toret.formalParams = this.formalParams.clone();
 
         // Slots for real parameters
@@ -153,60 +150,68 @@ public class InterpretedMethod extends Method {
     }
 
     @Override
-    public String getMethodBodyAsString() {
-        Stack<String> stack = new Stack<>();
+    public String getMethodBodyAsString()
+    {
         StringBuilder toret = new StringBuilder();
-
-        toret.append( "{" );
+        Stack<String> stack = new Stack<>();
+        ArrayList<Integer> positions = new ArrayList<>();
 
         // Add params
-        for(String param: this.getFormalParameters()) {
-            toret.append( param );
-            toret.append( ' ' );
-        }
-
+        toret.append( "{ " );
+        toret.append( this.getFormalParametersAsString() );
         toret.append( ": " );
 
         // Add commands
         for(Command cmd: this.getCmds()) {
-            String replaceCmd = "";
+            toret.append( cmd.toString() );
+            toret.append( "; " );
+        }
+/*
+        // Add commands
+        for(Command cmd: this.getCmds()) {
+            String replaceCmd;
             String cmdAsStr = cmd.toString();
-            int pos = cmdAsStr.indexOf( Parser.PopTask );
 
-            if ( pos >= 0 ) {
-                // Process the reference
-                if ( cmd.getReference().toString().equals( Parser.PopTask ) ) {
+            // Find all POP occurrences
+            positions.clear();
+            int popPos = cmdAsStr.lastIndexOf( Parser.PopTask );
+            do {
+                while( popPos > -1 ) {
+                    positions.add( popPos );
+                    cmdAsStr.lastIndexOf( Parser.PopTask, popPos - Parser.PopTask.length() );
+                }
+
+                for(int pos: positions) {
+                    // Process possible targets
+    //                pos += replaceCmd.length();
+    //                pos = cmdAsStr.indexOf( Parser.PopTask, pos );
                     replaceCmd = stack.pop();
                     cmdAsStr = cmdAsStr.substring( 0, pos )
                             + replaceCmd
                             + cmdAsStr.substring( pos + Parser.PopTask.length(), cmdAsStr.length() );
                 }
 
-                // Process possible targets
-                pos += replaceCmd.length();
-                pos = cmdAsStr.indexOf( Parser.PopTask, pos );
-                while( pos >= 0 ) {
-                    replaceCmd = stack.pop();
-                    cmdAsStr = cmdAsStr.substring( 0, pos )
-                            + replaceCmd
-                            + cmdAsStr.substring( pos + Parser.PopTask.length(), cmdAsStr.length() );
-
-                    // Next?
-                    pos += replaceCmd.length();
-                    pos = cmdAsStr.indexOf( Parser.PopTask, pos );
-                }
+                popPos = cmdAsStr.lastIndexOf( Parser.PopTask );
+            } while( popPos > -1 );
+/*
+            // Process the reference
+            if ( cmd.getReference().toString().equals( Parser.PopTask ) ) {
+                replaceCmd = stack.pop();
+                cmdAsStr = cmdAsStr.substring( 0, popPos )
+                        + replaceCmd
+                        + cmdAsStr.substring( popPos + Parser.PopTask.length(), cmdAsStr.length() );
             }
-
+*/
+/*
             // Push command
             stack.push( cmdAsStr );
         }
 
-        // Dump the remaining
+        // Dump the remaining in natural order (nearly never executed)
         for(String strCmd: stack) {
             toret.append( strCmd );
-            toret.append( "; " );
         }
-
+*/
         toret.append( "}" );
         return toret.toString();
     }
@@ -221,6 +226,7 @@ public class InterpretedMethod extends Method {
         return toret;
     }
 
+    @Override
     public int getNumParams() {
         return this.formalParams.length;
     }
