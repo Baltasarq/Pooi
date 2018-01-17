@@ -1,6 +1,8 @@
+// Pooi (c) Baltasar 2013 - 2018 MIT License <jbgarcia@uvigo.es>
 package com.devbaltasarq.pooi.core.evaluables;
 
 import com.devbaltasarq.pooi.core.Evaluable;
+import com.devbaltasarq.pooi.core.Reserved;
 
 import java.util.ArrayList;
 
@@ -10,6 +12,10 @@ import java.util.ArrayList;
  * Date: 11/19/12
  */
 public class Reference extends Evaluable {
+    public Reference()
+    {
+        this.attrs = new String[ 0 ];
+    }
 
     public Reference(String id)
     {
@@ -23,9 +29,13 @@ public class Reference extends Evaluable {
         this.setAttrs( ids );
     }
 
-    public Reference()
+    @Override
+    public boolean isPopTask()
     {
-        this.attrs = new String[ 0 ];
+        final String[] attrs = this.getAttrs();
+
+        return ( ( attrs.length  == 1 )
+                && ( attrs[ 0 ].equals( Reserved.PopTask ) ) );
     }
 
     /**

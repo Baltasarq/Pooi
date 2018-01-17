@@ -9,6 +9,7 @@ public class Reserved {
 
     public static final String ParentAttribute = "parent";
     public static final String SetMethod = "set";
+    public static final String PopTask = "__POP";
 
 
     public static final String RootObject = "Root";
@@ -36,6 +37,7 @@ public class Reserved {
             + ' ' + AssignmentOperator + ' '
             + ' ' + DateTimeObject + ' '
             + ' ' + SetMethod + ' '
+            + ' ' + PopTask + ' '
     ;
 
     public static boolean isReservedForObjects(String id)

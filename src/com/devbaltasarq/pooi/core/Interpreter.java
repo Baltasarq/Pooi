@@ -272,7 +272,7 @@ public class Interpreter {
 
             // Execute command stack
             for(Evaluable evaluable: method.getCmds()) {
-                Command command = (Command) evaluable;
+                final Command command = (Command) evaluable;
 
                 // Substitute __POP's in params
                 final int numCmdParams = command.getNumArguments();
@@ -284,8 +284,7 @@ public class Interpreter {
                     for(int i = numCmdParams -1; i >= 0; --i) {
                         Evaluable param = cmdParams[ i ];
 
-                        if ( param.toString().equals( Parser.PopTask ))
-                        {
+                        if ( param.isPopTask() ) {
                             param = stack.getTop();
                             stack.pop();
                         }
@@ -306,7 +305,7 @@ public class Interpreter {
 
                 // In reference
                 ref = command.getReference();
-                if ( ref.toString().equals( Parser.PopTask ) ) {
+                if ( ref.isPopTask() ) {
                     ref = stack.getTop();
                     stack.pop();
                 }

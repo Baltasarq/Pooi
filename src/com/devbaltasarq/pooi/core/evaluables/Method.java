@@ -72,7 +72,8 @@ public abstract class Method extends Member {
      * Returns a string with the formal parameters of the method
      * @return a String, with the formal parameters
      */
-    public String getFormalParametersAsString() {
+    public String getFormalParametersAsString()
+    {
         StringBuilder toret = new StringBuilder();
 
         for(String param: this.getFormalParameters()) {
@@ -95,17 +96,17 @@ public abstract class Method extends Member {
      */
     public abstract Method copy();
 
-    public Runtime getRuntime() {
+    public Runtime getRuntime()
+    {
         return this.rt;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         StringBuilder toret = new StringBuilder();
 
         toret.append( this.getName() );
-        toret.append( ' ' );
-        toret.append( this.getFormalParametersAsString() );
         toret.append( " = " );
         toret.append( this.getMethodBodyAsString() );
 

@@ -154,7 +154,6 @@ public class InterpretedMethod extends Method {
     {
         StringBuilder toret = new StringBuilder();
         Stack<String> stack = new Stack<>();
-        ArrayList<Integer> positions = new ArrayList<>();
 
         // Add params
         toret.append( "{ " );
@@ -163,57 +162,47 @@ public class InterpretedMethod extends Method {
 
         // Add commands
         for(Command cmd: this.getCmds()) {
-            toret.append( cmd.toString() );
-            toret.append( "; " );
-        }
-/*
-        // Add commands
-        for(Command cmd: this.getCmds()) {
-            String replaceCmd;
-            String cmdAsStr = cmd.toString();
-
-            // Find all POP occurrences
-            positions.clear();
-            int popPos = cmdAsStr.lastIndexOf( Parser.PopTask );
-            do {
-                while( popPos > -1 ) {
-                    positions.add( popPos );
-                    cmdAsStr.lastIndexOf( Parser.PopTask, popPos - Parser.PopTask.length() );
-                }
-
-                for(int pos: positions) {
-                    // Process possible targets
-    //                pos += replaceCmd.length();
-    //                pos = cmdAsStr.indexOf( Parser.PopTask, pos );
-                    replaceCmd = stack.pop();
-                    cmdAsStr = cmdAsStr.substring( 0, pos )
-                            + replaceCmd
-                            + cmdAsStr.substring( pos + Parser.PopTask.length(), cmdAsStr.length() );
-                }
-
-                popPos = cmdAsStr.lastIndexOf( Parser.PopTask );
-            } while( popPos > -1 );
-/*
-            // Process the reference
-            if ( cmd.getReference().toString().equals( Parser.PopTask ) ) {
-                replaceCmd = stack.pop();
-                cmdAsStr = cmdAsStr.substring( 0, popPos )
-                        + replaceCmd
-                        + cmdAsStr.substring( popPos + Parser.PopTask.length(), cmdAsStr.length() );
-            }
-*/
-/*
-            // Push command
-            stack.push( cmdAsStr );
+            stack.push( replacePop( cmd.toString(), stack ) );
         }
 
-        // Dump the remaining in natural order (nearly never executed)
+        // Dump the remaining
+        String separator = "";
         for(String strCmd: stack) {
+            toret.append( separator );
             toret.append( strCmd );
+            separator = "; ";
         }
-*/
-        toret.append( "}" );
+
+        toret.append( " }" );
         return toret.toString();
+    }
+
+    private static Integer[] findPops(String cmdAsStr)
+    {
+        ArrayList<Integer> positions = new ArrayList<>();
+        int popPos = cmdAsStr.lastIndexOf( Reserved.PopTask );
+
+        while( popPos > -1 ) {
+            positions.add( popPos );
+            popPos = cmdAsStr.lastIndexOf( Reserved.PopTask, popPos - Reserved.PopTask.length() );
+        }
+
+        return positions.toArray( new Integer[ positions.size() ] );
+    }
+
+    private static String replacePop(String cmdAsStr, Stack<String> stack)
+    {
+        Integer[] positions = findPops( cmdAsStr );
+
+        for(int pos: positions) {
+            String replaceCmd = replacePop( stack.pop(), stack );
+
+            cmdAsStr = cmdAsStr.substring( 0, pos )
+                    + replaceCmd
+                    + cmdAsStr.substring( pos + Reserved.PopTask.length(), cmdAsStr.length() );
+        }
+
+        return cmdAsStr;
     }
 
     public static String createNewMethodId()
@@ -227,7 +216,8 @@ public class InterpretedMethod extends Method {
     }
 
     @Override
-    public int getNumParams() {
+    public int getNumParams()
+    {
         return this.formalParams.length;
     }
 

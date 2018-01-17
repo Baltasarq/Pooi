@@ -21,8 +21,6 @@ import java.util.ArrayList;
  * Date: 11/16/12
  */
 public class Parser {
-    public static final String PopTask = "__POP";
-
     private static void clean(ArrayList<Command> toret)
     {
         for(int i = 0; i < toret.size(); ++i)
@@ -32,7 +30,7 @@ public class Parser {
             if ( evaluable instanceof Command ) {
                 Command cmd = (Command) evaluable;
 
-                if ( cmd.getReference().toString().equals( PopTask )
+                if ( cmd.getReference().toString().equals( Reserved.PopTask )
                         && cmd.getMessage().isEmpty() )
                 {
                     toret.remove( i );
@@ -49,7 +47,7 @@ public class Parser {
      * ref mth param1 ...paramN; ref mth param1 ...paramN; ...
      * @param order The input given by the user
      * @return A vector of Command object representing user's intentions
-     * @throws com.devbaltasarq.pooi.core.exceps.InterpretError
+     * @throws com.devbaltasarq.pooi.core.Interpreter.InterpretError
      */
     public static Command[] parseOrder(Runtime rt, String order) throws InterpretError {
         ArrayList<Command> toret = new ArrayList<Command>();
@@ -93,7 +91,7 @@ public class Parser {
      * @param lex the lexer with the order given by the user
      * @param cmds the orders stack so far
      * @return A command object that represents user's intentions
-     * @throws com.devbaltasarq.pooi.core.exceps.InterpretError when parsing is not possible
+     * @throws com.devbaltasarq.pooi.core.Interpreter.InterpretError when parsing is not possible
      */
     public static Command parseCommand(Runtime rt, Lexer lex, ArrayList<Command> cmds) throws InterpretError
     {
@@ -105,7 +103,7 @@ public class Parser {
 
             // Set the attributes of the reference
             if ( lex.getCurrentChar() == '(' ) {
-                toret.setReference( new Reference( new String[]{ PopTask } ) );
+                toret.setReference( new Reference( new String[]{ Reserved.PopTask } ) );
                 lex.advance();
                 cmds.add( parseCommand( rt, lex, cmds ) );
             } else {
@@ -229,7 +227,7 @@ public class Parser {
                 {
                     if ( lex.getCurrentChar() == '(' ) {
                         lex.advance();
-                        params.add( new Reference( PopTask ) );
+                        params.add( new Reference( Reserved.PopTask ) );
                         cmds.add( parseCommand( rt, lex, cmds ) );
                     }
                     else
@@ -251,7 +249,7 @@ public class Parser {
 
         if ( toret.isValid()
           && toret.getMessage().trim().isEmpty()
-          && !toret.getReference().toString().equals( PopTask  ) )
+          && !toret.getReference().toString().equals( Reserved.PopTask  ) )
         {
             toret.setMessage( NativeMethodStr.EtqMthToString );
         }

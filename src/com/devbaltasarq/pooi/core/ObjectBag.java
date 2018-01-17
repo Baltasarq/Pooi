@@ -587,7 +587,8 @@ public class ObjectBag {
 
         // Change the container of the pointed object, if appropriated
         if ( !isParent
-          && obj instanceof ValueObject )
+          && obj instanceof ValueObject
+          && obj.getContainer() == this.getRuntime().getLiteralsContainer() )
         {
             obj.setContainer( this );
         }

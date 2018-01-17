@@ -33,5 +33,3 @@ public abstract class ValueObject extends ObjectBag {
 
     public abstract Object getValueObject();
 }
-
-

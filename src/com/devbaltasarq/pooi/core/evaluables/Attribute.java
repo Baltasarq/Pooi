@@ -19,7 +19,8 @@ import com.devbaltasarq.pooi.core.objs.ValueObject;
 public class Attribute extends Member {
     
     /** Creates a new instance of Attribute */
-    public Attribute(String n, ObjectBag ref) {
+    public Attribute(String n, ObjectBag ref)
+    {
         super( n );
         this.setReference( ref );
     }
@@ -27,8 +28,8 @@ public class Attribute extends Member {
     /** Changes the object this attributes points to
      * @param obj The object this attribute will point to
      */
-    public void setReference(ObjectBag obj) {
-
+    public void setReference(ObjectBag obj)
+    {
         reference = obj;
     }
 
