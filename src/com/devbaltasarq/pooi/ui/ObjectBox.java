@@ -139,7 +139,7 @@ public class ObjectBox {
         canvas.setColor( Color.blue );
 
         // Name
-        canvas.print( posX, posY, this.infoLines[ 0 ] );
+        canvas.print( posX, posY, this.infoLines[ 0 ], Canvas.BOLD );
         posX += 10;
         posY += cr;
 

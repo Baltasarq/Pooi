@@ -8,6 +8,8 @@ import java.awt.image.BufferedImage;
  * Created by baltasarq on 27/04/16.
  */
 public class Canvas extends JPanel {
+    public static final boolean BOLD = true;
+
     /** Creates a new canvas with the specified dimensions
      * @param width The width of the drawing area.
      * @param height The height of the drawing area.
@@ -140,10 +142,26 @@ public class Canvas extends JPanel {
      */
     public void print(int x, int y, String str)
     {
+        print( x, y, str, false );
+    }
+
+    /**
+     * Draws a string in the graphic window
+     * @param x the x coordinate of the starting point
+     * @param y the y coordinate of the starting point
+     * @param str the vector of chars containing the string.
+     */
+    public void print(int x, int y, String str, boolean isBold)
+    {
         if ( str != null ) {
             final Graphics grfs = canvas.getGraphics();
+            Font font = this.getFont();
 
-            grfs.setFont( this.getFont() );
+            if ( isBold ) {
+                font = font.deriveFont( Font.BOLD );
+            }
+
+            grfs.setFont( font );
             grfs.setColor( this.getColor() );
             grfs.drawChars( str.toCharArray(), 0, str.length(), x, y );
         }
