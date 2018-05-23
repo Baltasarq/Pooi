@@ -1,4 +1,4 @@
-## Building POOI
+# Building POOI
 
 **Pooi** was written using *IntelliJ IDEA*. The preferred method for building
 the system is therefore using the IDE.
@@ -6,7 +6,7 @@ the system is therefore using the IDE.
 If you prefer other enviornments, like NetBeans or Eclipse, then use the *File >> Import from 
 sources* (or similar), option.
 
-# I'm a die-hard command-line user
+## I'm a die-hard command-line user
 
 Okay.
 You can use **Maven**. Once **Maven** is installed, and **Pooi** downloaded and 
@@ -17,4 +17,5 @@ unzipped in $SRC:
 	
 
 Execute it with the following command:
-	$ java -jar target/pooi-2.1-SNAPSHOT.jar
+
+	$ java -jar target/pooi-stable-SNAPSHOT.jar
