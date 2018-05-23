@@ -1,6 +1,9 @@
 # Local config for IDEA
 .idea/workspace.xml
 
+# Maven output
+target/
+
 # Executables
 *.class
 out/

@@ -1,0 +1,43 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+ 
+  <groupId>com.devbaltasarq.pooi</groupId>
+  <artifactId>pooi</artifactId>
+  <version>2.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
+  
+  <properties>
+        <src.dir>src/com/devbaltasarq/pooi</src.dir>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
+ 
+  <name>Pooi</name>
+  <url>http://jbgarcia.webs.uvigo.es/prys/pooi/</url>
+  
+  <build>    
+    <sourceDirectory>${src.dir}</sourceDirectory>
+    
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifestFile>src/META-INF/MANIFEST.MF</manifestFile>
+          </archive>
+        </configuration>
+      </plugin>
+    </plugins>
+      
+    <resources>
+      <resource>
+        <directory>src/com/devbaltasarq/pooi/res</directory>
+      </resource>
+    </resources>
+  </build>
+ 
+</project>
