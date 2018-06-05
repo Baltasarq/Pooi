@@ -12,14 +12,15 @@ import java.util.Scanner;
 /**
  * The main class, triggering the application.
  */
-public class App {
-    public static final String EtqVersionOption = "--version";
-    public static final String EtqNoGuiOption = "--nogui";
-    public static final String EtqQuietOption = "--quiet";
-    public static final String EtqHelpOption = "--help";
+public final class App {
+    private static final String EtqVersionOption = "--version";
+    private static final String EtqNoGuiOption = "--nogui";
+    private static final String EtqQuietOption = "--quiet";
+    private static final String EtqHelpOption = "--help";
 
     /** Shows the help of the program, on console */
-    public static void showHelp() {
+    private static void showHelp()
+    {
         System.out.println( "\n--version\tShows version information"
                 + "\n--nogui\t\tStarts a console interpreter"
                 + "\n--quiet\t\tNo verbosity"
@@ -28,10 +29,9 @@ public class App {
     }
 
     /** Process the possible arguments of the command line */
-    public static void processArgs(InterpreterCfg cfg, String[] args) {
-        for(int i = 0; i < args.length; ++i) {
-            String arg = args[ i ];
-
+    private static void processArgs(InterpreterCfg cfg, String[] args)
+    {
+        for(String arg: args) {
             if ( arg.startsWith( "--" ) ) {
                 if ( arg.equals( EtqVersionOption ) ) {
                     System.out.println( AppInfo.getMsgVersion() );
@@ -81,7 +81,7 @@ public class App {
         }
     }
 
-    public static void guiApp(Interpreter interpreter, String msg)
+    private static void guiApp(Interpreter interpreter, String msg)
     {
         // Prepare look & feel, if possible
         try {
@@ -104,7 +104,7 @@ public class App {
 
     }
 
-    public static void consoleApp(Interpreter terp, String msg) {
+    private static void consoleApp(Interpreter terp, String msg) {
         String input = null;
         Scanner scan = new Scanner( System.in );
 

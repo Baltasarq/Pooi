@@ -60,7 +60,7 @@ public class ObjectBag {
 
         private ObjectBag container;
         private Attribute attribute;
-    };
+    }
 
     public static final boolean Check = true;
     public static final boolean DontCheck = false;
@@ -185,7 +185,7 @@ public class ObjectBag {
             final Attribute atrInParent = containerObj.localInverseLookUp( this  );
 
             if ( atrInParent != null
-              && atrInParent.getName() != id  )
+              && !atrInParent.getName().equals( id )  )
             {
                 if ( containerObj.localLookUpAttribute( id ) != null ) {
                     throw new InterpretError( "'" + id + "' already exists in " + containerObj.getName() );
@@ -572,7 +572,7 @@ public class ObjectBag {
      * Adds an object to the list of attributes of this object
      * @param name The name of this new object in the attribute list
      * @param obj The ObjectBag reference to the object
-     * @throws com.devbaltasarq.pooi.core.Interpreter.InterpretError
+     * @throws InterpretError if attribute cannot be set
      */
     public void set(String name, ObjectBag obj) throws InterpretError
     {
@@ -864,7 +864,6 @@ public class ObjectBag {
      */
     public ObjectBag copy(String name, ObjectBag container) throws InterpretError
     {
-        final Runtime rt = this.getRuntime();
         ObjectBag toret = null;
         final HashSet<ObjectBag> objectsCopied = new HashSet<>();
         final LinkedList<ContainerAttributePair> objectsToCopy = new LinkedList<>();
@@ -941,7 +940,7 @@ public class ObjectBag {
      * @param name The name of the object. Assigned automatically if empty.
      * @param container The object in which to include the new object
      * @return An ObjectBag reference to the new (copied) object
-     * @throws com.devbaltasarq.pooi.core.Interpreter.InterpretError
+     * @throws InterpretError if the child cannot be created
      */
     public ObjectBag createChild(String name, ObjectBag container)
         throws InterpretError
@@ -989,7 +988,7 @@ public class ObjectBag {
     /**
      * Removes an attribute from the attribute list
      * @param name The name of the attribute to removeMember
-     * @throws com.devbaltasarq.pooi.core.Interpreter.InterpretError
+     * @throws InterpretError if member cannot be renmoved
      */
     public void removeMember(String name) throws InterpretError
     {

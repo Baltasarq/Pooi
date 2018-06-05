@@ -1,3 +1,4 @@
+// Pooi (c) 2008-2018 MIT License Baltasar <jbgarcia@uvigo.es>
 package com.devbaltasarq.pooi.ui;
 
 import com.devbaltasarq.pooi.core.AppInfo;
@@ -11,31 +12,31 @@ import com.devbaltasarq.pooi.core.objs.ObjectParent;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 
 /**
  * Created by Baltasar on 30/04/2016.
  */
-public class Inspector extends JDialog {
-    public static final String EtqIconCopy = "icons/copy.png";
-    public static final String EtqIconAddMethod = "icons/addMethod.png";
-    public static final String EtqIconAddAttribute = "icons/addAttribute.png";
-    public static final String EtqIconExecute = "icons/execute.png";
-    public static final String EtqIconDelete = "icons/delete.png";
+public final class Inspector extends JDialog {
+    private static final String EtqIconCopy = "icons/copy.png";
+    private static final String EtqIconAddMethod = "icons/addMethod.png";
+    private static final String EtqIconAddAttribute = "icons/addAttribute.png";
+    private static final String EtqIconExecute = "icons/execute.png";
+    private static final String EtqIconDelete = "icons/delete.png";
 
-    public Inspector(VisualEngine parent, ObjectBag obj) {
+    public Inspector(VisualEngine parentWindow, ObjectBag obj) {
         this.beingBuilt = true;
-        this.visualEngine = parent;
-        this.rt = parent.getInterpreter().getRuntime();
-        this.objInheritanceRoot = rt.getAbsoluteParent();
+        this.visualEngine = parentWindow;
+        this.rt = parentWindow.getInterpreter().getRuntime();
+        this.objInheritanceRoot = this.rt.getAbsoluteParent();
         this.obj = obj;
         this.objPath = obj.getPath();
-        this.setIconImage( parent.getIconImage() );
+        this.setIconImage( parentWindow.getIconImage() );
         this.setFont( this.visualEngine.getFont() );
         this.build();
         this.beingBuilt = false;
@@ -69,33 +70,33 @@ public class Inspector extends JDialog {
         }
     }
 
-    private void buildCloseButton() {
+    private void buildCloseButton()
+    {
+        final JButton btClose = new JButton( "Close" );
+
+        btClose.addActionListener( (e) -> Inspector.this.finish() );
+
         JPanel pnlClose = new JPanel();
         FlowLayout flow = new FlowLayout();
+
+        pnlClose.add( btClose );
         flow.setAlignment( FlowLayout.RIGHT );
         pnlClose.setLayout( flow );
-        this.btClose = new JButton( "Close" );
-        this.btClose.addActionListener(new ActionListener()
-        {
-            public void actionPerformed(ActionEvent e)
-            {
-                Inspector.this.finish();
-            }
-        });
-        pnlClose.add( this.btClose );
         this.add( pnlClose, BorderLayout.PAGE_END );
     }
 
-    private void buildBasicAttrsPanel() {
+    private void buildBasicAttrsPanel()
+    {
         // Add panel for object's name
-        JPanel pnlName = new JPanel();
+        final JLabel lblObjectName = new JLabel( "Name" );
+        final JPanel pnlName = new JPanel();
         pnlName.setBorder( new EmptyBorder( 10, 10, 10, 10 ) );
         pnlName.setLayout( new BoxLayout( pnlName, BoxLayout.LINE_AXIS ) );
-        JLabel lblObjectName = new JLabel( "Name" );
-        this.edObjectName = new JTextField();
-        edObjectName.setHorizontalAlignment( JTextField.RIGHT );
         pnlName.add( lblObjectName );
         pnlName.add( Box.createRigidArea( new Dimension( 10, 0 ) ) );
+
+        this.edObjectName = new JTextField();
+        this.edObjectName.setHorizontalAlignment( JTextField.RIGHT );
         pnlName.add( edObjectName );
         this.pnlAction.add( pnlName );
         this.pnlAction.add( Box.createVerticalGlue() );
@@ -110,25 +111,23 @@ public class Inspector extends JDialog {
                 Inspector.this.onEditObjectName();
             }
         } );
-        this.edObjectName.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                Inspector.this.onEditObjectName();
-            }
-        });
+
+        this.edObjectName.addActionListener( (e) -> Inspector.this.onEditObjectName() );
 
         // Add panel for parent attribute
         if ( !( this.getObj() instanceof ObjectParent ) ) {
-            JPanel pnlAttrParent = new JPanel();
-            pnlAttrParent.setBorder( new EmptyBorder( 10, 10, 10, 10 ) );
-            pnlAttrParent.setLayout( new BoxLayout( pnlAttrParent, BoxLayout.LINE_AXIS ) );
-            JLabel lblParentAttributeName = new JLabel( "Parent" );
+            final JLabel lblParentAttributeName = new JLabel( "Parent" );
+            final JPanel pnlAttrParent = new JPanel();
+
             this.cbParent = new JComboBox( this.availableObjectsNames );
             ( (JLabel) this.cbParent.getRenderer() ).setHorizontalAlignment( JLabel.RIGHT );
             ( (JTextField) this.cbParent.getEditor().getEditorComponent() ).setHorizontalAlignment( JTextField.RIGHT  );
             this.cbParent.setFont( this.visualEngine.getFont() );
             this.cbParent.setEditable( true );
             this.cbParent.getModel().setSelectedItem( this.getObj().getParentObject().getNameOrValueAsString() );
+
+            pnlAttrParent.setBorder( new EmptyBorder( 10, 10, 10, 10 ) );
+            pnlAttrParent.setLayout( new BoxLayout( pnlAttrParent, BoxLayout.LINE_AXIS ) );
             pnlAttrParent.add( lblParentAttributeName );
             pnlAttrParent.add( Box.createRigidArea( new Dimension( 10, 0 ) ) );
             pnlAttrParent.add( this.cbParent );
@@ -145,72 +144,57 @@ public class Inspector extends JDialog {
                     Inspector.this.onChangeParent();
                 }
             } );
-            this.cbParent.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent actionEvent) {
-                    Inspector.this.onChangeParent();
-                }
-            });
+            this.cbParent.addActionListener( (e) -> Inspector.this.onChangeParent() );
         }
     }
 
-    private void buildManagementButtonsPanel() {
-        JPanel pnlButtons = new JPanel();
+    private void buildManagementButtonsPanel()
+    {
+        final JPanel pnlButtons = new JPanel();
+        final JButton btAddAttribute = Util.createButton( this.iconAddAttribute,  "Add attribute" );
+        final JButton btAddMethod = Util.createButton( this.iconAddMethod, "Add method" );
+        final JButton btCopy = Util.createButton( this.iconCopy, "Copy" );
+
         pnlButtons.setBorder( new EmptyBorder( 10, 10, 10, 10 ) );
         pnlButtons.setLayout( new BoxLayout( pnlButtons, BoxLayout.LINE_AXIS ) );
-        JButton btAddAttribute = Util.createButton( this.iconAddAttribute,  "Add attribute" );
-        JButton btAddMethod = Util.createButton( this.iconAddMethod, "Add method" );
-        JButton btCopy = Util.createButton( this.iconCopy, "Copy" );
         pnlButtons.add( btAddAttribute );
         pnlButtons.add( Box.createHorizontalGlue() );
         pnlButtons.add( btAddMethod );
         pnlButtons.add( Box.createHorizontalGlue() );
         pnlButtons.add( btCopy );
+
         this.pnlAction.add( pnlButtons );
         this.pnlAction.add( Box.createVerticalGlue() );
 
-        btAddAttribute.addActionListener( new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Inspector.this.onAddAttribute();
-            }
-        } );
-
-        btAddMethod.addActionListener( new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Inspector.this.onAddMethod();
-            }
-        } );
-
-        btCopy.addActionListener( new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Inspector.this.copyObject();
-            }
-        } );
+        btAddAttribute.addActionListener( (e) -> Inspector.this.onAddAttribute() );
+        btAddMethod.addActionListener( (e) -> Inspector.this.onAddMethod() );
+        btCopy.addActionListener( (e) -> Inspector.this.copyObject() );
     }
 
-    private void addAttributePanel(Attribute attr) {
-        ObjectBag objDest = attr.getReference();
-        JPanel panel = new JPanel();
+    private void addAttributePanel(Attribute attr)
+    {
+        final ObjectBag objDest = attr.getReference();
+        final JTextField edName = new JTextField( attr.getName() );
+        final JButton btDelete = Util.createButton( this.iconDelete, "Delete" );
+        final JPanel panel = new JPanel();
+
         panel.setBorder(new EmptyBorder( 10, 10, 10, 10 ) );
         panel.setLayout( new BoxLayout( panel, BoxLayout.LINE_AXIS ) );
 
-        JButton btDelete = Util.createButton( this.iconDelete, "Delete" );
-        JComboBox cbContents = new JComboBox( this.availableObjectsNames );
+
+        final JComboBox cbContents = new JComboBox( this.availableObjectsNames );
         ( (JLabel) cbContents.getRenderer() ).setHorizontalAlignment( JLabel.RIGHT );
         ( (JTextField) cbContents.getEditor().getEditorComponent() ).setHorizontalAlignment( JTextField.RIGHT  );
         cbContents.setFont( this.visualEngine.getFont() );
         cbContents.setEditable( true );
         cbContents.getModel().setSelectedItem( objDest.getNameOrValueAsString() );
-        JTextField edName = new JTextField( attr.getName() );
 
         panel.add( btDelete );
         panel.add( Box.createRigidArea( new Dimension( 10, 0 ) ) );
         panel.add( edName );
         panel.add( Box.createRigidArea( new Dimension( 10, 0 ) ) );
         panel.add( cbContents );
+
         this.pnlAttributes.add( panel );
         this.pnlAttributes.add( Box.createVerticalGlue() );
 
@@ -224,12 +208,8 @@ public class Inspector extends JDialog {
                 Inspector.this.onRenameAttribute( edName, attr );
             }
         } );
-        edName.addActionListener( new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Inspector.this.onRenameAttribute( edName, attr );
-            }
-        } );
+
+        edName.addActionListener( (e) -> Inspector.this.onRenameAttribute( edName, attr ) );
 
         // Events for the contents of the attribute
         cbContents.addFocusListener( new FocusListener() {
@@ -241,26 +221,19 @@ public class Inspector extends JDialog {
                 Inspector.this.onChangeContentsForAttribute( cbContents, attr );
             }
         } );
-        cbContents.addActionListener( new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent evt) {
-                Inspector.this.onChangeContentsForAttribute( cbContents, attr );
-            }
-        } );
 
-        btDelete.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                Inspector.this.onDeleteAttribute( panel, attr );
-            }
-        });
+        cbContents.addActionListener( (e) -> Inspector.this.onChangeContentsForAttribute( cbContents, attr ) );
+
+        btDelete.addActionListener( (e) -> Inspector.this.onDeleteAttribute( panel, attr ) );
     }
 
-    private void buildAttributesManagementPanel() {
-        HashSet<String> attrIds = new HashSet<>( this.getObj().getNumberOfMethods() );
+    private void buildAttributesManagementPanel()
+    {
+        final HashSet<String> attrIds = new HashSet<>( this.getObj().getNumberOfMethods() );
 
         this.pnlAttributes = new JPanel();
-        JScrollPane scroll = new JScrollPane( this.pnlAttributes );
+        final JScrollPane scroll = new JScrollPane( this.pnlAttributes );
+
         this.pnlAttributes.setLayout( new BoxLayout( this.pnlAttributes, BoxLayout.PAGE_AXIS ) );
         this.pnlAction.add( scroll );
         this.pnlAction.add( Box.createVerticalGlue() );
@@ -282,7 +255,8 @@ public class Inspector extends JDialog {
         }
     }
 
-    private void addMethodPanel(ObjectBag.Slot slot) {
+    private void addMethodPanel(ObjectBag.Slot slot)
+    {
         String mthName = slot.getMethod().getName();
         final JPanel panel = new JPanel();
         panel.setBorder( new EmptyBorder( 10, 10, 10, 10 ) );
@@ -313,12 +287,8 @@ public class Inspector extends JDialog {
                 Inspector.this.onRenameMethod( slot, edName );
             }
         } );
-        edName.addActionListener( new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Inspector.this.onRenameMethod( slot, edName );
-            }
-        } );
+
+        edName.addActionListener( (e) -> Inspector.this.onRenameMethod( slot, edName ) );
 
         // Events for the body of the method
         edContents.addFocusListener( new FocusListener() {
@@ -330,29 +300,17 @@ public class Inspector extends JDialog {
                 Inspector.this.onMethodBodyChanged( edContents, slot );
             }
         } );
-        edContents.addActionListener( new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Inspector.this.onMethodBodyChanged( edContents, slot );
-            }
-        } );
+
+        edContents.addActionListener( (e) -> Inspector.this.onMethodBodyChanged( edContents, slot ) );
 
         // Events for buttons
-        btExecute.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
+        btExecute.addActionListener( (e) -> {
                 if ( !Inspector.this.beingBuilt ) {
                     Inspector.this.launchMethodExecution( slot.getMethod().getName() );
                 }
-            }
         });
 
-        btDelete.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                Inspector.this.onDeleteMethod( panel, slot );
-            }
-        });
+        btDelete.addActionListener( (e) -> Inspector.this.onDeleteMethod( panel, slot ) );
     }
 
     private void buildMethodsManagementPanel() {
@@ -382,7 +340,8 @@ public class Inspector extends JDialog {
               && obj != null );
     }
 
-    private void buildActionArea() {
+    private void buildActionArea()
+    {
         // Create a box layout in the center
         this.pnlAction = new JPanel();
         JScrollPane scroll = new JScrollPane( this.pnlAction );
@@ -395,8 +354,9 @@ public class Inspector extends JDialog {
         this.buildMethodsManagementPanel();
     }
 
-    private void build() {
-        this.prepareAvailableObjectsNames();
+    private void build()
+    {
+        this.buildAvailableObjectsNames();
 
         // Build
         this.setLayout( new BorderLayout( 5, 5 ) );
@@ -418,7 +378,8 @@ public class Inspector extends JDialog {
         this.setLocation( p );
     }
 
-    private void updateObjectBasicAttributes() {
+    private void updateObjectBasicAttributes()
+    {
         ObjectBag obj = this.getObj();
         ObjectBag objParent = this.getObj().getParentObject();
 
@@ -482,11 +443,13 @@ public class Inspector extends JDialog {
         }
     }
 
-    public ObjectBag getObj() {
+    public ObjectBag getObj()
+    {
         return this.obj;
     }
 
-    public static void addAttribute(Window frame, VisualEngine visualEngine, ObjectBag obj) {
+    static void addAttribute(Window frame, VisualEngine visualEngine, ObjectBag obj)
+    {
         String attrName = (String) JOptionPane.showInputDialog(
                 frame,
                 "New attribute's name:",
@@ -505,7 +468,8 @@ public class Inspector extends JDialog {
         }
     }
 
-    public static void addMethod(Window frame, VisualEngine visualEngine, ObjectBag obj) {
+    static void addMethod(Window frame, VisualEngine visualEngine, ObjectBag obj)
+    {
         String mthName = (String) JOptionPane.showInputDialog(
                 frame,
                 "New method's name:",
@@ -525,7 +489,7 @@ public class Inspector extends JDialog {
         return;
     }
 
-    public static void changeMethod(Window frame, VisualEngine visualEngine, ObjectBag obj, String name, String body)
+    static void changeMethod(Window frame, VisualEngine visualEngine, ObjectBag obj, String name, String body)
     {
         String mthBody = (String) JOptionPane.showInputDialog(
                 frame,
@@ -547,26 +511,31 @@ public class Inspector extends JDialog {
         return;
     }
 
-    /** Compiles all the names in the Root object
-     * @return The names, as a String[]
-     */
-    public String[] prepareAvailableObjectsNames() {
-        final Attribute[] attrs = this.rt.getRoot().getAttributes();
-        this.availableObjectsNames = new String[ attrs.length ];
-        for(int i = 0; i < attrs.length; ++i) {
-            this.availableObjectsNames[ i ] = attrs[ i ].getName();
-        }
+    /** Compiles all the names in the Root object and stores then in the String[] array
+      * this.availableObjectNames
+      */
+    private void buildAvailableObjectsNames()
+    {
+        final ArrayList<String> objNames = new ArrayList<>();
+        final Object[] names = Arrays.stream(
+                                        this.rt.getRoot().getAttributes() )
+                                    .map( Attribute::getName ).toArray();
 
-        return this.availableObjectsNames;
+
+        Arrays.stream( names ).forEach( (x) -> objNames.add( x.toString() ) );
+        this.availableObjectsNames = new String[ objNames.size() ];
+        objNames.toArray( this.availableObjectsNames );
     }
 
     /** Point of finishing for the inspector */
-    protected void finish() {
+    private void finish()
+    {
         this.setVisible( false );
     }
 
     /** Triggered when the user changes the name of the object */
-    protected void onEditObjectName() {
+    private void onEditObjectName()
+    {
         if ( !this.beingBuilt ) {
             String newName = this.edObjectName.getText().trim();
 
@@ -578,7 +547,8 @@ public class Inspector extends JDialog {
     }
 
     /** Triggered when the user schanges the parent */
-    protected void onChangeParent() {
+    private void onChangeParent()
+    {
         if ( !this.beingBuilt ) {
             String newParentName = (String) this.cbParent.getSelectedItem();
 
@@ -591,7 +561,8 @@ public class Inspector extends JDialog {
     }
 
     /** Triggered when the user adds a new attribute */
-    protected void onAddAttribute() {
+    private void onAddAttribute()
+    {
         String attrName = "attr" + ( this.getObj().getNumberOfAttributes()  + 1 );
 
         this.visualEngine.execute( this.getObj().getPath() + "." + attrName + " = 0" );
@@ -604,7 +575,8 @@ public class Inspector extends JDialog {
     }
 
     /** Triggered when the user adds a new method */
-    protected void onAddMethod() {
+    private void onAddMethod()
+    {
         String mthName = "mth" + ( this.getObj().getNumberOfMethods() + 1 );
 
         this.visualEngine.execute( this.getObj().getPath() + "." + mthName + " = {:}" );
@@ -616,7 +588,8 @@ public class Inspector extends JDialog {
     }
 
     /** Triggered when the user modifies the name of an attribute */
-    protected void onRenameAttribute(JTextField edName, Attribute attr) {
+    private void onRenameAttribute(JTextField edName, Attribute attr)
+    {
         if ( !this.beingBuilt ) {
             String newName = edName.getText();
 
@@ -627,7 +600,8 @@ public class Inspector extends JDialog {
         }
     }
 
-    protected void onChangeContentsForAttribute(JComboBox cbContents, Attribute attr) {
+    private void onChangeContentsForAttribute(JComboBox cbContents, Attribute attr)
+    {
         if ( !this.beingBuilt ) {
             String newContents = (String) cbContents.getSelectedItem();
 
@@ -638,7 +612,7 @@ public class Inspector extends JDialog {
     }
 
     /** Triggered when the user deletes an attribute */
-    protected void onDeleteAttribute(JPanel panel, Attribute attr)
+    private void onDeleteAttribute(JPanel panel, Attribute attr)
     {
         if ( !this.beingBuilt ) {
             this.visualEngine.execute( this.getObj().getPath() + " erase \"" + attr.getName() + "\"" );
@@ -648,7 +622,8 @@ public class Inspector extends JDialog {
     }
 
     /** Triggered when the user changes the name of a method */
-    protected void onRenameMethod(ObjectBag.Slot slot, JTextField edName) {
+    private void onRenameMethod(ObjectBag.Slot slot, JTextField edName)
+    {
         if ( !this.beingBuilt ) {
             final String oldName = slot.getMethod().getName();
             final String newName = edName.getText();
@@ -662,7 +637,8 @@ public class Inspector extends JDialog {
     }
 
     /** Triggered when the user changes the body of a method */
-    protected void onMethodBodyChanged(JTextField edContents, ObjectBag.Slot slot) {
+    private void onMethodBodyChanged(JTextField edContents, ObjectBag.Slot slot)
+    {
         if ( !this.beingBuilt ) {
             final Method mth = slot.getMethod();
             final String mthName = mth.getName();
@@ -675,7 +651,8 @@ public class Inspector extends JDialog {
     }
 
     /** Triggered when the user deletes a method */
-    protected void onDeleteMethod(JPanel panel, ObjectBag.Slot slot) {
+    private void onDeleteMethod(JPanel panel, ObjectBag.Slot slot)
+    {
         if ( !this.beingBuilt ) {
             final Method mth = slot.getMethod();
             this.visualEngine.execute( this.getObj().getPath() + " erase \"" + mth.getName() + "\"" );
@@ -691,7 +668,6 @@ public class Inspector extends JDialog {
     private String[] availableObjectsNames;
     private Boolean beingBuilt;
 
-    private JButton btClose;
     private JTextField edObjectName;
     private JComboBox cbParent;
     private JPanel pnlAction;

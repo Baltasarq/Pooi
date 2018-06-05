@@ -14,7 +14,7 @@ import java.util.Stack;
 
 /** Method holding interpreted code. */
 public class InterpretedMethod extends Method {
-    public static final String DefaultMethodId = "__mth_";
+    private static final String DefaultMethodId = "__mth_";
 
     public InterpretedMethod(Runtime rt, String name)
     {
@@ -104,11 +104,6 @@ public class InterpretedMethod extends Method {
         return ( cmds.substring( lex.getPos() +1 ).trim() );
     }
 
-    public void addCmds(String cmd) throws InterpretError
-    {
-        this.stackCmds.addAll( Arrays.asList( Parser.parseOrder( this.getRuntime(), cmd ) ) );
-    }
-
     @Override
     public InterpretedMethod copy()
     {
@@ -152,8 +147,8 @@ public class InterpretedMethod extends Method {
     @Override
     public String getMethodBodyAsString()
     {
-        StringBuilder toret = new StringBuilder();
-        Stack<String> stack = new Stack<>();
+        final StringBuilder toret = new StringBuilder();
+        final Stack<String> stack = new Stack<>();
 
         // Add params
         toret.append( "{ " );

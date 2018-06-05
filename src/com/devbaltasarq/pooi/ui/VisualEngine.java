@@ -1,3 +1,4 @@
+// Pooi (c) 2008-2018 MIT License Baltasar <jbgarcia@uvigo.es>
 package com.devbaltasarq.pooi.ui;
 
 import com.devbaltasarq.pooi.core.AppInfo;
@@ -30,17 +31,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-/*
- * VisualEngine.java
- *
- * Created on 1 de febrero de 2008, 13:26
- */
 
 /**
  * Interfaz de la app
  * @author  baltasarq
+ * @date 2008-02-01T13:26
  */
-public class VisualEngine extends JFrame {
+public final class VisualEngine extends JFrame {
     private static final int MinFontSize = 10;
     private static final int MaxFontSize = 32;
     private static final String EtqIconApp = "icons/pooiIcon.png";
@@ -136,18 +133,16 @@ public class VisualEngine extends JFrame {
 
             btCloseDlgFont.setMnemonic( 'o' );
             btCloseDlgFont.setText( "Ok" );
-            btCloseDlgFont.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    dlgFont.setVisible( false );
-                    int fontSize = Math.toIntExact( Math.round( (Double) spFontSize.getValue() ) );
+            btCloseDlgFont.addActionListener( (e) -> {
+                dlgFont.setVisible( false );
+                int fontSize = Math.toIntExact( Math.round( (Double) spFontSize.getValue() ) );
 
-                    if ( fontSize >= MinFontSize
-                      && fontSize <= MaxFontSize )
-                    {
-                        VisualEngine.this.font = new Font( "monospaced", Font.PLAIN, fontSize );
-                        VisualEngine.this.output.setFont( VisualEngine.this.font );
-                        VisualEngine.this.updateDiagram();
-                    }
+                if ( fontSize >= MinFontSize
+                  && fontSize <= MaxFontSize )
+                {
+                    VisualEngine.this.font = new Font( "monospaced", Font.PLAIN, fontSize );
+                    VisualEngine.this.output.setFont( VisualEngine.this.font );
+                    VisualEngine.this.updateDiagram();
                 }
             });
 
@@ -205,51 +200,31 @@ public class VisualEngine extends JFrame {
         opLoadSession.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
         opLoadSession.setMnemonic('l');
         opLoadSession.setText("Load session transcript");
-        opLoadSession.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                onLoadSession();
-            }
-        });
+        opLoadSession.addActionListener( (e) -> this.onLoadSession() );
         menuFile.add(opLoadSession);
 
         opSaveTranscript.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
         opSaveTranscript.setMnemonic('s');
         opSaveTranscript.setText("Save session transcript");
-        opSaveTranscript.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                onSaveSession();
-            }
-        });
+        opSaveTranscript.addActionListener( (e) -> this.onSaveSession() );
         menuFile.add(opSaveTranscript);
 
         opExport.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_MASK));
         opExport.setMnemonic('x');
         opExport.setText("Export objects");
-        opExport.addActionListener( new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                onExport();
-            }
-        } );
+        opExport.addActionListener( (e) -> this.onExport() );
         menuFile.add(opExport);
 
         opReset.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_R, java.awt.event.InputEvent.CTRL_MASK));
         opReset.setMnemonic('r');
         opReset.setText("Reset");
-        opReset.addActionListener( new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                onReset();
-            }
-        } );
+        opReset.addActionListener( (e) -> this.onReset() );
         menuFile.add( opReset );
 
         opExit.setAccelerator(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
         opExit.setMnemonic('q');
         opExit.setText("Quit");
-        opExit.addActionListener( new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                VisualEngine.this.close();
-            }
-        } );
+        opExit.addActionListener( (e) -> this.close() );
         menuFile.add(opExit);
 
         this.menuPpal.add(menuFile);
@@ -259,11 +234,7 @@ public class VisualEngine extends JFrame {
 
         opFont.setMnemonic('f');
         opFont.setText("Font");
-        opFont.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                onChangeFont();
-            }
-        });
+        opFont.addActionListener( (e) -> this.onChangeFont() );
         menuView.add(opFont);
 
         this.menuPpal.add(menuView);
@@ -275,20 +246,12 @@ public class VisualEngine extends JFrame {
         opHelp.setMnemonic('h');
         opHelp.setText("Help content");
         opHelp.setActionCommand("Help content ...");
-        opHelp.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                onHelp();
-            }
-        });
+        opHelp.addActionListener( (e) -> this.onHelp() );
         menuHelp.add(opHelp);
 
         opAbout.setMnemonic('a');
         opAbout.setText("About ...");
-        opAbout.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                onAbout();
-            }
-        });
+        opAbout.addActionListener( (e) -> this.onAbout() );
         menuHelp.add(opAbout);
 
         this.menuPpal.add(menuHelp);
@@ -314,9 +277,9 @@ public class VisualEngine extends JFrame {
     private void buildInput()
     {
         // Input
-        this.input = new JComboBox<String>();
+        this.input = new JComboBox<>();
         this.input.setEditable( true );
-        this.input.setFont( new java.awt.Font( "Courier New", 0, 18 ) );
+        this.input.setFont( new java.awt.Font( "Courier New", Font.PLAIN, 18 ) );
         this.input.getEditor().getEditorComponent().addKeyListener(
                 new java.awt.event.KeyListener() {
                     @Override
@@ -345,11 +308,7 @@ public class VisualEngine extends JFrame {
     {
         // Tree view
         trObjectsTree = new JTree();
-        trObjectsTree.addTreeSelectionListener( new TreeSelectionListener() {
-            public void valueChanged(TreeSelectionEvent evt) {
-                onSelectedItemChanged();
-            }
-        } );
+        trObjectsTree.addTreeSelectionListener( (e) -> this.onSelectedItemChanged() );
         trObjectsTree.addMouseListener( new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e)
@@ -387,21 +346,20 @@ public class VisualEngine extends JFrame {
 
     private void buildToolbar()
     {
-        JButton btReset = Util.createButton( this.iconReset, "Reset" );
-        JButton btNewObject = Util.createButton( this.iconNew, "New object" );
+        final JButton btReset = Util.createButton( this.iconReset, "Reset" );
+        final JButton btNewObject = Util.createButton( this.iconNew, "New object" );
+        final JToolBar tbIconBar = new JToolBar();
 
-        this.tbIconBar = new JToolBar();
-        this.tbIconBar.setFloatable( false );
+        tbIconBar.setFloatable( false );
+        tbIconBar.add( btReset );
+        tbIconBar.addSeparator();
+        tbIconBar.add( btNewObject );
 
-        this.tbIconBar.add( btReset );
-        this.tbIconBar.addSeparator();
-        this.tbIconBar.add( btNewObject );
-
-        this.getContentPane().add( this.tbIconBar, BorderLayout.NORTH );
+        this.getContentPane().add( tbIconBar, BorderLayout.NORTH );
 
         // Events
-        btReset.addActionListener( e -> VisualEngine.this.onReset() );
-        btNewObject.addActionListener( e -> VisualEngine.this.onNewObject( Runtime.EtqNameAnObject ) );
+        btReset.addActionListener( e -> this.onReset() );
+        btNewObject.addActionListener( e -> this.onNewObject( Runtime.EtqNameAnObject ) );
     }
 
     /** Retries icons from jar for future use */
@@ -431,89 +389,66 @@ public class VisualEngine extends JFrame {
 
         // Copy
         JMenuItem miCopy = new JMenuItem( "Copy" );
-        miCopy.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                VisualEngine.this.onNewObject( VisualEngine.this.getSelectedObjectPath() );
-            }
-        });
+        miCopy.addActionListener( (e) -> this.onNewObject( this.getSelectedObjectPath() ) );
         this.popup.add( miCopy );
 
         // List
         JMenuItem miList = new JMenuItem( "List" );
-        miList.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                VisualEngine.this.execute( VisualEngine.this.getSelectedObjectPath() + " list" );
-            }
-        });
+        miList.addActionListener( (e) -> this.execute( this.getSelectedObjectPath() + " list" ) );
         this.popup.add( miList );
 
         // Inspect
         JMenuItem miInspect = new JMenuItem( "Inspect" );
-        miInspect.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                ObjectBag objDest = null;
+        miInspect.addActionListener( (e) ->  {
+            ObjectBag objDest = null;
 
-                try {
-                    String objPath = VisualEngine.this.getSelectedObjectPath();
-                    String[] objPathParts = objPath.split( "\\." );
-                    objDest = VisualEngine.this.interpreter.getRuntime().solveToObject( new Reference( objPathParts ) );
-                } catch (InterpretError interpretError) {
-                    objDest = VisualEngine.this.interpreter.getRuntime().getAbsoluteParent();
-                }
-                VisualEngine.this.onInspect( objDest );
+            try {
+                String objPath = VisualEngine.this.getSelectedObjectPath();
+                String[] objPathParts = objPath.split( "\\." );
+                objDest = VisualEngine.this.interpreter.getRuntime().solveToObject( new Reference( objPathParts ) );
+            } catch (InterpretError interpretError) {
+                objDest = VisualEngine.this.interpreter.getRuntime().getAbsoluteParent();
             }
+
+            this.onInspect( objDest );
         });
         this.popup.add( miInspect );
 
         // Add attribute
-        JMenuItem miAddAttribbute = new JMenuItem( "Add attribute" );
-        miAddAttribbute.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                ObjectBag objDest = null;
+        final JMenuItem miAddAttribbute = new JMenuItem( "Add attribute" );
+        miAddAttribbute.addActionListener( (e) -> {
+            ObjectBag objDest = null;
 
-                try {
-                    String objPath = VisualEngine.this.getSelectedObjectPath();
-                    String[] objPathParts = objPath.split( "\\." );
-                    objDest = VisualEngine.this.interpreter.getRuntime().solveToObject( new Reference( objPathParts ) );
-                } catch (InterpretError interpretError) {
-                    objDest = VisualEngine.this.interpreter.getRuntime().getAbsoluteParent();
-                }
-                Inspector.addAttribute( VisualEngine.this, VisualEngine.this, objDest );
+            try {
+                String objPath = VisualEngine.this.getSelectedObjectPath();
+                String[] objPathParts = objPath.split( "\\." );
+                objDest = VisualEngine.this.interpreter.getRuntime().solveToObject( new Reference( objPathParts ) );
+            } catch (InterpretError interpretError) {
+                objDest = VisualEngine.this.interpreter.getRuntime().getAbsoluteParent();
             }
+            Inspector.addAttribute( VisualEngine.this, VisualEngine.this, objDest );
         });
         this.popup.add( miAddAttribbute );
 
         // Add method
         JMenuItem miAddMethod = new JMenuItem( "Add method" );
-        miAddMethod.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                ObjectBag objDest = null;
+        miAddMethod.addActionListener( (e) -> {
+            ObjectBag objDest = null;
 
-                try {
-                    String objPath = VisualEngine.this.getSelectedObjectPath();
-                    String[] objPathParts = objPath.split( "\\." );
-                    objDest = VisualEngine.this.interpreter.getRuntime().solveToObject( new Reference( objPathParts ) );
-                } catch (InterpretError interpretError) {
-                    objDest = VisualEngine.this.interpreter.getRuntime().getAbsoluteParent();
-                }
-                Inspector.addMethod( VisualEngine.this, VisualEngine.this, objDest );
+            try {
+                String objPath = VisualEngine.this.getSelectedObjectPath();
+                String[] objPathParts = objPath.split( "\\." );
+                objDest = VisualEngine.this.interpreter.getRuntime().solveToObject( new Reference( objPathParts ) );
+            } catch (InterpretError interpretError) {
+                objDest = VisualEngine.this.interpreter.getRuntime().getAbsoluteParent();
             }
+            Inspector.addMethod( VisualEngine.this, VisualEngine.this, objDest );
         });
         this.popup.add( miAddMethod );
 
         // Remove
         JMenuItem miErase = new JMenuItem( "Erase" );
-        miErase.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                VisualEngine.this.eraseObject( VisualEngine.this.getSelectedObjectPath() );
-            }
-        });
+        miErase.addActionListener( (e) -> VisualEngine.this.eraseObject( VisualEngine.this.getSelectedObjectPath() ) );
         this.popup.add( miErase );
     }
 
@@ -522,13 +457,14 @@ public class VisualEngine extends JFrame {
      */
     private void build()
     {
+        final JSplitPane spMain = new JSplitPane();
+
         Util.prepareDimensions( this );
 
         // Split view
         this.spPanel = new JSplitPane();
         this.spPanel.setDividerLocation( 150 );
-        this.spMain = new JSplitPane();
-        this.spMain.setDividerLocation( (int) ( this.getHeight() - ( this.getHeight() * 0.15 ) ) );
+        spMain.setDividerLocation( (int) ( this.getHeight() - ( this.getHeight() * 0.15 ) ) );
 
         // Build components
         this.buildMenuBar();
@@ -546,9 +482,9 @@ public class VisualEngine extends JFrame {
         // Compose it all
         JScrollPane scrlOutput = new JScrollPane();
         scrlOutput.setViewportView( this.output );
-        this.spMain.setOrientation( JSplitPane.VERTICAL_SPLIT  );
-        this.spMain.setBottomComponent( scrlOutput );
-        this.spPanel.setRightComponent( this.spMain );
+        spMain.setOrientation( JSplitPane.VERTICAL_SPLIT  );
+        spMain.setBottomComponent( scrlOutput );
+        this.spPanel.setRightComponent( spMain );
         this.getContentPane().add( this.spPanel, BorderLayout.CENTER );
         this.getContentPane().add( this.input, BorderLayout.SOUTH );
 
@@ -568,7 +504,7 @@ public class VisualEngine extends JFrame {
         // Prepare the diagrammer
         this.pnlCanvas = new Canvas( 2000, 2000 );
         this.scrCanvas = new JScrollPane( this.pnlCanvas );
-        this.spMain.setTopComponent( scrCanvas );
+        spMain.setTopComponent( scrCanvas );
         this.pnlCanvas.addMouseListener( new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -802,7 +738,7 @@ public class VisualEngine extends JFrame {
             String path = this.getSelectedObjectPath();
 
             if ( !path.isEmpty() ) {
-                this.input.setSelectedItem( path.toString() );
+                this.input.setSelectedItem( path );
             }
 
             this.input.requestFocusInWindow();
@@ -887,7 +823,7 @@ public class VisualEngine extends JFrame {
         }
     }
 
-    public void updateDiagram()
+    private void updateDiagram()
     {
         final int HorizontalSeparation = 25;
         final int VerticalSeparation = 50;
@@ -1008,12 +944,12 @@ public class VisualEngine extends JFrame {
         }
     }
 
-    public void activateGui()
+    void activateGui()
     {
         this.setGuiEnabled( true );
     }
 
-    public void deactivateGui()
+    void deactivateGui()
     {
         this.setGuiEnabled( true );
     }
@@ -1086,7 +1022,7 @@ public class VisualEngine extends JFrame {
             }
         }
     }
-
+/*
     public String makeInput(String msg)
     {
         String toret = JOptionPane.showInputDialog(
@@ -1101,8 +1037,8 @@ public class VisualEngine extends JFrame {
 
         return toret.trim();
     }
-
-    public void makeOutput(String msg)
+*/
+    void makeOutput(String msg)
     {
         this.output.append( msg );
     }
@@ -1118,10 +1054,8 @@ public class VisualEngine extends JFrame {
     private JTree trObjectsTree;
     private JSpinner spFontSize;
     private JSplitPane spPanel;
-    private JSplitPane spMain;
     private JScrollPane scrCanvas;
     private Canvas pnlCanvas;
-    private JToolBar tbIconBar;
     private JPopupMenu popup;
     private Font font;
 

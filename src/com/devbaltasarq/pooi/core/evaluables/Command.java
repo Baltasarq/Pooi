@@ -117,11 +117,17 @@ public class Command extends Evaluable {
 
     public String toString()
     {
-        StringBuilder toret = new StringBuilder();
+        final StringBuilder toret = new StringBuilder();
+        final Evaluable ref = this.getReference();
+        String refAsString = ref.toString();
+
+        if ( ref instanceof StrLiteral ) {
+            refAsString = "\"" + refAsString + "\"";
+        }
 
         toret.append( '(' );
         toret.append( ' ' );
-        toret.append( this.getReference().toString() );
+        toret.append( refAsString );
         toret.append( ' ' );
         toret.append( this.getMessage() );
         toret.append( ' ' );
