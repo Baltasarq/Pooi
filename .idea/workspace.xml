@@ -7,13 +7,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8a88262f-88f4-4f1f-8fed-10700b7b5117" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/ObjectBag.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/ObjectBag.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/Command.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/Command.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/methods/InterpretedMethod.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/methods/InterpretedMethod.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/App.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/Inspector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/Inspector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/VisualEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/VisualEngine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/AppInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/AppInfo.java" afterDir="false" />
     </list>
     <ignored path="pooi.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -78,15 +72,24 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Command.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Command.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/Command.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="401">
+            <state relative-caret-position="467">
               <caret line="124" column="52" selection-start-line="124" selection-start-column="52" selection-end-line="124" selection-end-column="52" />
               <folding>
                 <element signature="e#2547#2548#0" expanded="true" />
                 <element signature="e#2578#2579#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AppInfo.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/AppInfo.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="204">
+              <caret line="15" column="54" selection-start-line="15" selection-start-column="54" selection-end-line="15" selection-end-column="54" />
             </state>
           </provider>
         </entry>
@@ -162,13 +165,13 @@
         <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/objs/ValueObject.java" />
         <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/ObjectBox.java" />
         <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/Canvas.java" />
-        <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/AppInfo.java" />
         <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/Inspector.java" />
         <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/VisualEngine.java" />
         <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/ui/App.java" />
         <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/ObjectBag.java" />
         <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/methods/InterpretedMethod.java" />
         <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/Command.java" />
+        <option value="$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/AppInfo.java" />
       </list>
     </option>
   </component>
@@ -1017,13 +1020,13 @@
       <window_info id="Palette&#9;" order="4" />
       <window_info anchor="bottom" id="Event Log" order="0" sideWeight="0.33814588" side_tool="true" weight="0.20612244" />
       <window_info anchor="right" id="Maven Projects" order="9" weight="0.32936507" />
-      <window_info anchor="bottom" id="Run" order="6" sideWeight="0.6618541" visible="true" weight="0.1779661" />
+      <window_info anchor="bottom" id="Run" order="6" sideWeight="0.6618541" weight="0.1779661" />
       <window_info anchor="bottom" id="Version Control" order="1" weight="0.3278846" />
-      <window_info anchor="bottom" id="Terminal" order="11" weight="0.3290735" />
+      <window_info anchor="bottom" id="Terminal" order="11" visible="true" weight="0.32838982" />
       <window_info anchor="right" id="Designer" order="5" />
-      <window_info active="true" content_ui="combo" id="Project" order="3" sideWeight="0.52835053" visible="true" weight="0.2519573" />
+      <window_info active="true" content_ui="combo" id="Project" order="3" sideWeight="0.52681386" visible="true" weight="0.2519573" />
       <window_info anchor="bottom" id="Find" order="5" weight="0.31567797" />
-      <window_info id="Structure" order="6" sideWeight="0.4716495" side_tool="true" visible="true" weight="0.2519573" />
+      <window_info id="Structure" order="6" sideWeight="0.4731861" side_tool="true" visible="true" weight="0.2519573" />
       <window_info anchor="right" id="Ant Build" order="6" sideWeight="0.8970297" weight="0.25" />
       <window_info id="UI Designer" order="2" weight="0.32955405" />
       <window_info anchor="bottom" id="Debug" order="9" weight="0.29449153" />
@@ -1332,13 +1335,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/AppInfo.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="15" column="54" selection-start-line="15" selection-start-column="54" selection-end-line="15" selection-end-column="54" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/Member.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="153">
@@ -1455,12 +1451,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/evaluables/Command.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="401">
+        <state relative-caret-position="467">
           <caret line="124" column="52" selection-start-line="124" selection-start-column="52" selection-end-line="124" selection-end-column="52" />
           <folding>
             <element signature="e#2547#2548#0" expanded="true" />
             <element signature="e#2578#2579#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/devbaltasarq/pooi/core/AppInfo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="15" column="54" selection-start-line="15" selection-start-column="54" selection-end-line="15" selection-end-column="54" />
         </state>
       </provider>
     </entry>
