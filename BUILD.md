@@ -5,8 +5,8 @@ the system is therefore using the IDE.
 
 The following commands will download a copy of the repository and make IntelliJ IDEA open the project (provided that IntelliJ IDEA is installed in ~/bin):
 
-$ git clone https://github.com/Baltasarq/Pooi
-$ ~/bin/idea/bin/idea.sh Pooi/ &
+    $ git clone https://github.com/Baltasarq/Pooi
+    $ ~/bin/idea/bin/idea.sh Pooi/ &
 
 After IntelliJ IDEA is open, the only further step needed is to click the *play* button.
 
