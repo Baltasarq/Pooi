@@ -7,7 +7,7 @@ The following commands will download a copy of the repository and make *IntelliJ
     $ git clone https://github.com/Baltasarq/Pooi
     $ ~/bin/idea/bin/idea.sh Pooi/ &
 
-After *IntelliJ IDEA* is open, the only further step needed is to click the *play* button.
+After *IntelliJ IDEA* is open, the only further step needed to have the project compiled and executed is to click the *play* button.
 
 If you prefer other development environments, like **NetBeans** or **Eclipse**, then use the *File >> Import from 
 sources* (or similar) option, and follow the instructions of that environment in order to execute it.
