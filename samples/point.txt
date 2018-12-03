@@ -2,8 +2,16 @@
 > (TraitsPoint createChild) rename "Point"
 > Point.x = 0
 > Point.y = 0
-> TraitsPoint.shift = { delta: self.x = ( self.x + delta ); self.y = ( self.y + delta ) }
-> TraitsPoint.move = { x y: self.x = x; self.y = y }
+> TraitsPoint.shift = { delta:
+    self.x = ( self.x + delta );
+    self.y = ( self.y + delta )
+}
+
+> TraitsPoint.move = { x y:
+    self.x = x;
+    self.y = y
+}
+
 > TraitsPoint.str = {: ( ( self.x str ) + ", " ) + ( self.y str ) }
 > (Point copy) rename "p1"
 > p1 str

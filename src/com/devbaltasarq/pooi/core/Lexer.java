@@ -25,7 +25,7 @@ public class Lexer {
 
     public void advance(int value)
     {
-        this.setPos( getPos() + value );
+        this.setPos( this.getPos() + value );
     }
 
     public boolean isWhiteSpace()
@@ -54,20 +54,20 @@ public class Lexer {
         char ch;
 
         token = "";
-        skipSpaces();
-        ch = getCurrentChar();
+        this.skipSpaces();
+        ch = this.getCurrentChar();
 
 
         while( ( Character.isLetterOrDigit( ch )
               || ch == '_' )
-              && getPos() < getLine().length() )
+              && this.getPos() < this.getLine().length() )
         {
             token += ch;
             advance();
             ch = getCurrentChar();
         }
 
-        skipSpaces();
+        this.skipSpaces();
         return token;
     }
 
@@ -138,13 +138,13 @@ public class Lexer {
                     }
                 }
 
-                advance();
+                this.advance();
             }
 
-            advance();
+            this.advance();
         }
 
-        skipSpaces();
+        this.skipSpaces();
         return token;
     }
 
@@ -153,7 +153,7 @@ public class Lexer {
         char toret = '\0';
 
         if ( !this.isEOL() ) {
-            toret = getLine().charAt( getPos() );
+            toret = this.getLine().charAt( this.getPos() );
         }
 
         return toret;

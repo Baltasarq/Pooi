@@ -1,7 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+// Pooi (c) 2014 Baltasar MIT License <jbgarcia@uvigo.es>
 
 package com.devbaltasarq.pooi.core;
 
@@ -13,7 +10,7 @@ public class AppInfo {
     public static final String Name = "Pooi";
     public static final String Email = "jbgarcia@uvigo.es";
     public static final String Author = "Baltasar García Perez-Schofield";
-    public static final String Version = "2.2 20180605";
+    public static final String Version = "2.2.1 20181203";
     public static final String License = "MIT License: https://opensource.org/licenses/MIT";
     public static final String SessionFileExt = ".txt";
     public static final String ScriptFileExt = ".poi";

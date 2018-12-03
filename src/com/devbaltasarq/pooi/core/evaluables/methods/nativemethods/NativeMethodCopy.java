@@ -5,6 +5,7 @@ import com.devbaltasarq.pooi.core.ObjectBag;
 import com.devbaltasarq.pooi.core.evaluables.methods.NativeMethod;
 import com.devbaltasarq.pooi.core.Interpreter.InterpretError;
 
+// TODO: Should not be deletable.
 /**
  * Copying objects
  * @author baltasarq

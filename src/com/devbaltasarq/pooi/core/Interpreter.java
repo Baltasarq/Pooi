@@ -1,3 +1,5 @@
+// Pooi (c) 2014 Baltasar MIT License <jbgarcia@uvigo.es>
+
 package com.devbaltasarq.pooi.core;
 
 import com.devbaltasarq.pooi.core.evaluables.Attribute;
@@ -9,6 +11,7 @@ import com.devbaltasarq.pooi.core.evaluables.methods.NativeMethod;
 import com.devbaltasarq.pooi.core.objs.ObjectBool;
 
 import java.io.*;
+import java.util.ArrayList;
 
 /**
  * The interpreter, making sense of commands sent.
@@ -119,7 +122,8 @@ public class Interpreter {
         }
     }
 
-    public void reset(Runtime rt) throws InterpretError {
+    public void reset(Runtime rt) throws InterpretError
+    {
         this.rt = rt;
         this.error = false;
         this.createInfoObject();
@@ -371,6 +375,13 @@ public class Interpreter {
         return toret;
     }
 
+    /** Finds the correct reference in param val,
+      * againts the method, the current object (self), and the runtime.
+      * @param rt the runtime the interpreter executes against.
+      * @param self the object executing the method.
+      * @param method the method that it is being executed.
+      * @param val the value to find.
+      */
     protected Evaluable findCorrectReferenceInParam(Runtime rt, ObjectBag self, InterpretedMethod method, Evaluable val)
             throws InterpretError
     {
@@ -407,45 +418,113 @@ public class Interpreter {
         return toret;
     }
 
+    /** @return whether there was an error or not. */
     public boolean getError()
     {
         return error;
     }
 
-    public String loadSession(String fileName) {
+    /** Loads a complete session.
+      * @param fileName the file name to load.
+      */
+    public String loadSession(String fileName)
+    {
+        final String SESSION_OK = "\n\n*** Session '%s' restored ok. ***\n\n";
+        final String SESSION_ERROR = "\n\n*** Session '%s' restored with errors ***.\n\n";
+        final String SESSION_FAILED = "\n*** Session '%s' restoration failed ***\n\n";
+        final String FILE_NAME = new File( fileName ).getName();
         StringBuilder toret = new StringBuilder();
-        String lin;
+        String[] source = this.loadSessionFile( fileName, toret );
         
-        try {
-            BufferedReader session = new BufferedReader( new FileReader( new File( fileName ) ) );
+        if ( source.length > 0 ) {
+            // Interpret all instructions
+            for(String instruction: source) {
+                toret.append( ">" + instruction );
+                toret.append( '\n' );
+                toret.append( interpret( instruction ) );
+                toret.append( "\n\n" );
+                
+                if ( this.getError() ) {
+                    break;
+                }
+            }
             
+            if ( this.getError() ) {
+                toret.append( String.format( SESSION_ERROR, FILE_NAME ) );
+            } else {
+                toret.append( String.format( SESSION_OK, FILE_NAME ) );
+            }
+        } else {
+            toret.append( String.format( SESSION_FAILED, FILE_NAME ) );
+        }
+        
+        return toret.toString();
+    }
+    
+     /** Loads a complete session.
+       * @param fileName the file name to load.
+       * @param console the future messages to show in the console
+       */
+    private String[] loadSessionFile(String fileName, StringBuilder console)
+    {
+        final ArrayList<String> toret = new ArrayList<>();
+        String lin;
+        String instruction = "";
+        int openBraces = 0;
+        
+        try (BufferedReader session = new BufferedReader( new FileReader(
+                                             new File( fileName ) ) ) )
+        {
             lin = session.readLine();
             while( lin != null ) {
                 lin = lin.trim();
-                
-                if ( lin.length() > 1 ) {
-                    if ( lin.charAt( 0 ) == '>' ) {
-                        toret.append( lin );
-                        toret.append( '\n' );
-                        toret.append(
-                                interpret( lin.substring( 1, lin.length() ) ) 
-                        );
-                        toret.append( "\n\n" );
+              
+                // Should this line be considered?
+                if ( lin.length() > 0
+                  && ( lin.charAt( 0 ) == '>'
+                    || openBraces > 0 ) )
+                {
+                    // Remove the opening '>'
+                    if ( openBraces <= 0
+                      && lin.charAt( 0 ) == '>' )
+                    {
+                        lin = lin.substring( 1 );
+                    }
+                    
+                    // Check for braces
+                    for(char ch: lin.toCharArray()) {
+                        if ( ch == '{' ) {
+                            ++openBraces;
+                        }
+                        else
+                            if ( ch == '}' ) {
+                            --openBraces;
+                        }
+                    }
+                    
+                    // Add it
+                    instruction += " " + lin;
+                    if ( openBraces <= 0 ) {
+                        openBraces = 0;
+                        toret.add( instruction );
+                        instruction = "";
                     }
                 }
                 
                 lin = session.readLine();
             }
-            
-            session.close();
-            toret.append( "\n\nsession restored ok.\n\n");
         } catch(Exception e) {
-            toret.append( "\nsession failed to restore\n\n" );
-        }  
+            toret.clear();
+            console.append( "\nERROR: " + e.getMessage() + "\n" );
+        }
         
-        return toret.toString();
+        return toret.toArray( new String[ 0 ] );
     }
 
+    /** Checks whether the interpreter is in verbose mode or not.
+      * Create the info object if it does not exist.
+      * @return true if the interpreter is in verbose mode, or false.
+      */
     public boolean isVerbose() throws InterpretError
     {
         final InterpreterCfg cfg = this.getConfiguration();
@@ -469,6 +548,10 @@ public class Interpreter {
         return cfg.isVerbose();
     }
 
+    /** Puts the interpreter in verbose mode or not.
+      * Create the info object if it does not exist.
+      * @param flag true to put the interpreter in verbose mode.
+      */
     public void setVerbose(boolean flag) throws InterpretError {
         Attribute attrVerbose = null;
         ObjectBag info = this.getObjInfo();
@@ -483,19 +566,30 @@ public class Interpreter {
         this.getObjInfo().set( EtqInfoObjAttrVerbose, this.getRuntime().createBool( flag ) );
         this.getConfiguration().setVerbose( flag );
     }
-
-    public InterpreterCfg getConfiguration() {
-        return this.cfg;
-    }
-
-    public ObjectBag getObjInfo() {
+    
+    /** @return the info object.
+      * @see Runtime.
+      */
+    public ObjectBag getObjInfo()
+    {
         return this.objInfo;
     }
 
-    public boolean hasGui() {
+    /** @return the main configuration of the app. */
+    public InterpreterCfg getConfiguration()
+    {
+        return this.cfg;
+    }
+
+    /** @return true if the app is executing with GUI, false otherwise. */
+    public boolean hasGui()
+    {
         return this.getConfiguration().hasGui();
     }
 
+    /** @return the runtime for the interpreter.
+      * @see Runtime.
+      */
     public Runtime getRuntime()
     {
         return this.rt;
