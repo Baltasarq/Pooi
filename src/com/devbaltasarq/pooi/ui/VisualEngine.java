@@ -463,8 +463,6 @@ public final class VisualEngine extends JFrame {
 
         // Split view
         this.spPanel = new JSplitPane();
-        this.spPanel.setDividerLocation( 150 );
-        spMain.setDividerLocation( (int) ( this.getHeight() - ( this.getHeight() * 0.15 ) ) );
 
         // Build components
         this.buildMenuBar();
@@ -548,8 +546,10 @@ public final class VisualEngine extends JFrame {
             }
         } );
 
-        // Center on screen
+        // Center on screen & polish
         this.setLocationRelativeTo( null );
+        this.spPanel.setDividerLocation( (int) ( this.getWidth() * .15 ) );
+        spMain.setDividerLocation( (int) ( this.getHeight() - ( this.getHeight() * .33 ) ) );
     }
 
     private void onLoadSession()

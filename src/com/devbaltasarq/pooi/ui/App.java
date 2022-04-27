@@ -4,9 +4,12 @@ import com.devbaltasarq.pooi.core.AppInfo;
 import com.devbaltasarq.pooi.core.Interpreter;
 import com.devbaltasarq.pooi.core.Interpreter.InterpretError;
 import com.devbaltasarq.pooi.core.InterpreterCfg;
+import sun.awt.resources.awt;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -85,6 +88,8 @@ public final class App {
     {
         // Prepare look & feel, if possible
         try {
+            System.setProperty( "swing.aatext", "true" );
+            System.setProperty( "awt.useSystemAAFontSettings", "on" );
             UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
         } catch(Exception ignored) {
         }

@@ -3,6 +3,7 @@ package com.devbaltasarq.pooi.ui;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Map;
 
 /**
  * Created by baltasarq on 27/04/16.
@@ -18,7 +19,7 @@ public class Canvas extends JPanel {
     {
         this.setMinimumSize( new Dimension( width, height ) );
 
-        canvas  = new BufferedImage( width, height,  BufferedImage.TYPE_INT_RGB);
+        canvas  = new BufferedImage( width, height,  BufferedImage.TYPE_INT_RGB );
         JLabel canvasFrame = new JLabel( new ImageIcon( canvas ) );
         canvasFrame.setPreferredSize( new Dimension( width, height ) );
         canvasFrame.setMinimumSize( new Dimension( width, height ) );
@@ -58,7 +59,8 @@ public class Canvas extends JPanel {
     }
 
     /** Clears the drawing area */
-    public void cls() {
+    public void cls()
+    {
         final Graphics grfs = this.canvas.getGraphics();
 
         grfs.setColor( this.getBackgroundColor() );
@@ -134,6 +136,14 @@ public class Canvas extends JPanel {
         }
     }
 
+    /** Gets the hints for antialiasing. */
+    private Map getDesktopHints()
+    {
+        final Toolkit TK = Toolkit.getDefaultToolkit();
+
+        return (Map)( TK.getDesktopProperty("awt.font.desktophints") );
+    }
+
     /**
      * Draws a string in the graphic window
      * @param x the x coordinate of the starting point
@@ -154,16 +164,21 @@ public class Canvas extends JPanel {
     public void print(int x, int y, String str, boolean isBold)
     {
         if ( str != null ) {
-            final Graphics grfs = canvas.getGraphics();
+            final Graphics2D GRFS = (Graphics2D) canvas.getGraphics();
+            final Map HINTS = this.getDesktopHints();
             Font font = this.getFont();
 
             if ( isBold ) {
-                font = font.deriveFont( Font.BOLD );
+               font = font.deriveFont( Font.BOLD );
             }
 
-            grfs.setFont( font );
-            grfs.setColor( this.getColor() );
-            grfs.drawChars( str.toCharArray(), 0, str.length(), x, y );
+            if ( HINTS != null ) {
+                GRFS.addRenderingHints( HINTS );
+            }
+
+            GRFS.setFont( font );
+            GRFS.setColor( this.getColor() );
+            GRFS.drawChars( str.toCharArray(), 0, str.length(), x, y );
         }
     }
 
