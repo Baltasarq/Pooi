@@ -50,12 +50,11 @@ public class Parser {
      * @throws com.devbaltasarq.pooi.core.Interpreter.InterpretError
      */
     public static Command[] parseOrder(Runtime rt, String order) throws InterpretError {
-        ArrayList<Command> toret = new ArrayList<Command>();
+        final ArrayList<Command> TORET = new ArrayList<Command>();
         order = order.trim();
 
         // empty
         if  ( !order.isEmpty() ) {
-
             // removeMember last ';'
             if ( order.charAt( order.length() -1 ) == ';') {
                 order = order.substring( 0, order.length() -1 ).trim();
@@ -64,10 +63,10 @@ public class Parser {
             // parse it
             Lexer lex = new Lexer( order );
             lex.skipSpaces();
-            Command cmd = parseCommand( rt, lex, toret );
+            Command cmd = parseCommand( rt, lex, TORET );
 
             while ( cmd != null ) {
-                toret.add( cmd );
+                TORET.add( cmd );
 
                 // Traverse spaces to get to next command
                 lex.skipSpaces();
@@ -76,12 +75,12 @@ public class Parser {
                     lex.skipSpaces();
                 }
 
-                cmd = parseCommand( rt, lex, toret );
+                cmd = parseCommand( rt, lex, TORET );
             }
         }
 
-        clean( toret );
-        return toret.toArray( new Command[ toret.size() ] );
+        clean( TORET );
+        return TORET.toArray( new Command[ TORET.size() ] );
     }
 
     /**
