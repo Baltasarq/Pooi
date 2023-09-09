@@ -105,6 +105,10 @@ public class Interpreter {
             while ( ( line = reader.readLine() ) != null ) {
                 line = line.trim();
 
+                if ( line.isEmpty() ) {
+                    continue;
+                }
+
                 // Eliminate ">", if needed
                 if ( line.startsWith( ">" ) ) {
                     line = line.substring( 1 ).trim();
@@ -421,7 +425,7 @@ public class Interpreter {
     /** @return whether there was an error or not. */
     public boolean getError()
     {
-        return error;
+        return this.error;
     }
 
     /** Loads a complete session.
@@ -568,7 +572,7 @@ public class Interpreter {
     }
     
     /** @return the info object.
-      * @see Runtime.
+      * @see Runtime
       */
     public ObjectBag getObjInfo()
     {
@@ -588,7 +592,7 @@ public class Interpreter {
     }
 
     /** @return the runtime for the interpreter.
-      * @see Runtime.
+      * @see Runtime
       */
     public Runtime getRuntime()
     {
