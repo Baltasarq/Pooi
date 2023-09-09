@@ -2,10 +2,15 @@ package com.devbaltasarq.pooi.core;
 
 /**
  * Lexer for a given String
- * @auhtor: baltasarq
+ * @author: baltasarq
  * Date: 11/16/12
   */
 public class Lexer {
+    public static final String OtherWhitespaces = "\u000B\u000C\u0085"
+                                                    + "\u00A0\u2000\u2001\u2002\u2003"
+                                                    + "\u2004\u2005\u2006\u2007\u2008"
+                                                    + "\u2009\u200A\u2028\u2029\u202F"
+                                                    + "\u205F\u3000";
     public static final String Operators = "+-*/=<>?";
     public static final String Delimiters = ":{}()";
     public static final String SpecialCharacter = Operators + Delimiters;
@@ -30,7 +35,10 @@ public class Lexer {
 
     public boolean isWhiteSpace()
     {
-        return ( Character.isWhitespace( this.getCurrentChar() ) );
+        final char CH = this.getCurrentChar();
+
+        return ( OtherWhitespaces.indexOf( CH ) >= 0
+              || Character.isWhitespace( CH ) );
     }
 
     public void skipSpaces()
