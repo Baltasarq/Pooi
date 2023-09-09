@@ -51,7 +51,7 @@ public final class VisualEngine extends JFrame {
         this.currentDir = new File( System.getProperty( "user.home" ) );
         this.build();
 
-        this.addWindowListener(new WindowListener() {
+        this.addWindowListener( new WindowListener() {
             @Override
             public void windowOpened(WindowEvent windowEvent) {
                 VisualEngine.this.reset( VisualEngine.this.interpreter == null );
@@ -575,7 +575,8 @@ public final class VisualEngine extends JFrame {
         }
     }
 
-    private void load(String fn) {
+    private void load(String fn)
+    {
         this.output.append( "\n" + this.interpreter.loadSession( fn ) + "\n\n" );
         this.output.setCaretPosition( this.output.getText().length() );
         this.updateTree();
