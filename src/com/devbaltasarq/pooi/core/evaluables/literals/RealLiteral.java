@@ -10,7 +10,7 @@ import com.devbaltasarq.pooi.core.evaluables.Literal;
 public class RealLiteral extends Literal {
     public RealLiteral(double lit)
     {
-        super( new Double( lit ) );
+        super( lit );
     }
 
     public Double getValue()

@@ -10,7 +10,7 @@ import com.devbaltasarq.pooi.core.evaluables.Literal;
 public class BoolLiteral extends Literal {
     public BoolLiteral(boolean lit)
     {
-        super( new Boolean( lit ) );
+        super( lit );
     }
 
     public Boolean getValue()

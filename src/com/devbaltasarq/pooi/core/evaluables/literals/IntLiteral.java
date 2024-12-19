@@ -12,7 +12,7 @@ import com.devbaltasarq.pooi.core.evaluables.Literal;
 public class IntLiteral extends Literal {
     public IntLiteral(long lit)
     {
-        super( new Long( lit ) );
+        super( lit );
     }
 
     public Long getValue()

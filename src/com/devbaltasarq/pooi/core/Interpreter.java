@@ -30,7 +30,7 @@ public class Interpreter {
     public static final String EtqInfoObjMthAbout = "about";
     public static final String EtqComment = "#";
 
-    public static final String PathToScripts = "scripts/";
+    public static final String PathToScripts = "/com/devbaltasarq/pooi/res/scripts/";
     public static final String[] InternalScripts = { "math.poi" };
 
     /**
@@ -84,12 +84,17 @@ public class Interpreter {
 
     private void loadScripts() throws LoadInternalScriptError
     {
-        for (String path: InternalScripts ) {
-            String completePath = PathToScripts + path;
-            InputStream stream = this.getClass().getClassLoader().getResourceAsStream( completePath );
+        for (String scriptPath: InternalScripts ) {
+            String completePath = PathToScripts + scriptPath;
+            InputStream stream = this.getClass()
+                                        .getResourceAsStream( completePath );
 
+            if ( stream == null ) {
+                throw new LoadInternalScriptError( "[ERR] unable to find: " + completePath );
+            }
+            
             try {
-                this.interpretScript( path, stream );
+                this.interpretScript( scriptPath, stream );
             } catch(InterpretError exc) {
                 throw new LoadInternalScriptError( exc.getMessage() );
             }

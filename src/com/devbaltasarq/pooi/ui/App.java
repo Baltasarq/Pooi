@@ -1,25 +1,25 @@
+// (c) 2008 Baltasar MIT License <jbgarcia@uvigo.es>
+
+
 package com.devbaltasarq.pooi.ui;
+
 
 import com.devbaltasarq.pooi.core.AppInfo;
 import com.devbaltasarq.pooi.core.Interpreter;
 import com.devbaltasarq.pooi.core.Interpreter.InterpretError;
 import com.devbaltasarq.pooi.core.InterpreterCfg;
-import sun.awt.resources.awt;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.File;
-import java.util.Map;
 import java.util.Scanner;
 
-/**
- * The main class, triggering the application.
- */
+
+/** The main class, triggering the application. */
 public final class App {
-    private static final String EtqVersionOption = "--version";
-    private static final String EtqNoGuiOption = "--nogui";
-    private static final String EtqQuietOption = "--quiet";
-    private static final String EtqHelpOption = "--help";
+    private static final String ETQ_VERSION_OPTION = "--version";
+    private static final String ETQ_GUI_OPTION = "--nogui";
+    private static final String ETQ_QUITE_OPTION = "--quiet";
+    private static final String ETQ_HELP_OPTION = "--help";
 
     /** Shows the help of the program, on console */
     private static void showHelp()
@@ -36,20 +36,13 @@ public final class App {
     {
         for(String arg: args) {
             if ( arg.startsWith( "--" ) ) {
-                if ( arg.equals( EtqVersionOption ) ) {
-                    System.out.println( AppInfo.getMsgVersion() );
-                }
-                else
-                if ( arg.equals( EtqNoGuiOption ) ) {
-                    cfg.setHasGui( false );
-                }
-                else
-                if ( arg.equals( EtqQuietOption ) ) {
-                    cfg.setVerbose( false );
-                }
-                else
-                if ( arg.equals( EtqHelpOption ) ) {
-                    showHelp();
+                switch ( arg ) {
+                    case ETQ_VERSION_OPTION -> 
+                            System.out.println( AppInfo.getMsgVersion() );
+                    case ETQ_GUI_OPTION -> cfg.setHasGui( false );
+                    case ETQ_QUITE_OPTION -> cfg.setVerbose( false );
+                    case ETQ_HELP_OPTION -> showHelp();
+                    default -> System.err.println( "[ERR] option unknown" );
                 }
             }
             else {
@@ -98,15 +91,24 @@ public final class App {
         final VisualEngine g = new VisualEngine( interpreter );
 
         try {
-            // Run Gui interpreter
+            // Show messages and run interpreter
+            new Thread( () -> {
+                try {
+                    Thread.sleep( 1000 );
+                } catch(InterruptedException ignored) {
+                }
+                finally {
+                    g.makeOutput( "\n" + msg + "\n\n" );
+                }
+            }).start();
             g.setVisible( true );
-            g.makeOutput( "\n" + msg + "\n\n" );
         } catch(Exception e)
         {
             g.makeOutput( "\n\nUnexpected error:\n" + e.getLocalizedMessage() + "\n" );
             g.deactivateGui();
         }
 
+        return;
     }
 
     private static void consoleApp(Interpreter terp, String msg) {

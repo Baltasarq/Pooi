@@ -1023,22 +1023,7 @@ public final class VisualEngine extends JFrame {
             }
         }
     }
-/*
-    public String makeInput(String msg)
-    {
-        String toret = JOptionPane.showInputDialog(
-                this,
-                msg,
-                AppInfo.Name,
-                JOptionPane.QUESTION_MESSAGE );
 
-        if ( toret == null ) {
-            toret = "";
-        }
-
-        return toret.trim();
-    }
-*/
     void makeOutput(String msg)
     {
         this.output.append( msg );
